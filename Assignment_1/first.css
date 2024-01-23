@@ -49,6 +49,7 @@ body {
     background-attachment: fixed;
     height: 78.5vw;
     margin-bottom:6.2vw;
+    background-position: center;
 }
 
 .quote p.content{
