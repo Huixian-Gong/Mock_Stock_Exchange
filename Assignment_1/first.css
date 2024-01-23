@@ -43,7 +43,7 @@ body {
 
 
 .quote {
-    background-image: url("./resources/Assignment_1/image3.png");
+    background-image: url("./resources/image3.png");
     background-size: 1290px 1150px;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -72,7 +72,7 @@ body {
 .word{
     width: 28vw;
     height: 45vw;
-    background-image: url("./resources/Assignment_1/flower.png");
+    background-image: url("./resources/flower.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -109,7 +109,7 @@ body {
 }
 
 .right_im {
-    background-image: url("./resources/Assignment_1/image1.png");
+    background-image: url("./resources/image1.png");
     background-size: cover;
     background-repeat: no-repeat;
     width: 54vw;
@@ -145,7 +145,7 @@ body {
 }
 
 .gal {
-    background-image: url("./resources/Assignment_1/image2.png");
+    background-image: url("./resources/image2.png");
     background-size: 1100px 1330px;
     background-repeat: no-repeat;
     background-position: center;
@@ -158,7 +158,7 @@ body {
 
 .gal_word {
     float: right;
-    background-image: url("./resources/Assignment_1/flower.png");
+    background-image: url("./resources/flower.png");
     text-align: center;
     height: 42vw;
     width: 23.5vw;
