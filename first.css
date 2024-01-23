@@ -1,0 +1,267 @@
+body {
+    margin: 0;
+}
+
+.top_nav {
+    background-color: #ffffff;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    font-size: 1.3vw;
+}
+
+.top_nav a {
+    text-align: center;
+    padding-inline: 3vw;
+    text-decoration:none;
+    font-family: "Arial";
+    padding-block: 37px;
+    
+}
+
+.top_nav a.mainevents{
+    color: #af9453;
+    padding-left: 8vw;
+    float: left;
+}
+
+.top_nav a.home{
+    color: #6d5a29;
+    float: right;
+}
+
+.top_nav a.contact{
+    color: #000000;
+    float: right;
+    padding-right: 7vw;
+}
+
+.top_nav a.others{
+    color: #000000;
+    float: right;
+}
+
+
+.quote {
+    background-image: url("./resources/Assignment_1/image3.png");
+    background-size: 1290px 1150px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 78.5vw;
+    margin-bottom:6.2vw;
+}
+
+.quote p.content{
+    text-align: center;
+    color: #ffffff;
+    font-size: 4vw;
+    font-family: "Garamond";
+    padding-block-start: 24.5vw;
+    line-height: 8vw;
+    letter-spacing: 1.5vw;
+    margin: 0;
+}
+
+.services {
+  text-align: center;
+}
+.col {
+  display: inline-block;
+}
+
+.word{
+    width: 28vw;
+    height: 45vw;
+    background-image: url("./resources/Assignment_1/flower.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    color: #ffffff;
+    float: left;
+    margin-right: 3vw;
+}
+
+.word p.heading{
+    padding-block-start: 8vw;
+    font-size: 2.2vw;
+    font-family: "Arial";
+    letter-spacing: 1vw;
+}
+
+.word p.rest{
+    padding-block-start: 6vw;
+    font-size: 1.8vw;
+    font-family: "Garamond";
+    letter-spacing: 0.2vw;
+    font-weight: 500;
+    padding-bottom: 3.5vw;
+}
+
+
+.word button{
+    color: #ffffff;
+    background-color: #af9453;
+    border: 1.3px solid #ffffff;
+    padding-inline: 7vw;
+    padding-block: 1vw;
+    font-size: 1.4vw;
+}
+
+.right_im {
+    background-image: url("./resources/Assignment_1/image1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 54vw;
+    height: 45vw;
+    margin-left: 3vw;
+}
+
+.long {
+    font-family: "Garamond";
+    text-align: center;
+}
+
+.long p.back_quote{
+    font-size: 7vw;
+    margin-bottom: 0;
+    font-family: 'Times New Roman';
+    padding-top: 5.2vw;
+}
+
+.long p.sentence {
+    margin-top: 1.3vw;
+    font-size: 3vw;
+    line-height: 1.8vw;
+    letter-spacing: 0.3vw;
+    color: rgb(50, 50, 50);
+}
+.long p.name {
+    font-family: "Arial";
+    color: #af9453;
+    padding-bottom: 8.7vw;
+    padding-top: 2.2vw;
+    font-weight: bold;
+}
+
+.gal {
+    background-image: url("./resources/Assignment_1/image2.png");
+    background-size: 1100px 1330px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    height: 54vw;
+    margin: 6vw;
+    margin-bottom: 10vw;
+    background-position-y: 10vw;
+}
+
+.gal_word {
+    float: right;
+    background-image: url("./resources/Assignment_1/flower.png");
+    text-align: center;
+    height: 42vw;
+    width: 23.5vw;
+    background-position: center;
+    margin-right: 6vw;    
+    margin-top: 6vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+}
+
+
+.gal_word p.heading{
+    padding-block-start: 7vw;
+    font-size: 2.3vw;
+    font-family: "Arial";
+    letter-spacing: 1vw;
+}
+
+.gal_word p.rest{
+    padding-block-start: 6vw;
+    font-size: 1.6vw;
+    font-family: "Garamond";
+    letter-spacing: 0.4vw;
+    font-weight: 500;
+    padding-bottom: 3vw;
+}
+
+.gal_word button{
+    color: #ffffff;
+    background-color: #af9453;
+    border: 1.3px solid #ffffff;
+    padding-inline: 3vw;
+    padding-block: 1.0vw;
+    font-size: 1.4vw;
+}
+
+.info {
+    background-color: #af9453;
+    color: #ffffff;
+    font-family: "Arial";
+}
+.line {
+    text-align: center;
+}
+.pts {
+    display: inline-block;
+    font-size:3vw;
+    font-family: "Garamond";
+    text-align: center;
+}
+.larrow {
+    color: #af9453;
+    font-size: 3vw;
+    margin-right: 16vw;
+}
+.rarrow {
+    color: #af9453;
+    font-size: 3vw;
+    margin-left: 16vw;
+}
+.parent {
+    text-align: left;
+    background-color: #af9453;
+    color: #ffffff;
+    margin-bottom: 3vw;
+    margin-inline: 6vw;
+    height: 17vw;
+    font-family: "Arial";
+    padding-left: 2vw;
+    line-height: 2vw;
+}
+
+.child {
+    padding-block-start: 4vw;
+    display: inline-block;
+    font-size: 1.4vw;
+}
+
+.add {
+    border-right: 1px solid white;
+    height: 6vw;
+    padding-inline: 4rem 2rem;
+}
+.num {
+    border-right: 1px solid white;
+    height: 6vw;
+    padding-inline: 1.5rem 1rem;
+}
+.child p{
+    margin-left: 1rem;
+}
+
+.parent button {
+    color: #ffffff;
+    background-color: #af9453;
+    border: 1.3px solid #ffffff;
+    padding-inline: 2vw;
+    padding-block: 1vw;
+    font-size: 1.4vw;
+    float: right;
+    margin-top: 5.5vw;
+    margin-right: 6vw;
+}
+
+
