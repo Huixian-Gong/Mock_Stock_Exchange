@@ -166,7 +166,7 @@ body {
 
 .gal {
     background-image: url("./resources/image2.png");
-    background-size: 1095px 1330px;
+    background-size: 1095px 1300px;
     background-repeat: no-repeat;
     /* background-position: center; */
     background-position-x: 73px;
@@ -174,7 +174,7 @@ body {
     height: 677px;
     /* margin: 74.34px; */
     margin-bottom: 123.9px;
-    background-position-y: 550px;
+    background-position-y: 180px;
     width: 1239px;
     /* border: 2px solid red; */
 }
@@ -275,7 +275,7 @@ body {
     padding-block: 12.39px;
     font-size: 17.346px;
     float: right;
-    margin-top: 68.145px;
+    margin-top: 95px;
     margin-right: 74.34px;
 }
 
