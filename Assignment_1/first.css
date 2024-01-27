@@ -248,20 +248,23 @@ body {
 
 .child {
     padding-block-start: 49.56px;
-    padding-block-end: 60px;
+    padding-block-end: 38px;
     display: inline-block;
-    font-size: 17.346px;
+    font-size: 16.346px;
+    /* border: 2px solid red; */
 }
 
+
 .add {
-    border-right: 1px solid white;
     height: 74.34px;
+    /* border: 1px sol; */
     padding-inline: 4rem 2rem;
 }
 .num {
     border-right: 1px solid white;
+    border-left: 1px solid white;
     height: 74.34px;
-    padding-inline: 1.5rem 1rem;
+    padding-inline: 2rem 1.5rem;
 }
 .child p{
     margin-left: 1rem;
