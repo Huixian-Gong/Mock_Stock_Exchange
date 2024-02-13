@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+    <link rel="stylesheet" href="/static/index.css">
+    </head>
+    <body>
+        <div class="search_container">
+            <p class="search_header">Stock Search</p>
+            <form class="search_box" id="stockSearchForm">
+                <button type="submit" class="search_button"></button>
+                <input type="text" id="ticker" class="search_input" placeholder="Enter Stock Ticker Symbol" required>
+                <button type="button" id="clearButton" class="clear_button"></button>
+            </form>
+        </div>
+        <div class="search_result" id="results"></div>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+        <script src="/static/js/script.js"></script>
+        
+    </body> 
+</html>
