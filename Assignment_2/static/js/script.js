@@ -113,10 +113,12 @@ function func_stock_summary(data) {
 
 function trading_day(time_e) {
     const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    t = new Date();
+    // console.log(time_e);
+    const t = new Date(time_e * 1000);
     // console.log(t.getDate())
-    t = t.getDate() + " " + month[t.getMonth()] + ", " + t.getFullYear();
-    return t;
+    const ret = t.getDate() + " " + month[t.getMonth()] + ", " + t.getFullYear();
+    // console.log(ret);
+    return ret;
 }
 
 function trading_change(val) {
