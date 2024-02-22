@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded",  function() {
         .catch(error => console.error('Error:', error));
     }
     )
+    document.getElementById("clearButton").onclick = (function() {
+        document.getElementById("ticker").value = ''; 
+        document.getElementById("results").innerHTML = ''; 
+    });
 });
 
 // The opentab() is adapted from https://www.w3schools.com/howto/howto_js_tabs.asp
