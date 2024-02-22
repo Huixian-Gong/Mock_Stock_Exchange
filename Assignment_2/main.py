@@ -17,10 +17,10 @@ def homepage():
 @app.route('/lookup')
 def lookup():
     symbol = request.args.get('symbol')
-    api_key="cms4589r01qlk9b11g1gcms4589r01qlk9b11g20"
-    url = f'https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={api_key}'
-    response = requests.get(url)
-    return jsonify(response.json())
+    # url = f'https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token=cms4589r01qlk9b11g1gcms4589r01qlk9b11g20'
+    response = requests.get(f'https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token=cms4589r01qlk9b11g1gcms4589r01qlk9b11g20')
+    # return jsonify(response.json())
+    return response.json()
 
 @app.route('/stock')
 def stock():

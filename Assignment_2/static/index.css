@@ -156,6 +156,10 @@ td.company_right{
     background-color: rgb(221,221,221);
 }
 
+.tabs button.active {
+    background-color: rgb(204, 204, 204);
+  }
+
 .active {
     background-color: rgb(204, 204, 204);
 }
@@ -233,7 +237,7 @@ td.company_right{
 .heading {
     /* font-family: "Arial"; */
     float: left;
-    font-weight: 800;
+    /* font-weight: 800; */
     text-align: left;
     /* padding-top: 10px; */
 }
@@ -281,3 +285,12 @@ td.company_right{
     font-size: 18px;
 
 }
+
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    /* padding: 6px 12px; */
+    border: none;
+}
+  
