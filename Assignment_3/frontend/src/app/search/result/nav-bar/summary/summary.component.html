@@ -1,0 +1,30 @@
+<div *ngIf="combinedData" class="stock-container">
+
+    <!-- new-component.html -->
+    <div class="container">
+        <div class="left-section">
+        <div class="stock-info">
+            <p>High Price: {{ combinedData.price.h | number:'1.2-2' }}</p>
+            <p>Low Price: {{ combinedData.price.l | number:'1.2-2' }}</p>
+            <p>Open Price: {{ combinedData.price.o | number:'1.2-2' }}</p>
+            <p>Prev. Close: {{ combinedData.price.pc | number:'1.2-2' }}</p>
+        </div>
+        <div class="company-info">
+            <h3>About the company</h3>
+            <p>IPO Start Date: {{ combinedData.stock.ipo }}</p>
+            <p>Industry: {{ combinedData.stock.finnhubIndustry }}</p>
+            <p>Webpage: <a href="{{ combinedData.stock.weburl }}">{{ combinedData.stock.weburl }}</a></p>
+            <!-- <p>Company peers:{{ peers }}</p> -->
+        </div>
+        </div>
+        <div class="right-section">
+        <!-- <highcharts-chart 
+            [Highcharts]="Highcharts"
+            [options]="chartOptions"
+            style="width: 100%; height: 400px; display: block;"
+        ></highcharts-chart> -->
+        </div>
+    </div>
+  
+</div>
+  

@@ -1,0 +1,25 @@
+<div *ngIf="combinedData" class="stock-container">
+
+    <div class="top-section">
+        <div class="company-info">
+        <h1>{{ combinedData.stock.ticker }} <span class="star">★</span></h1>
+        <h2>{{ combinedData.stock.name }}</h2>
+        <p>{{ combinedData.stock.exchange }}</p>
+        <div class="buy-button">
+            <button>Buy</button>
+            </div>
+        </div>
+        <div class="company-logo">
+        <img [src]="combinedData.stock.logo" alt="{{ combinedData.stock.name }}">
+        <div class="market-status">{{ combinedData.price.t * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+        </div>
+        <div class="stock-info">
+        <span class="stock-price">{{ combinedData.price.c | number:'1.2-2' }}</span>
+        <span class="stock-change negative">{{ combinedData.price.d | number:'1.2-2' }} ({{ combinedData.price.dp | number:'1.2-2' }})</span>
+        <div class="current-time">{{ currentTime | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+        </div>
+        
+    </div>
+  
+</div>
+  

@@ -1,0 +1,70 @@
+/* top-section.component.css */
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff; /* Adjust background color as needed */
+    padding: 20px;
+  }
+  
+  .company-info {
+    text-align: left;
+  }
+  
+  .company-info h1 {
+    font-size: 2rem;
+    margin: 0;
+  }
+  
+  .company-info h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  
+  .company-info p {
+    margin: 0;
+  }
+  
+  .company-logo img {
+    height: 50px; /* Adjust as needed */
+  }
+  
+  .stock-info {
+    text-align: right;
+  }
+  
+  .stock-price {
+    font-size: 2.5rem;
+    display: block;
+  }
+  
+  .stock-change {
+    color: #ff3e30; /* Red for negative, green for positive */
+  }
+  
+  .negative {
+    color: #ff3e30;
+  }
+  
+  .positive {
+    color: #4cd964;
+  }
+  
+  .market-status {
+    font-size: 0.9rem;
+    color: #999; /* Grey color for less emphasis */
+  }
+  
+  .buy-button button {
+    background-color: #4cd964; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .star {
+    color: #ffcc00; /* Star color */
+  }
+  
