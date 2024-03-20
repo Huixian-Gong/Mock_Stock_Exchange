@@ -11,7 +11,8 @@
         </div>
         <div class="company-logo">
         <img [src]="combinedData.stock.logo" alt="{{ combinedData.stock.name }}">
-        <div class="market-status">{{ combinedData.price.t * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+        <!-- <div class="market-status">{{ marketStatus }}</div> -->
+        <div class="market-status">{{ marketStatus }} {{ combinedData.price.t * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</div>
         </div>
         <div class="stock-info">
         <span class="stock-price">{{ combinedData.price.c | number:'1.2-2' }}</span>

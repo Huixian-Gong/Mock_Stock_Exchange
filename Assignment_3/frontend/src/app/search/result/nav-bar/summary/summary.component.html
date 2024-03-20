@@ -1,5 +1,4 @@
 <div *ngIf="combinedData" class="stock-container">
-
     <!-- new-component.html -->
     <div class="container">
         <div class="left-section">
@@ -14,7 +13,14 @@
             <p>IPO Start Date: {{ combinedData.stock.ipo }}</p>
             <p>Industry: {{ combinedData.stock.finnhubIndustry }}</p>
             <p>Webpage: <a href="{{ combinedData.stock.weburl }}">{{ combinedData.stock.weburl }}</a></p>
-            <!-- <p>Company peers:{{ peers }}</p> -->
+            <!-- <p>Company peers:{{ combinedData.peers }}</p> -->
+            
+            <div *ngIf="combinedData && combinedData.peers.length > 0">
+            <p>Company Peers:</p>
+            <span *ngFor="let peer of combinedData.peers; let last = last">
+                <a [routerLink]="['/search', peer]">{{ peer }}</a>{{last ? '' : ', '}}
+            </span>
+            </div>
         </div>
         </div>
         <div class="right-section">
@@ -23,6 +29,11 @@
             [options]="chartOptions"
             style="width: 100%; height: 400px; display: block;"
         ></highcharts-chart> -->
+        <highcharts-chart 
+            [Highcharts]="Highcharts"
+            [options]="chartOptions"
+            style="width: 100%; height: 400px; display: block;">
+        </highcharts-chart>
         </div>
     </div>
   

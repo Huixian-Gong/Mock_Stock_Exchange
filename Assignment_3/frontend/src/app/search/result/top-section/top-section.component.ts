@@ -44,12 +44,34 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private sharedService: SharedService) {}
+  marketStatus: string = '';
+
+  calculateMarketStatus(): void {
+    if (this.combinedData && this.combinedData.price.t) {
+        const lastUpdateTimestamp = this.combinedData.price.t * 1000; // Convert to milliseconds
+        const currentTime = Date.now(); // Current time in milliseconds
+        
+        // Calculate the difference in minutes between the current time and the last update
+        const differenceInMinutes = (currentTime - lastUpdateTimestamp) / (1000 * 60);
+        
+        // Assume the market is open if the difference is 5 minutes or less
+        if (differenceInMinutes <= 5) {
+            this.marketStatus = 'Market Open';
+        } else {
+            // Market is considered closed if more than 5 minutes have elapsed
+            this.marketStatus = 'Market Closed';
+        }
+    } else {
+        this.marketStatus = 'Market Status Unknown';
+    }
+}
 
   ngOnInit(): void {
     // Existing subscription to shared data...
     this.subscription.add(
       this.sharedService.currentData$.subscribe((newData: CombinedData) => {
         this.combinedData = newData;
+        this.calculateMarketStatus(); // Call this method here
       })
     );
 
