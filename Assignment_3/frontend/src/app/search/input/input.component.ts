@@ -146,4 +146,3 @@ export class InputComponent {
 //     this.stockSymbol = '';
 //   }
 // }
-

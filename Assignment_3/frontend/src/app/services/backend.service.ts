@@ -12,12 +12,22 @@ export class BackendService {
   constructor(private http: HttpClient) {}
 
   // Example for a GET request
+
+  stockTicker(ticker: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ticker/${ticker}`);
+  }
+
   searchStock(ticker: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/search/${ticker}`);
   }
 
   stockPrice(ticker: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/quote/${ticker}`);
+  }
+
+  stockNews(ticker: string, from: string, to: string): Observable<any> {
+    console.log(`${this.apiUrl}/news/${ticker}/${from}/${to}`)
+    return this.http.get(`${this.apiUrl}/news/${ticker}/${from}/${to}`);
   }
 
   stockPeers(ticker: string): Observable<any> {
@@ -28,6 +38,11 @@ export class BackendService {
   summaryChart(ticker: string, from: string, to: string): Observable<any> {
     // Assuming your backend endpoint will handle the request to Polygon.io
     return this.http.get(`${this.apiUrl}/stock/hourly/${ticker}/${from}/${to}`);
+  }
+
+  chartTab(ticker: string, from: string, to: string): Observable<any> {
+    // Assuming your backend endpoint will handle the request to Polygon.io
+    return this.http.get(`${this.apiUrl}/chart/${ticker}/${from}/${to}`);
   }
   // You can add more methods for POST, PUT, DELETE, etc.
 }

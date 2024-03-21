@@ -4,6 +4,8 @@ import { BaseComponent } from './base/base.component'; // Assuming this is your 
 import { SearchComponent } from './search/search.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,8 @@ import { WatchlistComponent } from './watchlist/watchlist.component';
     BaseComponent, 
     SearchComponent, 
     PortfolioComponent, 
-    WatchlistComponent
+    WatchlistComponent,
+    MatDialogModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] // Ensure this is an array, `styleUrls` instead of `styleUrl`

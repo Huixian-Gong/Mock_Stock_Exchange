@@ -18,6 +18,18 @@ app.get('/search/home', (req, res) => {
     res.send('You are now at /search/home');
 });
 
+app.get('/ticker/:query', async (req, res) => {
+  const query = req.params.query;
+  const url = `https://finnhub.io/api/v1/search?q=${query}&token=${FINNHUB_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Finnhub' });
+  }
+});
+
 app.get('/search/:ticker', async (req, res) => {
     const ticker = req.params.ticker;
     const url = `https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
@@ -42,6 +54,7 @@ app.get('/quote/:ticker', async (req, res) => {
   }
 });
 
+
 app.get('/peers/:ticker', async (req, res) => {
   const ticker = req.params.ticker;
   const url = `https://finnhub.io/api/v1/stock/peers?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
@@ -51,6 +64,49 @@ app.get('/peers/:ticker', async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from Finnhub' });
+  }
+});
+
+app.get('/news/:ticker/:from/:to', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://finnhub.io/api/v1/company-news?symbol=${ticker}&from=${from}&to=${to}&token=${FINNHUB_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Finnhub news' });
+  }
+});
+
+app.get('/stock/hourly/:ticker/:from/:to', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/hour/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
+  // console.log(url);
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Polygon' });
+  }
+});
+
+app.get('/chart/:ticker/:from/:to', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Polygon' });
   }
 });
 

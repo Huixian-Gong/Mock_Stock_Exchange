@@ -1,0 +1,12 @@
+<p>news-dialog works!</p>
+<h2 mat-dialog-title>{{ data.headline }}</h2>
+<mat-dialog-content>
+  <img [src]="data.image" alt="News image" style="max-width: 100%;">
+  <p><strong>Source:</strong> {{ data.source }}</p>
+  <p><strong>Date:</strong> {{ data.datetime | date:'medium' }}</p>
+  <p><strong>Summary:</strong> {{ data.summary }}</p>
+  <p><strong>URL:</strong> <a href="{{ data.url }}" target="_blank">{{ data.url }}</a></p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

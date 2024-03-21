@@ -1,2 +1,25 @@
-<p>top-news works!</p>
-<div>content</div>
+  <div *ngIf="newsEntries.length">
+    <div *ngFor="let news of newsEntries; let i = index">
+      <mat-card (click)="openDialog(news)">
+        <mat-card-header>
+          <mat-card-title>{{ news.headline }}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image [src]="news.image" alt="News image">
+      </mat-card>
+    </div>
+  </div>
+  
+  <ng-template #newsDialog let-data>
+    <h2 mat-dialog-title>{{ data.headline }}</h2>
+    <mat-dialog-content>
+      <p><strong>Source:</strong> {{ data.source }}</p>
+      <p><strong>Date:</strong> {{ data.datetime | date:'medium' }}</p>
+      <p><strong>Summary:</strong> {{ data.summary }}</p>
+      <p><strong>URL:</strong> <a href="{{ data.url }}" target="_blank">{{ data.url }}</a></p>
+      <img [src]="data.image" alt="News image" style="max-width: 100%;">
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+  </ng-template>
+  
