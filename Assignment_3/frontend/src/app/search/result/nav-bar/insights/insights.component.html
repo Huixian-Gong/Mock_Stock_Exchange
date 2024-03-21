@@ -1,10 +1,41 @@
-<p>insights works!</p>
-<div>
-    <h3>Insider Aggregates</h3>
-    <p>Total - MSPR: {{ totalMSPR | number:'1.2-2' }}</p>
-    <p>Positive - MSPR: {{ positiveMSPR | number:'1.2-2' }}</p>
-    <p>Negative - MSPR: {{ negativeMSPR | number:'1.2-2' }}</p>
-    <p>Total - Change: {{ totalChange }}</p>
-    <p>Positive - Change: {{ positiveChange }}</p>
-    <p>Negative - Change: {{ negativeChange }}</p>
+<table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>MSPR</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Total</td>
+        <td>{{ totalMSPR | number:'1.0-2'}}</td>
+        <td>{{ totalChange }}</td>
+      </tr>
+      <tr>
+        <td>Positive</td>
+        <td>{{ positiveMSPR| number:'1.0-2' }}</td>
+        <td>{{ positiveChange }}</td>
+      </tr>
+      <tr>
+        <td>Negative</td>
+        <td>{{ negativeMSPR| number:'1.0-2' }}</td>
+        <td>{{ negativeChange }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <highcharts-chart 
+  [Highcharts]="Highcharts"
+  [options]="chartOptions1"
+  [update]="updateFlag"
+  style="width: 100%; height: 400px; display: block;">
+</highcharts-chart>
+
+<div class="chart-container">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="chartOptions2"
+      style="width: 100%; height: 400px; display: block;">
+    </highcharts-chart>
   </div>

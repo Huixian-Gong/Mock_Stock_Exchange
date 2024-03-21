@@ -1,8 +1,38 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BackendService } from '../../../../services/backend.service';
 import { HttpClientModule } from '@angular/common/http'
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import * as Highcharts from 'highcharts';
+import HC_stock from 'highcharts/modules/stock';
+import { HighchartsChartModule } from 'highcharts-angular';
+
+HC_stock(Highcharts);
+
+interface EarningData {
+  actual: number;
+  estimate: number;
+  period: string;
+  surprise: number;
+}
+
+interface EarningsResponse {
+  earnings: EarningData[];
+}
+
+interface Recommendation {
+  buy: number;
+  hold: number;
+  sell: number;
+  strongBuy: number;
+  strongSell: number;
+  period: string; // assuming period is a string like "2024-03-01"
+}
+
+interface RecommendationResponse {
+  recommendations: Recommendation[];
+}
 
 interface InsiderData {
   mspr: number;
@@ -21,7 +51,7 @@ interface AggregatedData {
 @Component({
   selector: 'app-insights',
   standalone: true,
-  imports: [HttpClientModule, CommonModule],
+  imports: [HttpClientModule, CommonModule, HighchartsChartModule],
   providers: [BackendService],
   templateUrl: './insights.component.html',
   styleUrl: './insights.component.css'
@@ -38,6 +68,32 @@ export class InsightsComponent {
   totalChange: any;
   positiveChange: any;
   negativeChange: any;
+
+
+  Highcharts: typeof Highcharts = Highcharts;
+  chartOptions1: Highcharts.Options = {series: [{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  },{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  },{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  },{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  },{data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  }]}; // Define the chart options type
+
+  chartOptions2: Highcharts.Options = {series: [{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  },{
+    data: [1, 2, 3, 4], // Example data
+    type: 'line' // Specify the chart type
+  }]}; // Define the chart options type
 
   constructor(
     private backendService: BackendService,
@@ -58,15 +114,19 @@ export class InsightsComponent {
 
     this.backendService.recommend(ticker).subscribe({
       next: (data) => {
-        this.recommendation = data
-        console.log(this.recommendation);
+        if (data && Array.isArray(data)) {
+          this.createRecommendationChart(data);
+          console.log(data)
+        } else {
+          console.error('Data is not an array:', data);
+        }
       },
-      error: (error) => console.error('Failed to fetch news data', error)
+      error: (error) => console.error('Failed to fetch recommendation data', error)
     });
     this.backendService.insider(ticker).subscribe({
       next: (data) => {
         this.insider = data;
-        console.log(this.insider);
+        // console.log(this.insider);
         // New aggregation logic starts here
         const initialAggregate: AggregatedData = {
           totalMSPR: 0,
@@ -101,16 +161,166 @@ export class InsightsComponent {
         this.positiveChange = aggregated.positiveChange;
         this.negativeChange = aggregated.negativeChange;
     
-        console.log('Aggregated data:', aggregated);
+        // console.log('Aggregated data:', aggregated);
       },
       error: (error) => console.error('Failed to fetch news data', error)
     });
     this.backendService.earning(ticker).subscribe({
       next: (data) => {
-        this.earning = data
-        console.log(this.earning);
+        if (data && Array.isArray(data)) {
+          this.createEarningsChart(data);
+          console.log(data)
+        } else {
+          console.error('Data is not an array:', data);
+        }
       },
-      error: (error) => console.error('Failed to fetch news data', error)
+      error: (error) => console.error('Failed to fetch earnings data', error)
     });
   }
+  updateFlag = false;
+
+  createRecommendationChart(recommendations: Recommendation[]): void {
+    const categories = recommendations.map(item => item.period);
+    const buy = recommendations.map(item => item.buy);
+    const sell = recommendations.map(item => item.sell);
+    const hold = recommendations.map(item => item.hold);
+    const strongBuy = recommendations.map(item => item.strongBuy);
+    const strongSell = recommendations.map(item => item.strongSell);
+    this.chartOptions1 = {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Recommendation Trends'
+      },
+      colors: ['rgb(49,98,57)', 'rgb(92, 190, 105)', 'rgb(187, 152, 59)', 'rgb(229,111,108)', 'rgb(130, 62,59)'],
+      xAxis: {
+        categories: categories
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: '# Analysis'
+        },
+        stackLabels: {
+          enabled: true,
+          style: {
+            fontWeight: 'bold'
+          }
+        }
+      },
+      legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        floating: true,
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+      },
+      tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+      },
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true
+          }
+        }
+      },
+      series: [{
+        name: 'Strong Buy',
+        data: strongBuy,
+        type: 'column',
+        showInLegend: true
+      }, {
+        name: 'Buy',
+        data: buy,
+        type: 'column',
+        showInLegend: true
+      }, {
+        name: 'Hold',
+        data: hold,
+        type: 'column',
+        showInLegend: true
+      }, {
+        name: 'Sell',
+        data: sell,
+        type: 'column',
+        showInLegend: true
+      }, {
+        name: 'Strong Sell',
+        data: [strongSell],
+        type: 'column',
+        showInLegend: true
+      }]
+
+    };
+    this.updateFlag = true;
+  }
+
+  createEarningsChart(earningsData: EarningData[]): void {
+    console.log(earningsData)
+    if (Array.isArray(earningsData)) {
+      const actualData = earningsData.map(data => ({
+        y: data.actual !== null ? data.actual : 0, // Replace null with 0
+        x: Date.parse(data.period),
+        surprise: data.surprise !== null ? data.surprise.toFixed(4) : 0 // Replace null with 0 and format
+      }));
+      
+      const estimateData = earningsData.map(data => ({
+        y: data.estimate !== null ? data.estimate : 0, // Replace null with 0
+        x: Date.parse(data.period)
+      }));
+
+    this.chartOptions2 = {
+      chart: {
+        type: 'spline'
+      },
+      title: {
+        text: 'Historical EPS Surprises'
+      },
+      xAxis: {
+        type: 'datetime',
+        labels: {
+          formatter: function() {
+            return Highcharts.dateFormat('%Y-%m-%d', this.value as number);
+          }
+        }
+      },
+      yAxis: {
+        title: {
+          text: 'Quarterly EPS'
+        }
+      },
+      tooltip: {
+        shared: true,
+        useHTML: true,
+        headerFormat: '<small>{point.key}</small><table>',
+        pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+          '<td style="text-align: right"><b>{point.y}</b></td></tr>' +
+          '<tr><td style="color: {series.color}">Surprise: </td>' +
+          '<td style="text-align: right"><b>{point.surprise}</b></td></tr>',
+        footerFormat: '</table>',
+        valueDecimals: 2
+      },
+      series: [{
+        name: 'Actual',
+        data: actualData,
+        type: 'spline',
+        showInLegend: true,
+        zIndex: 1
+      }, {
+        name: 'Estimate',
+        data: estimateData,
+        type: 'spline',
+        showInLegend: true,
+        zIndex: 0
+      }]
+    }
+} else {
+  console.error('Earnings data is not an array:', earningsData);
+}
+}
 }
