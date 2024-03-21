@@ -1,0 +1,9 @@
+/* Assuming your container div has a class called 'container' */
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-section, .right-section {
+    flex: 1;
+}

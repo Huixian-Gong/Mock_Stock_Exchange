@@ -15,3 +15,4 @@ import { InsightsComponent } from './insights/insights.component';
 export class NavBarComponent {
 
 }
+

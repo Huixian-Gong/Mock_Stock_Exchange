@@ -18,6 +18,7 @@ import { SearchComponent } from './app/search/search.component'; // Update the p
 import { WatchlistComponent } from './app/watchlist/watchlist.component'; // Update the path as needed
 import { PortfolioComponent } from './app/portfolio/portfolio.component'; // Update the path as needed
 import { InputComponent } from './app/search/input/input.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 enableProdMode(); // This can be called directly if there's no need to conditionally check for the environment
 
@@ -31,7 +32,7 @@ bootstrapApplication(AppComponent, {
       { path: 'portfolio', component: PortfolioComponent, title: 'Portfolio' },
       // If you have a specific "NotFound" component for unknown routes, add it here
       // { path: '**', component: NotFoundComponent }
-    ])),
+    ])), provideAnimationsAsync(),
   ]
 }).catch(err => console.error(err));
 
