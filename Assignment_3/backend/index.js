@@ -110,6 +110,49 @@ app.get('/chart/:ticker/:from/:to', async (req, res) => {
   }
 });
 
+app.get('/recommendation/:ticker', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://finnhub.io/api/v1/stock/recommendation?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Polygon' });
+  }
+});
+
+app.get('/earning/:ticker', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://finnhub.io/api/v1/stock/earnings?symbol=${ticker}&token=${FINNHUB_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Polygon' });
+  }
+});
+
+app.get('/insider/:ticker', async (req, res) => {
+  const ticker = req.params.ticker;
+  const from = req.params.from;
+  const to = req.params.to;
+  const url = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${ticker}&from=2022-01-01&token=${FINNHUB_API_KEY}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from Polygon' });
+  }
+});
+
+
 app.get('/watchlist', (req, res) => {
     res.send('You are now at /watchlist');
 });

@@ -34,6 +34,18 @@ export class BackendService {
     return this.http.get(`${this.apiUrl}/peers/${ticker}`);
   }
 
+  recommend(ticker: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/recommendation/${ticker}`);
+  }
+
+  earning(ticker: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/earning/${ticker}`);
+  }
+
+  insider(ticker: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/insider/${ticker}`);
+  }
+
   // Method to fetch hourly stock data
   summaryChart(ticker: string, from: string, to: string): Observable<any> {
     // Assuming your backend endpoint will handle the request to Polygon.io

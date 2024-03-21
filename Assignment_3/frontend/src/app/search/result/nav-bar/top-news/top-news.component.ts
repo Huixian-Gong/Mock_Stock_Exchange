@@ -1,28 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BackendService } from '../../../../services/backend.service';
-import { SharedService } from '../../../../services/shared.service'; // Ensure this path is correct
 import { HttpClientModule } from '@angular/common/http'
-import { forkJoin } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Subscription } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { NewsDialogComponent } from './news-dialog/news-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
-
-
-
-interface StockPrice {
-  t: number; // Timestamp
-}
-
-interface CombinedData {
-  stock: string[]; 
-  price: StockPrice;  // Use lowercase 'price', not 'StockPrice'
-  peers: string[];
-}
 
 @Component({
   selector: 'app-top-news',
@@ -35,15 +20,12 @@ interface CombinedData {
 export class TopNewsComponent implements OnInit {
   stockSymbol: string = '';
   currentTime: Date = new Date();
-  newsData: any; // Add a property to store the fetched data
   newsEntries: any[] = []; // Array to store filtered news entries
 
 
   constructor(
     private backendService: BackendService,
-    private sharedService: SharedService,
     private route: ActivatedRoute,
-    private router: Router,
     private dialog: MatDialog
   ) {}
 
@@ -66,16 +48,7 @@ export class TopNewsComponent implements OnInit {
     from.setDate(to.getDate() - 10);
     let fromFormatted = formatDate(from, 'yyyy-MM-dd', 'en-US');
     let toFormatted = formatDate(to, 'yyyy-MM-dd', 'en-US');
-    console.log(fromFormatted)
-    console.log(toFormatted)
 
-    this.backendService.stockNews(ticker, fromFormatted, toFormatted).subscribe({
-      next: (data) => {
-        console.log(data)
-        this.newsData = data; // Store the fetched data
-      }, 
-      error: (error) => console.error('Failed to fetch chart data', error)
-    });
 
     this.backendService.stockNews(ticker, fromFormatted, toFormatted).subscribe({
       next: (data) => {
