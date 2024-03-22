@@ -1,0 +1,36 @@
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* This will take care of spacing around items */
+    padding: 16px;
+  }
+  
+  .card-wrapper {
+    width: 40%;
+    height: 20%;
+    margin: 16px; /* Adjust the margin so that two cards fit within a row */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  }
+  
+  .news-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  img {
+    width: 20%; /* responsive image width */
+    height: 20%; /* maintain aspect ratio */
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+  
+  mat-card-title {
+    font-size: 16px; /* adjust as needed */
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+  }
+  

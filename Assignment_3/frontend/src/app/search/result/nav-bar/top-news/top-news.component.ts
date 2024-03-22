@@ -32,7 +32,7 @@ export class TopNewsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
-      console.log('news' + ticker)
+      // console.log('news' + ticker)
       if (ticker) {
         this.stockSymbol = ticker.toUpperCase();
         this.fetchData(this.stockSymbol); // Directly fetch data based on the ticker
@@ -57,7 +57,7 @@ export class TopNewsComponent implements OnInit {
           entry.source && entry.datetime && entry.url && entry.summary &&
           entry.headline && entry.image
         ).slice(0, 20); // Assuming 'data' is an array of news entries
-        console.log(this.newsEntries);
+        // console.log(this.newsEntries);
       },
       error: (error) => console.error('Failed to fetch news data', error)
     });
