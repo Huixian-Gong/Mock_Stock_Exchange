@@ -48,13 +48,11 @@ export class BackendService {
 
   // Method to fetch hourly stock data
   summaryChart(ticker: string, from: string, to: string): Observable<any> {
-    // Assuming your backend endpoint will handle the request to Polygon.io
     return this.http.get(`${this.apiUrl}/stock/hourly/${ticker}/${from}/${to}`);
   }
 
   chartTab(ticker: string, from: string, to: string): Observable<any> {
     console.log(`${this.apiUrl}/chart/${ticker}/${from}/${to}`)
-    // Assuming your backend endpoint will handle the request to Polygon.io
     return this.http.get(`${this.apiUrl}/chart/${ticker}/${from}/${to}`);
   }
   // You can add more methods for POST, PUT, DELETE, etc.

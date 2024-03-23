@@ -1,36 +1,52 @@
 .cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around; /* This will take care of spacing around items */
-    padding: 16px;
-  }
-  
-  .card-wrapper {
-    width: 40%;
-    height: 20%;
-    margin: 16px; /* Adjust the margin so that two cards fit within a row */
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  }
-  
-  .news-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  
-  img {
-    width: 20%; /* responsive image width */
-    height: 20%; /* maintain aspect ratio */
-  }
-  
-  mat-card-content {
-    padding: 16px;
-  }
-  
-  mat-card-title {
-    font-size: 16px; /* adjust as needed */
-    font-weight: bold;
-    text-align: center;
-    margin: 0;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* This will take care of spacing around items */
+  padding: 16px;
+}
+
+.card-wrapper {
+  display: flex;
+  flex-basis: calc(50% - 50px); /* Assuming 25px margin, adjust 50px accordingly */
+  margin: 25px; 
+  /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); */
+  border: 1px solid rgb(230, 230, 230);
+  background-color: rgb(250, 250, 250);
+  align-items: center;
+  max-width: 550px;
+  min-height: 100px;
+  border-radius: 10px;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  box-shadow: none;
+  min-height:100px; /* Let the content define the height */
+  max-width: 550px;
+  background-color: transparent;
+
+}
+
+img {
+  width: 130px; 
+  height: 80px; 
+  margin-right: 16px; /* Add some spacing between image and title */
+}
+
+mat-card-content {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  min-width: 400px;
+}
+
+mat-card-title {
+  font-size: 14px;
+  font-weight: lighter; /* Make title stand out */
+  margin: 0;
+  font-family: sans-serif;
+  text-align: center;
+}

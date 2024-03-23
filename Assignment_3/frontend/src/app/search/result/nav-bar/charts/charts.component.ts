@@ -162,6 +162,16 @@ Exporting(Highcharts);
           offset: 0,
           lineWidth: 2
       }],
+      xAxis: {
+        type: 'datetime',
+        scrollbar: {
+          enabled: true
+        },
+        dateTimeLabelFormats: {
+          hour: '%H:%M'
+        }
+      }
+      ,
 
       tooltip: {
           split: true
@@ -180,7 +190,7 @@ Exporting(Highcharts);
           name: 'AAPL',
           id: 'aapl',
           zIndex: 2,
-          data: ohlc
+          data: ohlc,
       }, {
           type: 'column',
           name: 'Volume',
