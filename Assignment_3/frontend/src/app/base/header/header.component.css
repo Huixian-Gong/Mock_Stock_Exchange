@@ -3,5 +3,29 @@
 }
 
 .navbar-brand, .nav-link {
-    color: #fff !important;
+    color: #ffffff !important;
+    
+}
+.navbar-brand {
+    margin-left: 40px;
+}
+
+/* This ensures the list items are pushed to the right */
+.nav-items-right {
+    margin-left: auto;
+  }
+  
+  /* Optional: Adjust the spacing between items */
+  .nav-item {
+    margin-right: 15px; /* Adjust the spacing to your preference */
+  }
+
+  .active-link {
+    outline: 1px solid #FFFFFF; /* Outline color */
+    border-radius: 5px; /* Optional: for rounded corners */
+    padding: 5px; /* Adjust padding to ensure it looks good with the outline */
+  }
+  
+#navbarNav {
+    margin-right: 20px;
 }

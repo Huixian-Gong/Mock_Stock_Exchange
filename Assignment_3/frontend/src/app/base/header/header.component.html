@@ -1,45 +1,20 @@
-  <!-- header.component.html -->
-  <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" routerLink="/">Stock Search</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" routerLink="/search/home">Search</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/watchlist">Watchlist</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/portfolio">Portfolio</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  
-
-  
-<!-- 
 <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Stock Search</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/search/home">Search</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/watchlist">Watchlist</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="portfolio">Portfolio</a>
-        </li>
-      </ul>
-    </div>
-  </nav> -->
-
+  <a class="navbar-brand" routerLink="/">Stock Search</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav nav-items-right">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/search/home" [class.active-link]="isSearchRoute">Search</a>
+      </li>
+      <!-- Use routerLinkActive as before for the other links -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/watchlist" routerLinkActive="active-link">Watchlist</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/portfolio" routerLinkActive="active-link">Portfolio</a>
+      </li>
+    </ul>
+  </div>
+</nav>

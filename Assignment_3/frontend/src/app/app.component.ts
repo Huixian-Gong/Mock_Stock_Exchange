@@ -5,6 +5,7 @@ import { SearchComponent } from './search/search.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
@@ -16,7 +17,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     SearchComponent, 
     PortfolioComponent, 
     WatchlistComponent,
-    MatDialogModule
+    MatDialogModule,
+    HttpClientModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] // Ensure this is an array, `styleUrls` instead of `styleUrl`

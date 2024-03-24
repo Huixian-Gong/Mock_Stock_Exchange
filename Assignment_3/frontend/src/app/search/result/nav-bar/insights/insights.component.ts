@@ -116,7 +116,7 @@ export class InsightsComponent {
       next: (data) => {
         if (data && Array.isArray(data)) {
           this.createRecommendationChart(data);
-          console.log(data)
+          // console.log(data)
         } else {
           console.error('Data is not an array:', data);
         }
@@ -169,7 +169,7 @@ export class InsightsComponent {
       next: (data) => {
         if (data && Array.isArray(data)) {
           this.createEarningsChart(data);
-          console.log(data)
+          // console.log(data)
         } else {
           console.error('Data is not an array:', data);
         }
@@ -261,7 +261,7 @@ export class InsightsComponent {
   }
 
   createEarningsChart(earningsData: EarningData[]): void {
-    console.log(earningsData)
+    // console.log(earningsData)
     if (Array.isArray(earningsData)) {
       const actualData = earningsData.map(data => ({
         y: data.actual !== null ? data.actual : 0, // Replace null with 0

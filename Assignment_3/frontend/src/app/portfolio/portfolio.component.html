@@ -1,1 +1,38 @@
-<p>portfolio works!</p>
+<div class="portfolio-container">
+    <div class="wallet-info">
+      Money in Wallet: ${{ walletBalance | number:'1.2-2' }}
+    </div>
+  
+    <div *ngFor="let stock of stocksDetails" class="stock-item">
+      <div class="stock-header">
+        {{ stock.ticker }} {{ stock.name }}
+      </div>
+      <div class="stock-details">
+        <div class="quantity">
+          Quantity: {{ stock.quantity }}
+        </div>
+        <div class="avg-cost">
+          Avg. Cost / Share: {{ stock.avgCost | number:'1.2-2' }}
+        </div>
+        <div class="total-cost">
+          Total Cost: {{ stock.totalCost | number:'1.2-2' }}
+        </div>
+      </div>
+      <div class="stock-pricing">
+        <div [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">
+          Change: {{ stock.change | number:'1.2-2' }}
+        </div>
+        <div class="current-price">
+          Current Price: {{ stock.c | number:'1.2-2' }}
+        </div>
+        <div class="market-value">
+          Market Value: {{ stock.marketValue | number:'1.2-2' }}
+        </div>
+      </div>
+      <div class="stock-actions">
+        <button (click)="buy(stock.ticker)">Buy</button>
+        <button (click)="sell(stock.ticker)">Sell</button>
+      </div>
+    </div>
+  </div>
+  

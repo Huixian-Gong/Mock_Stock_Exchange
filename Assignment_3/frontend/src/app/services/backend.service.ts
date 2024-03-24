@@ -26,7 +26,7 @@ export class BackendService {
   }
 
   stockNews(ticker: string, from: string, to: string): Observable<any> {
-    console.log(`${this.apiUrl}/news/${ticker}/${from}/${to}`)
+    // console.log(`${this.apiUrl}/news/${ticker}/${from}/${to}`)
     return this.http.get(`${this.apiUrl}/news/${ticker}/${from}/${to}`);
   }
 
@@ -46,14 +46,50 @@ export class BackendService {
     return this.http.get(`${this.apiUrl}/insider/${ticker}`);
   }
 
-  // Method to fetch hourly stock data
   summaryChart(ticker: string, from: string, to: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/stock/hourly/${ticker}/${from}/${to}`);
   }
 
   chartTab(ticker: string, from: string, to: string): Observable<any> {
-    console.log(`${this.apiUrl}/chart/${ticker}/${from}/${to}`)
+    // console.log(`${this.apiUrl}/chart/${ticker}/${from}/${to}`)
     return this.http.get(`${this.apiUrl}/chart/${ticker}/${from}/${to}`);
   }
+
+  addStock(ticker: string): Observable <any> {
+    return this.http.get(`${this.apiUrl}/favorites/add/${ticker}`);
+  }
+
+  removeStock(ticker: string): Observable <any> {
+    return this.http.get(`${this.apiUrl}/favorites/remove/${ticker}`);
+  }
+
+  deleteStock(ticker: string): Observable <any> {
+    return this.http.get(`${this.apiUrl}/favorites/delete/${ticker}`);
+  }
+
+  checkStock(ticker: string): Observable <any> {
+    return this.http.get(`${this.apiUrl}/favorites/check/${ticker}`);
+  }
+
+  getFavorites(): Observable <any> {
+    return this.http.get(`${this.apiUrl}/fav_list`);
+  }
   // You can add more methods for POST, PUT, DELETE, etc.
+  getBalance(): Observable <any> {
+    return this.http.get(`${this.apiUrl}/balance`);
+  }
+
+  buyStock(ticker: string, count: number, price: number): Observable <any> {
+    return this.http.get(`${this.apiUrl}/buy/${ticker}/${count}/${price}`);
+  }
+
+  sellStock(ticker: string, count: number, price: number): Observable <any> {
+    return this.http.get(`${this.apiUrl}/sell/${ticker}/${count}/${price}`);
+  }
+
+  getPortfolio(): Observable <any> {
+    return this.http.get(`${this.apiUrl}/portfolio`);
+  }
+
+
 }

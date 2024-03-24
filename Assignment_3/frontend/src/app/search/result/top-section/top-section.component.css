@@ -64,7 +64,25 @@
     cursor: pointer;
   }
   
-  .star {
-    color: #ffcc00; /* Star color */
+  .bi {
+    cursor: pointer;
   }
   
+  .bi-star {
+    fill: gray;
+    cursor: pointer;
+  }
+  
+  .bi-star-fill {
+    fill: yellow;
+    cursor: pointer;
+  }
+
+  .sell-button button {
+    background-color: #ff1100; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }

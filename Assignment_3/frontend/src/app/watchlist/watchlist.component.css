@@ -1,0 +1,37 @@
+.watchlist-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+  
+  .remove-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+  .ticker {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .company-name {
+    flex-grow: 1;
+  }
+  
+  .price {
+    margin-right: 5px;
+  }
+  
+  .change {
+    color: green;
+  }
+  
+  .change.negative {
+    color: red;
+  }
+  

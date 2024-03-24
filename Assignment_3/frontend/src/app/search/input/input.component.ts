@@ -58,7 +58,7 @@ export class InputComponent {
           peers: results.peersData
         };
         this.sharedService.updateData(combinedData);
-        console.log('Combined Response from backend:', combinedData);
+        // console.log('Combined Response from backend:', combinedData);
       },
       error: (error) => console.error('Error fetching data:', error)
     });

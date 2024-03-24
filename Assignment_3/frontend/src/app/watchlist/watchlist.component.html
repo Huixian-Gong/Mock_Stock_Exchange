@@ -1,1 +1,10 @@
-<p>watchlist works!</p>
+<div *ngFor="let stock of stocksDetails" class="watchlist-item">
+    <div class="remove-button" (click)="onRemoveStock(stock.ticker)">x</div>
+    <div class="ticker">{{ stock.ticker }}</div>
+    <div class="company-name">{{ stock.name }}</div>
+    <div class="price">{{ stock.c | number:'1.2-2' }}</div>
+    <div class="change">
+      {{ stock.d | number:'1.2-2' }} ({{ stock.dp | number:'1.2-2' }}%)
+    </div>
+  </div>
+  

@@ -87,7 +87,7 @@ Exporting(Highcharts);
           data=data.results
           if (data && Array.isArray(data)) {
             this.createChart(data);
-            console.log(data)
+            // console.log(data)
           } else {
             console.error('Data is not an array:', data);
           }
