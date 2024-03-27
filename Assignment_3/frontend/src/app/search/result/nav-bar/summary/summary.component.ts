@@ -91,33 +91,76 @@ export class SummaryComponent implements OnInit, OnDestroy {
   
     this.chartOptions = {
       chart: {
-        type: 'line'
+        type: 'line',
+        backgroundColor: 'rgb(248,248,248)',
+        
       },
       title: {
-        text: apiData.ticker + ' Hourly Price Variation'
+        text: apiData.ticker + ' Hourly Price Variation',
+        style: {
+          color: 'rgb(180, 180, 180)' // Set the title color
+        }
       },
       xAxis: {
         type: 'datetime',
-        title: {
-          text: 'Time'
-        }
+        endOnTick: true,
+        startOnTick: true,
+        showLastLabel: true,  // Ensure the last label is shown
+        crosshair: {
+          snap: true, // Optionally disable snapping to data points
+          color: 'rgba(150, 150, 150, 0.8)', // Customize the crosshair color
+          width: 1, // Customize the crosshair width,
+          label: {
+            enabled: true,
+            backgroundColor: 'rgb(255,255,255)',
+          }
+        },
+        scrollbar: {
+          enabled: true
+        },
       },
-      yAxis: {
+      yAxis: { 
+        opposite: true,
         title: {
-          text: 'Close Price'
-        }
+          text: '' ,
+        },
+        labels: {
+          x: -20,
+          y: -5
+        },
+        
       },
       series: [{
         type: 'line',
         name: apiData.ticker,
         data: seriesData,
         tooltip: {
-          valueDecimals: 2
-        }
+          valueDecimals: 2,
+          
+        },
+        marker: {
+          enabled: false // Set enabled to false to remove the markers
+      }
       }],
       time: {
         useUTC: false // Set to true or false depending on your data's timezone
-      }
+      },
+      legend: {
+        enabled: false // Set legend to be hidden
+    },
+    tooltip: {
+      formatter: function() {
+          return '<hr style="border: 1px solid ' + this.series.color + '; width: 100%;">' +' <span style="color:' + this.series.color + '">&#9679;</span> '+apiData.ticker + ": " +this.point.y; // Customize the tooltip content here
+      },
+      positioner: function(labelWidth, labelHeight, point) {
+        var tooltipX, tooltipY;
+
+        tooltipX = point.plotX + this.chart.plotLeft + 20; // 10px to the right of the cursor
+        tooltipY = point.plotY + this.chart.plotTop - labelHeight / 2;
+
+        return { x: tooltipX, y: tooltipY };
+        },
+      },
     };
   }
 

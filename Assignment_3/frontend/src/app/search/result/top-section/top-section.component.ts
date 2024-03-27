@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { SharedService } from '../../../services/shared.service'; // Update the path accordingly
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
@@ -6,10 +6,14 @@ import { startWith, map } from 'rxjs/operators';
 import { HttpClientModule } from '@angular/common/http'
 import { BackendService } from '../../../services/backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { BuyStockDialogComponent } from './buy-stock-dialog/buy-stock-dialog.component';
-import { SellStockDialogComponent } from './sell-stock-dialog/sell-stock-dialog.component';
-
+import { formatDate } from '@angular/common';
+import { NgbModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';    //need to import
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';  //need to import
+import { FormsModule } from '@angular/forms';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 interface StockInfo {
   exchange: string;
@@ -41,7 +45,12 @@ interface CombinedData {
 @Component({
   selector: 'app-top-section',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, MatDialogModule, BuyStockDialogComponent,SellStockDialogComponent],
+  imports: [
+    CommonModule, 
+    HttpClientModule, 
+    NgbModule,
+    FormsModule,
+    NgbAlertModule],
   providers: [BackendService],
   templateUrl: './top-section.component.html',
   styleUrls: ['./top-section.component.css'] // Changed 'styleUrl' to 'styleUrls'
@@ -55,13 +64,30 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   marketStatus: string = '';
   stockSymbol: string = '';
   balance: number = 0;
+  marketOpen :boolean = false;
+  increasing: boolean = false
+  stockCount: number = 0;
+  data: any;
+  quantity: number = 0;
+  totalCost: number = 0;
+  private modalRef!: NgbModalRef;
+
+
 
   constructor(
     private sharedService: SharedService,
     private backendService: BackendService,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
+    private modalWindow: NgbModal,
+    private modalService: NgbModal
     ) {}
+
+    @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
+    private _success = new Subject<string>();
+    successMessage = '';
+
+    private _fail = new Subject<string>();
+    failMessage = '';
 
     toggleStar(): void {
       if (this.combinedData && this.combinedData.stock.ticker) {
@@ -74,6 +100,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
                 next: (response) => {
                   console.log('Stock added to watchlist:', response);
                   this.isStarred = true; // Update local state to reflect the addition
+                  this.showAlertFor(`${this.combinedData?.stock.ticker} added to watchlist.`);
                 },
                 error: (error) => console.error('Error adding stock to watchlist', error)
               });
@@ -105,17 +132,46 @@ export class TopSectionComponent implements OnInit, OnDestroy {
           // Assume the market is open if the difference is 5 minutes or less
           if (differenceInMinutes <= 5) {
               this.marketStatus = 'Market Open';
+              this.marketOpen = true;
           } else {
+            let fromFormatted = formatDate(this.combinedData.price.t * 1000, 'yyyy-MM-dd HH:mm:ss', 'en-US');
               // Market is considered closed if more than 5 minutes have elapsed
-              this.marketStatus = 'Market Closed';
+              this.marketStatus = 'Market Closed ' + fromFormatted ;
+              this.marketOpen = false;
+          }
+
+          if (this.combinedData?.price.d > 0 ) {
+            this.increasing = true;
+          } else {
+            this.increasing = false;
           }
       } else {
           this.marketStatus = 'Market Status Unknown';
       }
   }
 
+  public showAlertFor(message: string): void {
+    this._success.next(`${message}`);
+  }
+
+  public showFailAlertFor(message: string): void {
+    this._fail.next(`${message}`);
+  }
+
   ngOnInit(): void {
-    
+    this._success.subscribe(message => this.successMessage = message);
+    this._success.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+    this._fail.subscribe(message => this.failMessage = message);
+    this._fail.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
       if (ticker) {
@@ -127,6 +183,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.sharedService.currentData$.subscribe((newData: CombinedData) => {
         this.combinedData = newData;
+        console.log(this.combinedData)
         this.calculateMarketStatus(); // Call this method here
       })
     );
@@ -145,100 +202,100 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this.subscription.add(timeUpdateSubscription);
   }
 
-  openBuyDialog(): void {
-    if (this.combinedData) {
-      this.backendService.getBalance().subscribe({
-        next: (response) => {
-          // Assuming response contains the balance directly
-          // Make sure this aligns with your backend response structure
-          this.balance = response; // Update the balance state with the fetched balance
   
-          // Open the dialog with the updated balance
-          const dialogRef = this.dialog.open(BuyStockDialogComponent, {
-            width: '250px',
-            data: {
-              stock: this.combinedData?.stock, // Assuming combinedData is not null here
-              price: this.combinedData?.price,
-              walletBalance: this.balance // Here you pass the updated balance
-            }
-          });
-  
-          dialogRef.afterClosed().subscribe(result => {
-            // Actions after the dialog is closed, if necessary
-          });
-        },
-        error: (error) => {
-          console.error('Error fetching balance', error);
-          // Handle error
-        }
-      });
-    }
-  }
-
-  openSellDialog(): void {
-    if (this.combinedData) {
-      this.backendService.getBalance().subscribe({
-        next: (response) => {
-          // Assuming response contains the balance directly
-          // Make sure this aligns with your backend response structure
-          this.balance = response; // Update the balance state with the fetched balance
-  
-          // Open the dialog with the updated balance
-          const dialogRef = this.dialog.open(SellStockDialogComponent, {
-            width: '250px',
-            data: {
-              stock: this.combinedData?.stock, // Assuming combinedData is not null here
-              price: this.combinedData?.price,
-              walletBalance: this.balance // Here you pass the updated balance
-            }
-          });
-  
-          dialogRef.afterClosed().subscribe(result => {
-            // Actions after the dialog is closed, if necessary
-          });
-        },
-        error: (error) => {
-          console.error('Error fetching balance', error);
-          // Handle error
-        }
-      });
-    }
+  // New method to update stock count
+  updateStockCountAfterTransaction(ticker: string): void {
+    // Fetch or calculate the new stock count
+    this.backendService.checkStock(ticker).subscribe({
+      next: (stockInfo) => {
+        this.stockCount = stockInfo.count || 0; // Update stockCount with the latest info
+        this.isStarred = stockInfo.watchlist; // Update isStarred if needed
+      },
+      error: (error) => console.error('Error fetching updated stock info', error)
+    });
   }
 
   checkInitialStarState(ticker: string): void {
     this.backendService.getBalance().subscribe({
       next: (response) => {
         this.balance = response; // Update local state to reflect the removal
-        console.log(this.balance)
       },
       error: (error) => console.error('Error removing stock from watchlist', error)
     });
-  console.log(this.balance)
+
     this.backendService.checkStock(ticker).subscribe({
       next: (stockInfo) => {
+        this.stockCount = (stockInfo.count)
+        // console.log(this.stockCount)
         this.isStarred = (stockInfo.watchlist);
       },
       error: (error) => console.error('Error checking initial stock state', error)
     });
   }
 
+  openModal(content: TemplateRef<any>, stock: any) {
+    this.data = stock;
+    // Open the modal and save the reference
+    this.modalRef = this.modalService.open(content);  
+  }
+
   ngOnDestroy(): void {
     // Clean up the subscription when the component gets destroyed
     this.subscription.unsubscribe();
   }
+
+  calculateTotal() {
+    this.totalCost = this.quantity * this.data.price.c;
+  }
+
+
+  buyStock() {
+    if (this.quantity > 0) {
+      // ... your backend service call
+      this.backendService.buyStock(this.data.stock.ticker, this.quantity, this.data.price.c).subscribe({
+        next: (response) => {
+          console.log('Stock purchase successful:', response);
+          
+          this.updateStockCountAfterTransaction(this.data.stock.ticker)
+          // Check if modalRef is defined and then close the modal
+          if (this.modalRef) {
+            this.modalRef.close();
+          }
+          this.showAlertFor(`${this.combinedData?.stock.ticker} bought successfully.`);
+        },
+        error: (error) => {
+          console.error('Error buying stock:', error);
+          // Handle error (e.g., show an error message)
+        }
+      });
+    } else {
+      console.error('Quantity must be greater than 0');
+      // Handle the error case
+    }
+  }
+
+  sellStock() {
+    if (this.quantity > 0) {
+      // ... your backend service call
+      this.backendService.sellStock(this.data.stock.ticker, this.quantity, this.data.price.c).subscribe({
+        next: (response) => {
+          console.log('Stock selling successful:', response);
+          this.updateStockCountAfterTransaction(this.data.stock.ticker)
+          // Check if modalRef is defined and then close the modal
+          if (this.modalRef) {
+            this.modalRef.close();
+          }
+          this.showFailAlertFor(`${this.combinedData?.stock.ticker} sold successfully.`);
+        },
+        error: (error) => {
+          console.error('Error selling stock:', error);
+          // Handle error (e.g., show an error message)
+        }
+      });
+    } else {
+      console.error('Quantity must be greater than 0');
+      // Handle the error case
+    }
+  }
+
 }
-
-
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-top-section',
-//   standalone: true,
-//   imports: [],
-//   templateUrl: './top-section.component.html',
-//   styleUrl: './top-section.component.css'
-// })
-// export class TopSectionComponent {
-
-// }
-

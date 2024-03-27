@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../services/backend.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, timeout } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { delay } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
 
 interface Stock {
   ticker: string;
@@ -13,7 +17,7 @@ interface Stock {
 @Component({
   selector: 'app-watchlist',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, MatProgressSpinnerModule],
   providers: [BackendService],
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.css']
@@ -21,19 +25,26 @@ interface Stock {
 export class WatchlistComponent implements OnInit {
   watchlist: any[] = [];
   stocksDetails: any[] = []; // This array will hold the combined details
+  loading: boolean = false;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService,
+    private router: Router) {}
 
   ngOnInit(): void {
+    this.loading = true
+    
     this.loadWatchlist();
+    
   }
 
   loadWatchlist(): void {
+    
     this.backendService.getFavorites().subscribe((stocks: Stock[]) => {
       // Filter stocks to include only those with watchlist = true
       this.watchlist = stocks.filter(stock => stock.watchlist === true);
       console.log(this.watchlist);
       this.fetchStockDetails(); // Fetch additional details for each stock
+      this.loading = false
     });
   }
 
@@ -66,5 +77,10 @@ export class WatchlistComponent implements OnInit {
       // Also remove the stock from the stocksDetails
       this.stocksDetails = this.stocksDetails.filter(stock => stock.ticker !== ticker);
     });
+  }
+
+  route(ticker: string): void {
+    this.router.navigate(['/search', ticker])
+
   }
 }

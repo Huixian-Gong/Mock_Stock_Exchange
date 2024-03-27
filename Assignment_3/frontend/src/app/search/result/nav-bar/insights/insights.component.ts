@@ -21,6 +21,11 @@ interface EarningsResponse {
   earnings: EarningData[];
 }
 
+interface StockDetailsResponse {
+  name: string;
+  // other fields...
+}
+
 interface Recommendation {
   buy: number;
   hold: number;
@@ -68,7 +73,7 @@ export class InsightsComponent {
   totalChange: any;
   positiveChange: any;
   negativeChange: any;
-
+  companyName: any;
 
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions1: Highcharts.Options = {series: [{
@@ -165,6 +170,15 @@ export class InsightsComponent {
       },
       error: (error) => console.error('Failed to fetch news data', error)
     });
+
+    this.backendService.searchStock(ticker).subscribe({
+      next: (response: StockDetailsResponse) => {
+        this.companyName = response.name;
+        // Handle other data...
+      },
+      error: (error) => console.error('Failed to fetch stock details', error)
+    });
+
     this.backendService.earning(ticker).subscribe({
       next: (data) => {
         if (data && Array.isArray(data)) {
@@ -180,7 +194,7 @@ export class InsightsComponent {
   updateFlag = false;
 
   createRecommendationChart(recommendations: Recommendation[]): void {
-    const categories = recommendations.map(item => item.period);
+    const categories = recommendations.map(item => item.period.substring(0,7));
     const buy = recommendations.map(item => item.buy);
     const sell = recommendations.map(item => item.sell);
     const hold = recommendations.map(item => item.hold);
@@ -188,7 +202,8 @@ export class InsightsComponent {
     const strongSell = recommendations.map(item => item.strongSell);
     this.chartOptions1 = {
       chart: {
-        type: 'column'
+        type: 'column',
+        backgroundColor: 'rgb(248,248,248)',
       },
       title: {
         text: 'Recommendation Trends'
@@ -203,16 +218,16 @@ export class InsightsComponent {
           text: '# Analysis'
         },
         stackLabels: {
-          enabled: true,
+          enabled: false,
           style: {
             fontWeight: 'bold'
           }
         }
       },
       legend: {
-        align: 'right',
-        verticalAlign: 'top',
-        floating: true,
+        align: 'center', // Center the legend
+        verticalAlign: 'bottom', // Move it to the bottom
+        floating: false, // Disable floating
         borderColor: '#CCC',
         borderWidth: 1,
         shadow: false
@@ -260,6 +275,7 @@ export class InsightsComponent {
     this.updateFlag = true;
   }
 
+
   createEarningsChart(earningsData: EarningData[]): void {
     // console.log(earningsData)
     if (Array.isArray(earningsData)) {
@@ -276,7 +292,8 @@ export class InsightsComponent {
 
     this.chartOptions2 = {
       chart: {
-        type: 'spline'
+        type: 'spline',
+        backgroundColor: 'rgb(248,248,248)',
       },
       title: {
         text: 'Historical EPS Surprises'

@@ -1,37 +1,87 @@
 .watchlist-item {
-    display: flex;
+    display: block;
     align-items: center;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     position: relative;
+    border-radius: 10px;
+    padding-bottom: 30px;
   }
   
   .remove-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    margin-left: 10px;
     cursor: pointer;
+    width: 20px;
+    padding-bottom: 10px;
   }
   
   .ticker {
     font-weight: bold;
     margin-right: 5px;
+    
   }
   
   .company-name {
     flex-grow: 1;
+    font-size: 20px;
   }
   
   .price {
     margin-right: 5px;
   }
   
-  .change {
+  /* .change {
     color: green;
   }
   
   .change.negative {
     color: red;
   }
-  
+   */
+  .container {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+.left-section, .right-section {
+    flex: 1;
+}
+
+.title {
+  font-family: sans-serif;
+  font-size: 40px;
+  margin-block: 55px;
+}
+
+.ticker {
+  font-size: 30px;
+}
+
+.down {
+  font-size: 30px;
+  color: red;
+}
+.up {
+  font-size: 30px;
+  color: green;
+}
+
+
+.change {
+  font-size: 20px;
+}
+
+.bubble {
+  background-color: rgb(253, 246, 215);
+  text-align: center;
+  border: 2px solid rgb(247, 237, 190);
+  padding-block: 20px;
+  border-radius: 5px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}

@@ -117,7 +117,7 @@ app.get('/stock/hourly/:ticker/:from/:to', async (req, res) => {
   const from = req.params.from;
   const to = req.params.to;
   const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/hour/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
-  // console.log(url);
+  console.log(url);
   try {
     const response = await fetch(url);
     const data = await response.json();

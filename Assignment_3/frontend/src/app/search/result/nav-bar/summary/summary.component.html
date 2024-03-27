@@ -3,20 +3,22 @@
     <div class="container">
         <div class="left-section">
         <div class="stock-info">
-            <p>High Price: {{ combinedData.price.h | number:'1.2-2' }}</p>
-            <p>Low Price: {{ combinedData.price.l | number:'1.2-2' }}</p>
-            <p>Open Price: {{ combinedData.price.o | number:'1.2-2' }}</p>
-            <p>Prev. Close: {{ combinedData.price.pc | number:'1.2-2' }}</p>
+            <b>High Price: </b>{{ combinedData.price.h | number:'1.2-2' }}<br>
+            <b>Low Price: </b>{{ combinedData.price.l | number:'1.2-2' }}<br>
+            <b>Open Price: </b>{{ combinedData.price.o | number:'1.2-2' }}<br>
+            <b>Prev. Close: </b>{{ combinedData.price.pc | number:'1.2-2' }}<br>
         </div>
         <div class="company-info">
-            <h3>About the company</h3>
-            <p>IPO Start Date: {{ combinedData.stock.ipo }}</p>
-            <p>Industry: {{ combinedData.stock.finnhubIndustry }}</p>
-            <p>Webpage: <a href="{{ combinedData.stock.weburl }}">{{ combinedData.stock.weburl }}</a></p>
+            <div class="header">
+            <u><b>About the company</b></u>
+            </div>
+            <p><b>IPO Start Date: </b>{{ combinedData.stock.ipo }}</p>
+            <p><b>Industry: </b>{{ combinedData.stock.finnhubIndustry }}</p>
+            <p><b>Webpage: </b><a href="{{ combinedData.stock.weburl }}">{{ combinedData.stock.weburl }}</a></p>
             <!-- <p>Company peers:{{ combinedData.peers }}</p> -->
             
             <div *ngIf="combinedData && combinedData.peers.length > 0">
-            <p>Company Peers:</p>
+            <p><b>Company Peers:</b></p>
             <span *ngFor="let peer of combinedData.peers; let last = last">
                 <a [routerLink]="['/search', peer]">{{ peer }}</a>{{last ? '' : ', '}}
             </span>
@@ -24,7 +26,6 @@
         </div>
         </div>
         <div class="right-section">
-
         <highcharts-chart 
             [Highcharts]="Highcharts"
             [options]="chartOptions"

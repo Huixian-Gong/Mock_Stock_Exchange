@@ -7,3 +7,22 @@
 .left-section, .right-section {
     flex: 1;
 }
+
+.company-info {
+    text-align: center;
+}
+
+u {
+    font-size: 20px;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.stock-info {
+    font-size: 15px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 100px;
+}

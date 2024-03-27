@@ -1,15 +1,17 @@
-.container {
-    max-width: 35%; /* Adjust as needed */
-    margin: auto;
-  }
-  
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }  
   .form-container {
     /* padding: 10px; */
     border-radius: 20px;
-    border: 2px solid #007bff; /* Bootstrap primary color */
+    border: 4px solid rgb(35,34,164); /* Bootstrap primary color */
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    width: 400px;
+    margin: 0 auto;
   }
   
   .search-form {
@@ -20,7 +22,6 @@
   .search-input {
     flex: 1;
     border: none;
-    margin-right: 5px;
     padding-left: 20px;
     border-radius: 20px;
     outline: none;
@@ -30,15 +31,12 @@
   .clear-button {
     background-color: transparent;
     border: none;
-    padding-right: 20px;
-    border-radius: 50%; /* Circular shape */
-    margin-left: 5px;
     cursor: pointer;
   }
   
   .search-button svg,
   .clear-button svg {
-    fill: #007bff; /* SVG icon color */
+    fill: rgb(35,34,164); /* SVG icon color */
   }
   
   /* Adjust button sizes as needed */
@@ -50,6 +48,7 @@
   .clear-button {
     width: 30px;
     height: 30px;
+    margin-right: 10px;
   }
   
   /* Hover effect for buttons */
@@ -67,4 +66,18 @@
   
   .example-full-width {
     width: 100%;
+  }
+
+  .title {
+    margin-top: 40px;
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: lighter;
+    margin-bottom: 45px;
+  }
+
+  @media (max-width: 400px) {
+    .form-container {
+      width: 300px;
+    }
   }

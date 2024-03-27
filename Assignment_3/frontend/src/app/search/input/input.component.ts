@@ -1,22 +1,46 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { BackendService } from '../../services/backend.service'; // Ensure this path is correct
 import { SharedService } from '../../services/shared.service'; // Ensure this path is correct
 import { HttpClientModule } from '@angular/common/http'
 import { forkJoin } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { map, startWith } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
+
+
+interface Stock {
+  description: string;
+  displaySymbol: string;
+}
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.css'],
   standalone: true,
-  imports: [FormsModule, HttpClientModule], // Removed HttpClientModule as it's provided by BackendService
+  imports: [FormsModule, 
+    HttpClientModule, 
+    CommonModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,], // Removed HttpClientModule as it's provided by BackendService
   providers: [BackendService] // Added SharedService
 })
 export class InputComponent {
   stockSymbol: string = '';
+  data : any;
+  filteredStocks$: Observable<any[]> = of([]);
+  private searchTerms = new Subject<string>();
+  stockCtrl = new FormControl();
 
   constructor(
     private backendService: BackendService,
@@ -26,23 +50,52 @@ export class InputComponent {
   ) {}
 
   ngOnInit(): void {
+    this.filteredStocks$ = this.stockCtrl.valueChanges.pipe(
+      // debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term => term ? this.backendService.stockTicker(term) : of([])),
+      map((results: any) => results.result.filter((stock: any) =>
+        stock.type === 'Common Stock' && !stock.displaySymbol.includes('.'))
+      )
+    );
     // Listen to route parameter changes
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
       if (ticker) {
         this.stockSymbol = ticker.toUpperCase();
-        this.fetchData(this.stockSymbol); // Directly fetch data based on the ticker
+        this.stockCtrl.setValue(this.stockSymbol); // Set the value in FormControl as well
+        this.fetchData(this.stockSymbol);
       }
     });
   }
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement; // Safely cast the event target to HTMLInputElement
+    this.onSearch(input.value); // Now you can safely access input.value
+  }
 
   onSubmit(): void {
-    // Navigate only if it's a new search
-    if (this.router.url !== `/search/${this.stockSymbol}`) {
-      this.router.navigate(['/search', this.stockSymbol]);
+    const searchTerm = this.stockCtrl.value; // Use the value from the form control
+    if (this.router.url !== `/search/${searchTerm}`) {
+      this.router.navigate(['/search', searchTerm]);
     } else {
-      this.fetchData(this.stockSymbol); // Otherwise, just fetch the data
+      this.fetchData(searchTerm); // Otherwise, just fetch the data
     }
+  }
+  // Push a search term into the observable stream.
+  search(term: string): void {
+    this.searchTerms.next(term);
+  }
+  selectStock(stock: any): void {
+    this.stockSymbol = stock.displaySymbol;
+    this.stockCtrl.setValue(this.stockSymbol); // This will set the selected stock symbol in the input field
+    this.onSubmit(); // Trigger search immediately
+    this.filteredStocks$ = of([]); // Clear suggestions
+  }
+
+  // Use this method in your template's (input) event
+  onSearch(term: string): void {
+    this.stockSymbol = term.toUpperCase();
+    this.search(term);
   }
 
   fetchData(ticker: string): void {
@@ -59,90 +112,17 @@ export class InputComponent {
         };
         this.sharedService.updateData(combinedData);
         // console.log('Combined Response from backend:', combinedData);
+        this.data = combinedData
+        console.log(this.data)
       },
       error: (error) => console.error('Error fetching data:', error)
     });
   }
 
   clearInput(): void {
-    this.stockSymbol = '';
+    this.stockCtrl.setValue(''); // Clears the FormControl that's bound to the input
     this.sharedService.updateData(null);
+    this.router.navigate(['/search/home']);
   }
+  
 }
-
-
-// import { Component } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { HttpClientModule } from '@angular/common/http'
-// import { BackendService } from '../../services/backend.service'; // Update the path accordingly
-
-// @Component({
-//   selector: 'app-input',
-//   templateUrl: './input.component.html',
-//   styleUrls: ['./input.component.css'],
-//   standalone: true,
-//   imports: [FormsModule, HttpClientModule], // HttpClientModule is no longer needed here
-//   providers: [BackendService] 
-// })
-// export class InputComponent {
-//   stockSymbol: string = '';
-
-//   // Inject BackendService into your component
-//   constructor(private backendService: BackendService) {}
-
-//   onSubmit(): void {
-//     // Use the backend service to send the GET request
-//     this.backendService.searchStock(this.stockSymbol).subscribe({
-//       next: (response) => {
-//         console.log('Response from backend:', response);
-//         // Handle the response as needed
-//       },
-//       error: (error) => {
-//         console.error('Error fetching data:', error);
-//         // Handle any errors
-//       }
-//     });
-//   }
-
-//   clearInput(): void {
-//     this.stockSymbol = '';
-//   }
-// }
-
-
-
-// import { Component } from '@angular/core';
-// import { HttpClient, HttpClientModule } from '@angular/common/http';
-// import { FormsModule } from '@angular/forms';
-
-// @Component({
-//   selector: 'app-input',
-//   templateUrl: './input.component.html',
-//   styleUrls: ['./input.component.css'],
-//   standalone: true,
-//   imports: [FormsModule, HttpClientModule] // Import HttpClientModule here
-// })
-// export class InputComponent {
-//   stockSymbol: string = '';
-
-//   // Inject HttpClient into your component
-//   constructor(private http: HttpClient) {}
-
-//   onSubmit(): void {
-//     const apiUrl = `http://localhost:3000/search/${this.stockSymbol}`;
-//     this.http.get(apiUrl).subscribe({
-//       next: (response) => {
-//         console.log('Response from backend:', response);
-//         // Handle the response as needed
-//       },
-//       error: (error) => {
-//         console.error('Error fetching data:', error);
-//         // Handle any errors
-//       }
-//     });
-//   }
-
-//   clearInput(): void {
-//     this.stockSymbol = '';
-//   }
-// }

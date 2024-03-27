@@ -1,0 +1,12 @@
+.bubble {
+    background-color: rgb(244, 221, 223);
+    text-align: center;
+    border: 2px solid rgb(222, 195, 197);
+    padding-block: 20px;
+    border-radius: 5px;
+  }
+  
+  .spinner {
+    display: flex;
+    justify-content: center;
+  }

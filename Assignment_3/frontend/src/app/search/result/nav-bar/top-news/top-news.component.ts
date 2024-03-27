@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef} from '@angular/core';
 import { BackendService } from '../../../../services/backend.service';
 import { HttpClientModule } from '@angular/common/http'
 import { ActivatedRoute } from '@angular/router';
@@ -8,11 +8,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewsDialogComponent } from './news-dialog/news-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';    //need to import
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';  //need to import
 
 @Component({
   selector: 'app-top-news',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, MatDialogModule, MatCardModule], // Removed HttpClientModule as it's provided by BackendService
+  imports: [HttpClientModule, CommonModule, MatDialogModule, MatCardModule, NgbModule], // Removed HttpClientModule as it's provided by BackendService
   providers: [BackendService, DatePipe], // Added SharedService
   templateUrl: './top-news.component.html',
   styleUrl: './top-news.component.css'
@@ -21,12 +23,14 @@ export class TopNewsComponent implements OnInit {
   stockSymbol: string = '';
   currentTime: Date = new Date();
   newsEntries: any[] = []; // Array to store filtered news entries
+  data: any;
 
 
   constructor(
     private backendService: BackendService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private modalWindow: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -63,12 +67,16 @@ export class TopNewsComponent implements OnInit {
     });
   }
 
-  openDialog(news: any): void {
-    this.dialog.open(NewsDialogComponent, {
-      data: news,
-      width: '600px'
-    });
-  }
 
+  openModal(content: TemplateRef<any>, news: any) {
+    this.data= news
+    console.log("PORTFOLIO ONPEN MODEL CONTENT", this.data)
+    this.modalWindow.open(content, { ariaLabelledBy: 'modal-basic-title' }).result
+    .then(
+      (result) => {
+        console.log(`Closed with: ${result}`);
+      }
+    );
+  }
 }
 

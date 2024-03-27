@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BackendService } from '../services/backend.service';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; // <-- Import 'map' operator from RxJS
-import { MatDialog } from '@angular/material/dialog'; // Import MatDialog
-import { BuyStockDialogComponent } from '../search/result/top-section/buy-stock-dialog/buy-stock-dialog.component';
-import { SellStockDialogComponent } from '../search/result/top-section/sell-stock-dialog/sell-stock-dialog.component';
+import { NgbModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';    //need to import
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';  //need to import
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { delay } from 'rxjs/operators';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 interface Stock {
@@ -30,7 +35,12 @@ interface Stock {
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, 
+    HttpClientModule, 
+    FormsModule, 
+    NgbModule, 
+    MatProgressSpinnerModule,
+    NgbAlertModule],
   providers: [BackendService], // Ensure BackendService is provided if not globally available
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.css']
@@ -40,14 +50,53 @@ export class PortfolioComponent implements OnInit {
   portfolio: any[] = []; // Replace with actual dynamic data
   stocksDetails: any[] = []; // This array will hold the combined details
   result: any[] = [];
+  modalContent!: any;
+  data: any;
+  quantity: number = 0;
+  totalCost: number = 0;
+  private modalRef!: NgbModalRef;
+  loading: boolean = false;
+  
 
+  
   constructor(private backendService: BackendService,
-    public dialog: MatDialog // Inject MatDialog service
+    private modalWindow: NgbModal,
+    private modalService: NgbModal
     ) {}
+  
+  @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
+  private _success = new Subject<string>();
+  successMessage = '';
+
+  private _fail = new Subject<string>();
+  failMessage = '';
+
+  public showAlertFor(message: string): void {
+    this._success.next(`${message}`);
+  }
+
+  public showFailAlertFor(message: string): void {
+    this._fail.next(`${message}`);
+  }
 
   ngOnInit(): void {
+    this.loading = true
     this.refreshPortfolio();
+    this._success.subscribe(message => this.successMessage = message);
+    this._success.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+    this._fail.subscribe(message => this.failMessage = message);
+    this._fail.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+    
   }
+  
 
   refreshPortfolio(): void {
     // Load both the portfolio and the balance simultaneously
@@ -55,12 +104,13 @@ export class PortfolioComponent implements OnInit {
       portfolio: this.backendService.getPortfolio(),
       balance: this.backendService.getBalance()
       
-    }).subscribe({
+    }).pipe(delay(3000)).subscribe({
       
       next: ({ portfolio, balance }) => {
         this.portfolio = portfolio;
         this.walletBalance = balance;
         this.fetchStockDetails();
+        this.loading = false
       },
       error: (error) => console.error('Error refreshing portfolio', error)
     });
@@ -113,62 +163,63 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
-  buy(stockItem: string): void {
-    // First fetch the details for the current stock item
-    forkJoin({
-      stockData: this.backendService.searchStock(stockItem),
-      priceData: this.backendService.stockPrice(stockItem),
-    }).subscribe({
-      next: ({ stockData, priceData }) => {
-        // Open the buy stock dialog with the fetched data
-        const dialogRef = this.dialog.open(BuyStockDialogComponent, {
-          width: '250px',
-          data: {
-            stock: stockData,
-            price: priceData, // Assuming priceData.c is the current price of the stock
-            walletBalance: this.walletBalance
-          }
-        });
-  
-        dialogRef.afterClosed().subscribe(result => {
-        // Call refreshPortfolio to update the component's state with the latest data
-          this.refreshPortfolio();
-        });
-      },
-      error: (error) => {
-        console.error('Error fetching stock details:', error);
-      }
-    });
+  calculateTotal() {
+    this.totalCost = this.quantity * this.data.c;
   }
-  
 
-  
-  sell(stockItem: string): void {
-    // First fetch the details for the current stock item
-    forkJoin({
-      stockData: this.backendService.searchStock(stockItem),
-      priceData: this.backendService.stockPrice(stockItem),
-    }).subscribe({
-      next: ({ stockData, priceData }) => {
-        // Open the sell stock dialog with the fetched data
-        const dialogRef = this.dialog.open(SellStockDialogComponent, {
-          width: '250px',
-          data: {
-            stock: stockData,
-            price: priceData, // Assuming priceData.c is the current price of the stock
-            walletBalance: this.walletBalance
-          }
-        });
-  
-        dialogRef.afterClosed().subscribe(result => {
-        // Call refreshPortfolio to update the component's state with the latest data
-          this.refreshPortfolio();
-        });
-      },
-      error: (error) => {
-        console.error('Error fetching stock details:', error);
-      }
-    });
-
+  openModal(content: TemplateRef<any>, stock: any) {
+    this.data = stock;
+    // Open the modal and save the reference
+    this.modalRef = this.modalService.open(content);  
   }
+
+  buyStock() {
+    if (this.quantity > 0) {
+      // ... your backend service call
+      this.backendService.buyStock(this.data.ticker, this.quantity, this.data.c).subscribe({
+        next: (response) => {
+          console.log('Stock purchase successful:', response);
+          this.loadPortfolio()
+          // Check if modalRef is defined and then close the modal
+          
+          if (this.modalRef) {
+            this.modalRef.close();
+            this.showAlertFor(`${this.data.ticker} bought successfully.`);
+          }
+        },
+        error: (error) => {
+          console.error('Error buying stock:', error);
+          // Handle error (e.g., show an error message)
+        }
+      });
+    } else {
+      console.error('Quantity must be greater than 0');
+      // Handle the error case
+    }
+  }
+
+  sellStock() {
+    if (this.quantity > 0) {
+      // ... your backend service call
+      this.backendService.sellStock(this.data.ticker, this.quantity, this.data.c).subscribe({
+        next: (response) => {
+          console.log('Stock selling successful:', response);
+          this.loadPortfolio()
+          // Check if modalRef is defined and then close the modal
+          if (this.modalRef) {
+            this.modalRef.close();
+          }
+          this.showFailAlertFor(`${this.data.ticker} sold successfully.`);
+        },
+        error: (error) => {
+          console.error('Error selling stock:', error);
+          // Handle error (e.g., show an error message)
+        }
+      });
+    } else {
+      console.error('Quantity must be greater than 0');
+      // Handle the error case
+    }
+  }
+
 }

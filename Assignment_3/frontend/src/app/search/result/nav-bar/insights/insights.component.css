@@ -1,0 +1,43 @@
+tr {
+    border-bottom: 1px solid black;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+th {
+    width: 150px;
+    text-align: center;
+    padding-block: 5px;
+}
+
+td {
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-section, .right-section {
+    flex: 1;
+}
+
+.left-section {
+    margin-right: 10px;
+}
+
+.right-section {
+    margin-left: 10px;
+}
+
+.title {
+    text-align: center;
+    font-size: 25px;
+    font-family: sans-serif;
+    margin-block: 10px;
+}

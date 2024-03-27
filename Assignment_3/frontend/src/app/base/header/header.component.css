@@ -1,8 +1,8 @@
 .navbar {
-    background-color: rgb(31, 39, 151);
+    background-color: rgb(30, 40, 172);
 }
 
-.navbar-brand, .nav-link {
+.navbar-brand {
     color: #ffffff !important;
     
 }
@@ -16,16 +16,47 @@
   }
   
   /* Optional: Adjust the spacing between items */
-  .nav-item {
-    margin-right: 15px; /* Adjust the spacing to your preference */
-  }
+.nav-item {
+  margin-right: 15px; /* Adjust the spacing to your preference */
+}
 
-  .active-link {
-    outline: 1px solid #FFFFFF; /* Outline color */
-    border-radius: 5px; /* Optional: for rounded corners */
-    padding: 5px; /* Adjust padding to ensure it looks good with the outline */
-  }
+.active-link {
+  outline: 1px solid #FFFFFF; /* Outline color */
+  border-radius: 5px; /* Optional: for rounded corners */
+  padding: 5px; /* Adjust padding to ensure it looks good with the outline */
+}
+
+.nav-link {
+  font-weight: lighter;
+  color: rgb(209, 209, 209)
+}
+
+.nav-link:hover {
+  color: #ffffff !important; /* Change text color on hover */
+  border-radius: 5px; /* Match the border-radius of .active-link for consistency */
+}
   
 #navbarNav {
     margin-right: 20px;
+}
+
+@media (max-width: 400px) {
+  
+  #navbarNav {
+    margin-top: 20px;
+    margin-left: 40px;
+  }
+  
+  .nav-items-right {
+    flex-direction: column; /* Stack the nav items vertically */
+    align-items: center; /* Center align the items */
+    margin-left: 0; /* Reset this to ensure center alignment */
+  }
+
+ 
+  .nav-link {
+    padding-left: 20px;
+    width: 250px; /* Ensure it takes full width */
+
+  }
 }

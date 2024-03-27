@@ -1,38 +1,125 @@
 <div class="portfolio-container">
-    <div class="wallet-info">
-      Money in Wallet: ${{ walletBalance | number:'1.2-2' }}
+  <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text" (closed)="successMessage = ''" #selfClosingAlert>
+    {{ successMessage }}
+  </ngb-alert>
+  <ngb-alert *ngIf="failMessage" [type]="'danger'" class="center-text" (closed)="failMessage = ''" #selfClosingAlert>
+    {{ failMessage }}
+  </ngb-alert>
+    <div class="title"> My Portfolio</div>
+    <div *ngIf="loading" class="spinner">
+      <mat-spinner diameter="70"></mat-spinner>
     </div>
+    
+    <div *ngIf="!loading">
+      <div class="wallet-info">
+        Money in Wallet: ${{ walletBalance | number:'1.2-2' }}
+      </div>
+    </div>
+    <div *ngIf="loading == false && stocksDetails.length == 0" class="empty">
+      <div class="bubble">Currently you don't have any stock.</div>
+    </div>
+    
   
     <div *ngFor="let stock of stocksDetails" class="stock-item">
       <div class="stock-header">
-        {{ stock.ticker }} {{ stock.name }}
+        <span class="ticker">{{ stock.ticker }}</span>&nbsp; <span class="name">{{ stock.name }}</span>
       </div>
-      <div class="stock-details">
-        <div class="quantity">
-          Quantity: {{ stock.quantity }}
+      <div class="stock-info">
+        <div class="stock-details">
+          <div class="quantity">
+            Quantity: <span class="value">{{ stock.quantity | number:'1.2-2' }}</span>
+          </div>
+          <div class="avg-cost">
+            Avg. Cost / Share: <span class="value">{{ stock.avgCost | number:'1.2-2' }}</span>
+          </div>
+          <div class="total-cost">
+            Total Cost: <span class="value">{{ stock.totalCost | number:'1.2-2' }}</span>
+          </div>
         </div>
-        <div class="avg-cost">
-          Avg. Cost / Share: {{ stock.avgCost | number:'1.2-2' }}
-        </div>
-        <div class="total-cost">
-          Total Cost: {{ stock.totalCost | number:'1.2-2' }}
-        </div>
-      </div>
-      <div class="stock-pricing">
-        <div [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">
-          Change: {{ stock.change | number:'1.2-2' }}
-        </div>
-        <div class="current-price">
-          Current Price: {{ stock.c | number:'1.2-2' }}
-        </div>
-        <div class="market-value">
-          Market Value: {{ stock.marketValue | number:'1.2-2' }}
+        <div class="stock-pricing">
+          <div>
+            Change: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">
+              <span *ngIf="stock.change >= 0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+              </span>
+              <span *ngIf="stock.change < 0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                </svg>
+            </span>
+              {{ stock.change | number:'1.2-2' }}</span>
+          </div>
+          <div class="current-price" >
+            Current Price: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">{{ stock.c | number:'1.2-2' }}</span>
+          </div>
+          <div class="market-value">
+            Market Value: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">{{ stock.marketValue | number:'1.2-2' }}</span>
+          </div>
         </div>
       </div>
       <div class="stock-actions">
-        <button (click)="buy(stock.ticker)">Buy</button>
-        <button (click)="sell(stock.ticker)">Sell</button>
+        <button class="buy-button" (click)="openModal(buying, stock)">Buy</button>
+        <!-- <button class="buy-button" (click)="openModal(content, stock.ticker, 'buy')">Modal</button> -->
+        <button class="sell-button" (click)="openModal(selling, stock)">Sell</button>
       </div>
     </div>
   </div>
+
+  <ng-template #buying let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title col-1">
+      {{ data.ticker}}
+      </h4>
+      <div class="col-10"></div>
+      <a type="button" class="close col-1" aria-label="Close" (click)="modal.close()">
+        <span aria-hidden="true"><u>&times;</u></span>
+      </a>
+    </div>
   
+    <div class="modal-body">
+      <div class="col-1"></div>
+      Current price: {{ data.c | number:'1.2-2' }}<br>
+      Money in Wallet: ${{ walletBalance | number:'1.2-2' }}<br>
+      Quantity:  
+      <input type="number" class="col-10" [(ngModel)]="quantity" min="0" (input)="calculateTotal()" oninput="validity.valid||(value='');" pattern="\d*">
+    </div>
+    <div class="modal-footer">
+      <div style="text-align: left;">
+        Total: {{ totalCost | number: "1.2-2" }}
+      </div>
+      <button id="buy" (click)="buyStock()">
+        Buy
+      </button>
+  </div>
+  </ng-template>
+
+
+<ng-template #selling let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title col-1">
+    {{ data.ticker}}
+    </h4>
+    <div class="col-10"></div>
+    <a type="button" class="close col-1" aria-label="Close" (click)="modal.close()">
+      <span aria-hidden="true"><u>&times;</u></span>
+    </a>
+  </div>
+  
+  <div class="modal-body">
+    <div class="col-1"></div>
+    Current price: {{ data.c | number:'1.2-2' }}<br>
+    Money in Wallet: ${{ walletBalance | number:'1.2-2' }}<br>
+    Quantity:  
+    <input type="number" class="col-10" [(ngModel)]="quantity" min="0" (input)="calculateTotal() " oninput="validity.valid||(value='');" pattern="\d*">
+  </div>
+  <div class="modal-footer">
+    <div style="text-align: left;">
+      Total: {{ totalCost | number: "1.2-2" }}
+    </div>
+    <button id="sell" (click)="sellStock()">
+      Sell
+    </button>
+  </div>
+  </ng-template>

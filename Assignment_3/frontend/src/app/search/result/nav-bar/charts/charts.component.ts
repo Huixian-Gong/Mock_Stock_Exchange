@@ -117,6 +117,10 @@ Exporting(Highcharts);
       ]);
   
       this.chartOptions = {
+        chart: {
+          backgroundColor: 'rgb(248,248,248)',
+        },
+
         rangeSelector: {
           selected: 2,
           inputEnabled: true,
@@ -127,7 +131,7 @@ Exporting(Highcharts);
           enabled: false, // This will hide the context button
       },
       title: {
-          text: 'AAPL Historical'
+          text: this.stockSymbol + ' Historical'
       },
 
       subtitle: {
@@ -135,6 +139,7 @@ Exporting(Highcharts);
       },
 
       yAxis: [{
+        opposite: true,
           startOnTick: false,
           endOnTick: false,
           labels: {
@@ -150,7 +155,9 @@ Exporting(Highcharts);
               enabled: true
           }
       }, {
+        opposite: true,
           labels: {
+            
               align: 'right',
               x: -3
           },
@@ -184,10 +191,12 @@ Exporting(Highcharts);
           }
         }
       },
-
+      legend: {
+        enabled:false
+      },
       series: [{
           type: 'candlestick',
-          name: 'AAPL',
+          name: this.stockSymbol,
           id: 'aapl',
           zIndex: 2,
           data: ohlc,

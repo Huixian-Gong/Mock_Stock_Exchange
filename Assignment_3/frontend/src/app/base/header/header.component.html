@@ -1,14 +1,13 @@
 <nav class="navbar navbar-expand-lg">
   <a class="navbar-brand" routerLink="/">Stock Search</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarNav" [attr.aria-expanded]="!isNavbarCollapsed" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
+  <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed" id="navbarNav">
     <ul class="navbar-nav nav-items-right">
       <li class="nav-item">
         <a class="nav-link" routerLink="/search/home" [class.active-link]="isSearchRoute">Search</a>
       </li>
-      <!-- Use routerLinkActive as before for the other links -->
       <li class="nav-item">
         <a class="nav-link" routerLink="/watchlist" routerLinkActive="active-link">Watchlist</a>
       </li>
