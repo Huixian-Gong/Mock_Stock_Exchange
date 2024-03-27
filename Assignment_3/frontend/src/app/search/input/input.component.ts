@@ -13,7 +13,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { interval } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 
 interface Stock {
@@ -32,7 +34,8 @@ interface Stock {
     MatAutocompleteModule,
     MatInputModule,
     MatFormFieldModule,
-    ReactiveFormsModule,], // Removed HttpClientModule as it's provided by BackendService
+    ReactiveFormsModule,
+    MatProgressSpinnerModule], // Removed HttpClientModule as it's provided by BackendService
   providers: [BackendService] // Added SharedService
 })
 export class InputComponent {
@@ -41,6 +44,10 @@ export class InputComponent {
   filteredStocks$: Observable<any[]> = of([]);
   private searchTerms = new Subject<string>();
   stockCtrl = new FormControl();
+  loading: boolean = false;
+  // selection: boolean = false;
+  private intervalSubscription: Subscription = new Subscription();
+
 
   constructor(
     private backendService: BackendService,
@@ -53,10 +60,23 @@ export class InputComponent {
     this.filteredStocks$ = this.stockCtrl.valueChanges.pipe(
       // debounceTime(300),
       distinctUntilChanged(),
-      switchMap(term => term ? this.backendService.stockTicker(term) : of([])),
-      map((results: any) => results.result.filter((stock: any) =>
-        stock.type === 'Common Stock' && !stock.displaySymbol.includes('.'))
-      )
+      switchMap(term => {
+        // If the term is not empty, initiate the search
+        if (term) {
+          this.loading = true; // Indicate loading
+          // this.selection = false;
+          return this.backendService.stockTicker(term);
+        } else {
+          // If the term is empty, clear the results and loading state
+          this.loading = false; // No longer loading
+          // this.selection = true;
+          return of([]);
+        }}),
+      map((results: any) => {
+        this.loading = false; // Data received, stop loading
+        return results.result.filter((stock: any) =>
+          stock.type === 'Common Stock' && !stock.displaySymbol.includes('.'));
+      })
     );
     // Listen to route parameter changes
     this.route.paramMap.subscribe(params => {
@@ -86,6 +106,7 @@ export class InputComponent {
     this.searchTerms.next(term);
   }
   selectStock(stock: any): void {
+    this.loading = false;
     this.stockSymbol = stock.displaySymbol;
     this.stockCtrl.setValue(this.stockSymbol); // This will set the selected stock symbol in the input field
     this.onSubmit(); // Trigger search immediately

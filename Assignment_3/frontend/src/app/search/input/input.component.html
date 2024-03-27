@@ -10,9 +10,15 @@
             (input)="onInput($event)"
             class="search-input">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectStock($event.option.value)">
-            <mat-option *ngFor="let stock of filteredStocks$ | async" [value]="stock">
-              {{stock.displaySymbol}} - {{stock.description}}
+            <mat-option *ngIf="loading">
+              <mat-spinner diameter="30"></mat-spinner>
             </mat-option>
+            <ng-container *ngFor="let stock of filteredStocks$ | async">
+              <mat-option *ngIf="!loading" [value]="stock">
+                {{stock.displaySymbol}} - {{stock.description}}
+              </mat-option>
+            </ng-container>
+            
           </mat-autocomplete>
           <button type="submit" class="search-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">

@@ -6,6 +6,8 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { FooterComponent } from './base/footer/footer.component';
+import { HeaderComponent } from './base/header/header.component';
 
 
 @Component({
@@ -18,7 +20,9 @@ import { HttpClientModule } from '@angular/common/http';
     PortfolioComponent, 
     WatchlistComponent,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
+    FooterComponent,
+    HeaderComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] // Ensure this is an array, `styleUrls` instead of `styleUrl`
@@ -27,22 +31,3 @@ export class AppComponent {
   title = 'frontend';
 }
 
-
-
-// import { Component } from '@angular/core';
-// import { RouterOutlet } from '@angular/router';
-// import { BaseComponent } from './base/base.component';
-// import { SearchComponent } from './search/search.component';
-// import { PortfolioComponent } from './portfolio/portfolio.component';
-// import { WatchlistComponent } from './watchlist/watchlist.component';
-
-// @Component({
-//   selector: 'app-root',
-//   standalone: true,
-//   imports: [RouterOutlet, BaseComponent, SearchComponent, PortfolioComponent, WatchlistComponent],
-//   templateUrl: './app.component.html',
-//   styleUrl: './app.component.css'
-// })
-// export class AppComponent {
-//   title = 'frontend';
-// }
