@@ -1,4 +1,4 @@
-<div *ngIf="combinedData" class="stock-container">
+<div *ngIf="info && price" class="stock-container container">
     <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text" (closed)="successMessage = ''" #selfClosingAlert>
       {{ successMessage }}
     </ngb-alert>
@@ -6,9 +6,10 @@
       {{ failMessage }}
     </ngb-alert>
   
-    <div class="top-section">
-        <div class="company-info">
-        <h1>{{ combinedData.stock.ticker }} 
+    <div class="top-section row">
+
+        <div class="company-info col-5">
+        <h1>{{ info?.ticker }} 
             <!-- <i class="bi bi-star" [class.starred]="isStarred" (click)="toggleStar()"></i> -->
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
                 [ngClass]="{'bi bi-star': !isStarred, 'bi bi-star-fill': isStarred}" 
@@ -18,52 +19,52 @@
             </svg>
             <!-- <button class="star fav_button" [class.starred]="isStarred" (click)="toggleStar()">★</button> -->
         </h1>
-        <h2>{{ combinedData.stock.name }}</h2>
-        <p>{{ combinedData.stock.exchange }}</p>
+        <h2>{{ info?.name }}</h2>
+        <p>{{ info?.exchange }}</p>
         <div class="transaction-button-container">
             <div class="buy-button">
                 <div class="buy-button">
-                    <button (click)="openModal(buying, combinedData)">Buy</button>
+                    <button (click)="openModal(buying, data)">Buy</button>
                 </div>
                 </div>
             <div *ngIf="stockCount > 0" class="sell-button">
                 <div class="sell-button">
-                    <button (click)="openModal(selling, combinedData)">Sell</button>
+                    <button (click)="openModal(selling, data)">Sell</button>
                   </div>
             </div>
             </div>
         </div>
-        <div class="logo-container">
+        <div class="logo-container col-2">
             <div class="company-logo">
-            <img [src]="combinedData.stock.logo" alt="{{ combinedData.stock.name }}">
+            <img [src]="info?.logo" alt="{{ info?.name }}">
             <!-- <div class="market-status">{{ marketStatus }}</div> -->
             </div>
         </div>
-        <div class="stock-info">
-        <span class="stock-price" [ngClass]="{'inc': increasing, 'dec':!increasing}">{{ combinedData.price.c | number:'1.2-2' }}</span>
-        <div *ngIf="combinedData.price.d > 0">
+        <div class="stock-info col-5">
+        <span class="stock-price" [ngClass]="{'inc': increasing, 'dec':!increasing}">{{ price?.c | number:'1.2-2' }}</span>
+        <div *ngIf="price?.d > 0">
             <span class="stock-change inc"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                 <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-              </svg>&nbsp;&nbsp;{{ combinedData.price.d | number:'1.2-2' }} ({{ combinedData.price.dp | number:'1.2-2' }}%)</span>
+              </svg>&nbsp;{{ price?.d | number:'1.2-2' }} ({{ price?.dp | number:'1.2-2' }}%)</span>
         </div>
-        <div *ngIf="combinedData.price.d < 0">
+        <div *ngIf="price?.d < 0">
             <span class="stock-change dec"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                 <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-              </svg>&nbsp;&nbsp;{{ combinedData.price.d | number:'1.2-2' }} ({{ combinedData.price.dp | number:'1.2-2' }}%)</span>
+              </svg>&nbsp;{{ price?.d | number:'1.2-2' }} ({{ price?.dp | number:'1.2-2' }}%)</span>
         </div>
-        <!-- <span class="stock-change" [ngClass]="{'inc': increasing, 'dec':!increasing}">{{ combinedData.price.d | number:'1.2-2' }} ({{ combinedData.price.dp | number:'1.2-2' }}%)</span> -->
         <div class="current-time">{{ currentTime | date:'yyyy-MM-dd HH:mm:ss' }}</div>
         </div>
-        
+
     </div>
     <div [ngClass]="{'open': marketOpen, 'closed':!marketOpen}">{{ marketStatus }}</div>
 </div>
 
 
+
 <ng-template #buying let-modal>
     <div class="modal-header">
       <h4 class="modal-title">
-      {{ data.stock.ticker}}
+      {{ info?.ticker}}
       </h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
         <span aria-hidden="true"><u>&times;</u></span>
@@ -71,7 +72,7 @@
     </div>
   
     <div class="modal-body">
-      Current price: {{ data.price.c }}<br>
+      Current price: {{ price?.c }}<br>
       Money in Wallet: ${{ balance }}<br>
       Quantity:  
       <input type="number" [(ngModel)]="quantity" min="0" (input)="calculateTotal()">
@@ -90,7 +91,7 @@
 <ng-template #selling let-modal>
     <div class="modal-header">
       <h4 class="modal-title">
-      {{ data.stock.ticker}}
+      {{ info?.ticker}}
       </h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
         <span aria-hidden="true"><u>&times;</u></span>
@@ -98,7 +99,7 @@
     </div>
   
     <div class="modal-body">
-      Current price: {{ data.price.c }}<br>
+      Current price: {{ price?.c }}<br>
       Money in Wallet: ${{ balance }}<br>
       Quantity:  
       <input type="number" [(ngModel)]="quantity" min="0" (input)="calculateTotal()">
@@ -112,3 +113,4 @@
         </button>
         </div>
   </ng-template>
+

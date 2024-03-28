@@ -30,11 +30,12 @@ interface StockPrice {
   t: number; // Timestamp
 }
 
+
 // CombinedData interface should match the structure of the combined data emitted
 interface CombinedData {
   stock: StockInfo;   // Use lowercase 'stock', not 'StockInfo'
   price: StockPrice;  // Use lowercase 'price', not 'StockPrice'
-  peers: string[]
+  peers: string[];
 }
 
 @Component({
@@ -57,32 +58,33 @@ export class SearchComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private sharedService: SharedService,) {}
 
-  ngOnInit(): void {
-    console.log(this.combinedData)
-    this.loading = true
-    this.route.paramMap.subscribe(params => {
-      const tickerValue = params.get('ticker');
-      if (tickerValue) {
-        this.ticker = tickerValue.toUpperCase(); // Update input box
-        this.submitSearch(); // Auto-submit
-      }
-    });
-    this.subscription.add(
-      this.sharedService.currentData$.subscribe((newData: CombinedData) => {
-        this.combinedData = newData;
-        this.exist = this.combinedData.peers.length != 0
-        this.loading = !(this.combinedData.peers.length == 0 || this.combinedData.peers.length != 0 )
-      })
-      
-    );
+    ngOnInit(): void {
+      console.log(this.combinedData);
+      this.loading = true;
+      this.route.paramMap.subscribe(params => {
+        const tickerValue = params.get('ticker');
+        if (tickerValue) {
+          this.ticker = tickerValue.toUpperCase(); // Update input box
+          this.submitSearch(); // Auto-submit
+        }
+      });
+      this.subscription.add(
+        this.sharedService.currentData$.subscribe((newData: CombinedData) => {
+          if (newData) { // Ensure newData is not null before proceeding
+            this.combinedData = newData;
+            this.exist = newData.peers && newData.peers.length !== 0;
+            // Adjust the loading state based on the new data
+            this.loading = false;
+          } else {
+            // Handle the case where newData is null
+            this.loading = true; // You may want to adjust this based on your needs
+            this.exist = false;
+          }
+        })
+      );
+    }
     
-      // console.log(this.combinedData)
+    submitSearch(): void {
+      console.log(`Searching for ${this.ticker}`);
+    }
   }
-
-  
-  submitSearch(): void {
-    // Your search logic here, using this.ticker
-    console.log(`Searching for ${this.ticker}`);
-    // this.ngAfterViewInit();
-  }
-}

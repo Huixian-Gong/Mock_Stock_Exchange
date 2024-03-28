@@ -8,6 +8,10 @@
     border-radius: 10px;
     padding-bottom: 30px;
   }
+
+  .watchlist-container {
+    margin: auto;
+  }
   
   .remove-button {
     margin-left: 10px;
@@ -84,4 +88,20 @@
 .spinner {
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 400px) {
+  .title {
+    font-size: 30px;
+    margin-block: 35px;
+  }
+  .ticker {
+    font-size: 25px;
+  }
+  .price {
+    font-size: 23px;
+  }
+  .change {
+    font-size: 20px;
+  }
 }

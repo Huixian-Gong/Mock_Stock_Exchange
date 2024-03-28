@@ -18,21 +18,9 @@ td {
     text-align: center;
 }
 
-.container {
+.graphs {
     display: flex;
-    justify-content: space-between;
-}
-
-.left-section, .right-section {
-    flex: 1;
-}
-
-.left-section {
-    margin-right: 10px;
-}
-
-.right-section {
-    margin-left: 10px;
+    flex-direction: row;
 }
 
 .title {

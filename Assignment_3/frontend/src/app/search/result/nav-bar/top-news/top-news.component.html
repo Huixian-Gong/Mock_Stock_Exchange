@@ -1,10 +1,12 @@
-<div class="cards-container">
-  <div *ngFor="let news of newsEntries" class="card-wrapper">
-    <mat-card class="news-card" (click)="openModal(content, news)">
-      <img mat-card-image [src]="news.image" alt="{{ news.headline }}">
-      <mat-card-content>
-        <mat-card-title>{{ news.headline }}</mat-card-title>
-      </mat-card-content>
+<div class="cards-container row">
+  <div *ngFor="let news of newsEntries" class="card-wrapper col-md-6 col-12">
+    <mat-card class="news-card col-12" (click)="openModal(content, news)">
+      <!-- <div class="row"> -->
+        <img class="col-md-3 col-12" [src]="news.image" alt="{{ news.headline }}">
+        <mat-card-content class="col-md-9 col-12">
+          <mat-card-title>{{ news.headline }}</mat-card-title>
+        </mat-card-content>
+      <!-- </div> -->
     </mat-card>
     
   </div>
@@ -18,37 +20,50 @@
   <ng-template #content let-modal>
   
     <div class="modal-header">
-      <h4 class="modal-title">
-      {{ data.headline}}<br>
-      {{ data.datetime | date:'medium' }}
-      </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <div class="modal-title col-11">
+        <span class="title">{{ data.source}}</span><br>
+        <span class="date"> {{data.datetime * 1000 | date:'MMMM d, y' }} </span> 
+      </div>
+      <a type="button" class="close col-1" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true"><u>&times;</u></span>
-      </button>
+      </a>
     </div>
-  
+    <div class="body-container">
     <div class="modal-body">
-      {{ data.headline }}<br>
-      {{ data.summary }}<br>
-      For more details click <a href="{{ data.url }}" target="_blank">here</a>
-      <div class="row align-items-center">
-          <div>Share</div>
-          <div class="share-section">
+      <div class="headline">{{ data.headline }}</div>
+      <div class="summary">{{ data.summary }}</div>
+      <div class="link">For more details click <a class="close-button" href="{{ data.url }}" target="_blank">here</a></div>
+      <div class="row align-items-center share-container">
+          <div class="share-section ">
+            <div class="share">Share</div>
+            <div class="button-container">
             <!-- Twitter Button -->
-            <a href="https://twitter.com/intent/tweet?text={{data.headline}}&url={{data.url}}" target="_blank" class="share-button twitter">
+            <!-- <a href="https://twitter.com/intent/tweet?text={{data.headline}}&url={{data.url}}" target="_blank" class="share-button twitter">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
                 <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
               </svg>
+            </a> -->
+            <div class="button-size">
+            <a href="https://twitter.com/intent/tweet?text={{data.headline}}&url={{data.url}}" target="_blank" class="twitter">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" fill="black" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+              </svg>
             </a>
-          
+          </div>
             <!-- Facebook Button -->
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{data.url}}" target="_blank" class="share-button facebook">
+            <div class="button-size">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{data.url}}" target="_blank" class=" facebook">
               <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><rect fill="#1877f2" height="512" rx="15%" width="512"/>
                 <path d="m355.6 330 11.4-74h-71v-48c0-20.2 9.9-40 41.7-40h32.3v-63s-29.3-5-57.3-5c-58.5 0-96.7 35.4-96.7 99.6v56.4h-65v74h65v182h80v-182z" fill="#fff"/></svg>
             </a>
           </div>
+          </div>
+        </div>
+      </div>
       </div>
 
     </div>
 
   </ng-template>
+
+  

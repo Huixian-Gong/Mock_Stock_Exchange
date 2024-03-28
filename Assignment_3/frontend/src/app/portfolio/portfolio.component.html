@@ -1,4 +1,5 @@
-<div class="portfolio-container">
+<div class="outer-container">
+<div class="portfolio-container col-md-8 col-11">
   <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text" (closed)="successMessage = ''" #selfClosingAlert>
     {{ successMessage }}
   </ngb-alert>
@@ -24,39 +25,60 @@
       <div class="stock-header">
         <span class="ticker">{{ stock.ticker }}</span>&nbsp; <span class="name">{{ stock.name }}</span>
       </div>
-      <div class="stock-info">
-        <div class="stock-details">
-          <div class="quantity">
-            Quantity: <span class="value">{{ stock.quantity | number:'1.2-2' }}</span>
-          </div>
-          <div class="avg-cost">
-            Avg. Cost / Share: <span class="value">{{ stock.avgCost | number:'1.2-2' }}</span>
-          </div>
-          <div class="total-cost">
-            Total Cost: <span class="value">{{ stock.totalCost | number:'1.2-2' }}</span>
-          </div>
-        </div>
-        <div class="stock-pricing">
-          <div>
-            Change: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">
-              <span *ngIf="stock.change >= 0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-              </svg>
+      <div class="stock-info ">
+        <div class="stock-details container">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="row">
+                <span class="col-8"> Quantity: </span>
+                <span class="value col-4">{{ stock.quantity | number:'1.2-2' }}</span>
+              </div>
+              <div class="row">
+                <span class="col-8">Avg. Cost / Share: </span>
+                <span class="value col-4">{{ stock.avgCost | number:'1.2-2' }}</span>
+              </div>
+              <div class="row">
+                <span class="col-8">Total Cost: </span>
+                <span class="value col-4">{{ stock.totalCost | number:'1.2-2' }}</span>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="row">
+              <span class="col-8">Change: </span>
+              <span class="col-4">
+                <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">
+                  <span *ngIf="stock.change >= 0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-up-fill " viewBox="0 0 16 16">
+                      <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                    </svg>
+                  </span>
+                  <span *ngIf="stock.change < 0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                    </svg>
+                  </span>
+                  {{ stock.change | number:'1.2-2' }}
+                </span>
               </span>
-              <span *ngIf="stock.change < 0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                </svg>
-            </span>
-              {{ stock.change | number:'1.2-2' }}</span>
+            </div>
+            <div class="row">
+              <span class="col-8">Current Price: </span>
+              <span class=" col-4">
+                <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">{{ stock.c | number:'1.2-2' }}</span>
+              </span>
+            </div>
+            <div class="row">
+              <span class="col-8">Market Value: </span>
+              <span class=" col-4">
+                <span [ngClass]="{'positive ': stock.change >= 0, 'negative ': stock.change < 0}">{{ stock.marketValue | number:'1.2-2' }}</span>
+              </span>
+              </div>
           </div>
-          <div class="current-price" >
-            Current Price: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">{{ stock.c | number:'1.2-2' }}</span>
+            
           </div>
-          <div class="market-value">
-            Market Value: <span [ngClass]="{'positive': stock.change >= 0, 'negative': stock.change < 0}">{{ stock.marketValue | number:'1.2-2' }}</span>
-          </div>
+          
+          
+          
         </div>
       </div>
       <div class="stock-actions">
@@ -66,6 +88,7 @@
       </div>
     </div>
   </div>
+</div>
 
   <ng-template #buying let-modal>
     <div class="modal-header">

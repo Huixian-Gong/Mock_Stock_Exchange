@@ -45,9 +45,9 @@ app.get('/', (req, res) => {
     res.redirect('/search/home');
 })
 
-app.get('/search/home', (req, res) => {
-    res.send('You are now at /search/home');
-});
+// app.get('/search/home', (req, res) => {
+//     res.send('You are now at /search/home');
+// });
 
 app.get('/ticker/:query', async (req, res) => {
   const query = req.params.query;
@@ -117,7 +117,7 @@ app.get('/stock/hourly/:ticker/:from/:to', async (req, res) => {
   const from = req.params.from;
   const to = req.params.to;
   const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/hour/${from}/${to}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
-  console.log(url);
+  // console.log(url);
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -193,7 +193,7 @@ app.get('/portfolio', async (req, res) => {
 
     // Find the portfolio document that contains stocks
     const portfolio = await collection.findOne({}, { projection: { "stocks": 1, _id: 0 } });
-    console.log(portfolio)
+    // console.log(portfolio)
     if (portfolio) {
         // Filter out stocks that do not have 'quantity' key or have quantity of 0
         const stocks = portfolio.stocks.filter(stock => stock.count && stock.count > 0);

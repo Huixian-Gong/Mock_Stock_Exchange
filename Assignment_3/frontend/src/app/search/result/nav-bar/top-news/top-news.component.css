@@ -7,48 +7,51 @@
 
 .card-wrapper {
   display: flex;
-  flex-basis: calc(50% - 20px); /* Assuming 25px margin, adjust 50px accordingly */
-  margin-left: 10px; 
-  margin-right: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: 1px solid rgb(185, 184, 184);
-  background-color: rgb(250, 250, 250);
   align-items: center;
-  min-height: 100px;
   border-radius: 10px;
+}
+
+.close-button a{
+  text-align: right;
+}
+
+.date {
+  color: rgb(162, 162, 162);
+  font-size: 15px;
 }
 
 .news-card {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
   box-shadow: none;
-  min-height:100px; /* Let the content define the height */
-  /* max-width: 500px; */
   background-color: transparent;
-  /* justify-content: center; */
-  flex: 1
+  border: 1px solid rgb(185, 184, 184);
+  background-color: rgb(250, 250, 250);
+  min-height: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px
 }
 
 img {
   width: 125px;
-  height: 60px;
-  margin-right: 16px; /* Add some spacing between image and title */
-  flex-shrink: 0; /* Prevents the image from shrinking */
-  flex-grow: 0; /* Prevents the image from growing */
-  flex-basis: auto; /* The default value, but it ensures that flex-basis is not controlling the size */
+  height: 80px;
+  border-radius: 5px;
+  margin-left: 15px; /* Add some spacing between image and title */
+  flex-shrink: 0; 
+  flex-grow: 0; 
+  flex-basis: auto; 
 }
 
 
 mat-card-content {
   display: flex;
+  text-align: center;
   flex-direction: column; /* Stack the children vertically */
   justify-content: center; /* Center the content vertically */
   align-items: center; /* Center the content horizontally */
   flex: 1; /* Allow the content to fill the available space */
-  padding: 0 16px; /* Adjust padding as needed, removing the horizontal padding may allow more space for text */
+  /* padding: 0 16px; Adjust padding as needed, removing the horizontal padding may allow more space for text */
   /* Remove the red border used for debugging */
 }
 
@@ -58,35 +61,123 @@ mat-card-title {
   margin: 0;
   font-family: sans-serif;
   text-align: center;
+  align-items: center;
+}
+
+.share-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  
 }
 
 /* News Dialog Component CSS */
 .share-section {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   margin-top: 20px; /* Adjust spacing as needed */
+  
 }
 
 .share-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; /* Size of the button */
-  height: 40px;
+  /* width: 40px; /* Size of the button */
+  /* height: 40px;  */
   border-radius: 50%;
   color: #fff; /* Icon color */
   text-decoration: none;
-  font-size: 20px; /* Icon size */
 }
 
-.twitter {
-  background-color: #1DA1F2; /* Twitter color */
+.button-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  
+}
+.button-size {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
 }
 
-.facebook {
-  background-color: #3b5998; /* Facebook color */
-}
+
 
 .fa {
   pointer-events: none; /* Makes sure the icon doesn't interfere with the link */
 }
+
+.share-section {
+  border: 2px solid rgb(241, 241, 241);
+  border-radius: 10px;
+}
+
+.modal-body {
+  width: 95%;
+  margin: auto;
+}
+.title {
+  font-size: 35px;
+}
+.headline {
+  font-size: 23px; 
+}
+
+.share {
+  color: rgb(138, 138, 138);
+  font-size: 20px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.summary {
+  font-size: 18px;
+  color: rgb(110, 110, 110);
+}
+.link {
+  font-size: 15px;
+  color: rgb(190, 190, 190)
+}
+
+.modal-title {
+  padding-top: 10px;
+  line-height: 23px;
+  padding-left: 10px;
+}
+
+
+@media (max-width: 400px) {
+  .news-card {
+    flex-direction: column;
+  }
+  img {
+    width: 330px;
+    height: 165px;
+    border-radius: 5px;
+    flex-shrink: 0; 
+    flex-grow: 0; 
+    flex-basis: auto; 
+    margin-top: 20px;
+    margin-left: unset;
+  }
+  .title {
+    font-size: 25px;
+  }
+  .date {
+    font-size: 15px;
+  }
+  .headline {
+    font-size: 17px;
+  }
+  .summary {
+    font-size: 15px;
+  }
+  .link {
+    font-size: 12px;
+  }
+  .share {
+    font-size: 15px;
+  }
+}
+

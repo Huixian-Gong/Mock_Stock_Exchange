@@ -1,7 +1,7 @@
-<div *ngIf="combinedData" class="stock-container">
+<div *ngIf="combinedData" class="stock-container container">
     <!-- new-component.html -->
-    <div class="container">
-        <div class="left-section">
+    <div class="row">
+        <div class="col-md-6 col-12">
         <div class="stock-info">
             <b>High Price: </b>{{ combinedData.price.h | number:'1.2-2' }}<br>
             <b>Low Price: </b>{{ combinedData.price.l | number:'1.2-2' }}<br>
@@ -19,13 +19,13 @@
             
             <div *ngIf="combinedData && combinedData.peers.length > 0">
             <p><b>Company Peers:</b></p>
-            <span *ngFor="let peer of combinedData.peers; let last = last">
+            <span *ngFor="let peer of combinedData.peers; let last = last" class="peers">
                 <a [routerLink]="['/search', peer]">{{ peer }}</a>{{last ? '' : ', '}}
             </span>
             </div>
         </div>
         </div>
-        <div class="right-section">
+        <div class="col-md-6 col-12 chart">
         <highcharts-chart 
             [Highcharts]="Highcharts"
             [options]="chartOptions"

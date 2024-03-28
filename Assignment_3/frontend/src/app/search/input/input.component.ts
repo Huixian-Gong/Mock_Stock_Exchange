@@ -94,7 +94,7 @@ export class InputComponent {
   }
 
   onSubmit(): void {
-    const searchTerm = this.stockCtrl.value; // Use the value from the form control
+    const searchTerm = this.stockCtrl.value.toUpperCase(); // Use the value from the form control
     if (this.router.url !== `/search/${searchTerm}`) {
       this.router.navigate(['/search', searchTerm]);
     } else {

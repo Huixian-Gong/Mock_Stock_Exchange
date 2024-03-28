@@ -1,7 +1,7 @@
 /* top-section.component.css */
 .top-section {
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
     background-color: #fff; /* Adjust background color as needed */
     padding: 20px;
@@ -9,7 +9,7 @@
   
   
   .company-info, .logo-container, .stock-info {
-    flex: 1; /* This ensures each child takes up equal width */
+    /* flex: 1; This ensures each child takes up equal width */
     text-align: center; /* Centers the content within each container */
   }
 
@@ -66,12 +66,12 @@
   }
   
   .inc {
-    color: rgb(54, 169, 22);
+    color: rgb(62, 138, 39);
     
   }
   
   .open {
-    color: rgb(54, 169, 22);
+    color: rgb(62, 138, 39);
     text-align: center;
     justify-content: center;
     margin-bottom: 20px;
@@ -141,4 +141,62 @@
 
   .center-text {
     text-align: center;
+  }
+
+  @media (max-width: 400px) {
+    .top-section {
+      padding: 0px;
+      margin-top: 20px;
+    }
+    .company-logo img{
+      height: 50px; /* Adjust as needed */
+      width: 50px;
+    }
+
+    .company-info h1{
+      font-size: 25px;
+    }
+
+    .company-info h2{
+      font-size: 20px;
+    }
+
+    .company-info p {
+      font-size: 15px;
+    }
+
+    .stock-price {
+      font-size: 25px;
+    }
+
+    .stock-change {
+      font-size: 20px;
+    }
+
+    .sell-button button {
+      background-color: #ff1100; /* Green background */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .buy-button button {
+      background-color: rgb(69, 144,100); /* Green background */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .current-time {
+      font-size: 15px;
+    }
+
+    .open, .closed {
+      margin-top: 10px;
+    }
   }

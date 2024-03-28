@@ -186,6 +186,7 @@ export class PortfolioComponent implements OnInit {
             this.modalRef.close();
             this.showAlertFor(`${this.data.ticker} bought successfully.`);
           }
+          this.quantity = 0;
         },
         error: (error) => {
           console.error('Error buying stock:', error);
@@ -210,6 +211,7 @@ export class PortfolioComponent implements OnInit {
             this.modalRef.close();
           }
           this.showFailAlertFor(`${this.data.ticker} sold successfully.`);
+          this.quantity = 0;
         },
         error: (error) => {
           console.error('Error selling stock:', error);

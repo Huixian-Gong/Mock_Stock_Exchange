@@ -1,5 +1,5 @@
 .portfolio-container {
-    padding: 20px;
+  margin: auto;
   }
   
   .wallet-info {
@@ -13,6 +13,7 @@
     flex-direction: column;
     flex: 1;
     font-family: sans-serif;
+    padding-block: 15px;
   }
 
   .stock-pricing {
@@ -25,14 +26,17 @@
   }
   .value {
     float: right;
-    margin-right: 130px;
+    /* margin-right: 130px; */
   }
   .stock-info {
-    padding-top: 10px;
+    /* padding-top: 10px;
     padding-left: 15px;
-    padding-bottom: 10px;
+    padding-bottom: 10px; */
     display: flex;
     background-color: white;
+    border-bottom: 2px solid rgb(221, 221, 221);
+    border-top: 2px solid rgb(221, 221, 221);
+    /* flex-direction: column; */
   }
   
   .stock-item {
@@ -46,7 +50,7 @@
   
   .stock-header {
     font-weight: bold;
-    border-bottom: 2px solid rgb(221, 221, 221);
+    
     background-color: transparent;
     padding-left: 15px;
     /* padding-top: 15px; */
@@ -60,7 +64,7 @@
   }
   
   .stock-actions {
-    border-top: 2px solid  rgb(221, 221, 221);
+    /* border-top: 2px solid  rgb(221, 221, 221); */
     background-color: transparent;
   }
 
@@ -72,14 +76,12 @@
   
   .positive {
     color: rgb(60, 134, 40);
-    float: right;
-    margin-right: 130px;
+    /* float: right; */
   }
   
   .negative {
     color: rgb(208, 45, 31);
-    float: right;
-    margin-right: 130px;
+    /* float: right; */
   }
   
   .ticker {
@@ -133,6 +135,9 @@
   padding-block: 20px;
   border-radius: 5px;
 }
+.center-text {
+  text-align: center;
+}
 
 .spinner {
   display: flex;
@@ -184,4 +189,33 @@
   width: 50px;
   height: 35px;
 
+}
+
+@media (max-width: 400px) {
+  .outer-container {
+    width: 100%;
+  }
+
+  .portfolio-container {
+    margin: auto;
+  }
+
+  .stock-details  {
+    font-size: 20px;
+  }
+
+  .ticker {
+    font-size: 25px;
+  }
+  .name {
+    font-size: 20px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+  .wallet-info {
+    font-size: 25px;
+    padding-top: 10px;
+  }
 }

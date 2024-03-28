@@ -119,6 +119,7 @@ Exporting(Highcharts);
       this.chartOptions = {
         chart: {
           backgroundColor: 'rgb(248,248,248)',
+          
         },
 
         rangeSelector: {
@@ -200,6 +201,7 @@ Exporting(Highcharts);
           id: 'aapl',
           zIndex: 2,
           data: ohlc,
+          
       }, {
           type: 'column',
           name: 'Volume',

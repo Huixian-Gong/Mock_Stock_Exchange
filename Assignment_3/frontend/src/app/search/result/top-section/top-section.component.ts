@@ -25,6 +25,7 @@ interface StockInfo {
   weburl: string;
 }
 
+
 interface StockPrice {
   c: number; // Current price
   d: number; // Change
@@ -60,6 +61,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   combinedData: CombinedData | null = null; // The property type is now the corrected CombinedData
   currentTime: Date = new Date();
   private subscription: Subscription = new Subscription();
+  private updateInfoPriceSubscription: Subscription = new Subscription();
   isStarred: boolean = false; // Initial state of the star
   marketStatus: string = '';
   stockSymbol: string = '';
@@ -71,6 +73,9 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   quantity: number = 0;
   totalCost: number = 0;
   private modalRef!: NgbModalRef;
+  info: any;
+  price: any;
+  infoPrice: any;
 
 
 
@@ -90,8 +95,8 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     failMessage = '';
 
     toggleStar(): void {
-      if (this.combinedData && this.combinedData.stock.ticker) {
-        const ticker = this.combinedData.stock.ticker;
+      if (this.info && this.info.ticker) {
+        const ticker = this.info.ticker;
         // Check the stock's presence in the database
         this.backendService.checkStock(this.stockSymbol).subscribe({
           next: (stockExists) => {
@@ -100,7 +105,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
                 next: (response) => {
                   console.log('Stock added to watchlist:', response);
                   this.isStarred = true; // Update local state to reflect the addition
-                  this.showAlertFor(`${this.combinedData?.stock.ticker} added to watchlist.`);
+                  this.showAlertFor(`${this.info.ticker} added to watchlist.`);
                 },
                 error: (error) => console.error('Error adding stock to watchlist', error)
               });
@@ -120,10 +125,21 @@ export class TopSectionComponent implements OnInit, OnDestroy {
       }
     }
   
-
+    startAutoUpdateInfoPrice(ticker: string): void {
+      // Clear any existing interval subscription to prevent multiple intervals
+      this.updateInfoPriceSubscription.unsubscribe();
+  
+      // Immediately update info and price, then set up an interval to continue updating
+      this.updateInfoPrice(ticker);
+      this.updateInfoPriceSubscription = interval(15000).subscribe(() => {
+        this.updateInfoPrice(ticker);
+      });
+    }
+  
+  
     calculateMarketStatus(): void {
-      if (this.combinedData && this.combinedData.price.t) {
-          const lastUpdateTimestamp = this.combinedData.price.t * 1000; // Convert to milliseconds
+      if (this.price && this.price.t) {
+          const lastUpdateTimestamp = this.price.t * 1000; // Convert to milliseconds
           const currentTime = Date.now(); // Current time in milliseconds
           
           // Calculate the difference in minutes between the current time and the last update
@@ -134,13 +150,13 @@ export class TopSectionComponent implements OnInit, OnDestroy {
               this.marketStatus = 'Market Open';
               this.marketOpen = true;
           } else {
-            let fromFormatted = formatDate(this.combinedData.price.t * 1000, 'yyyy-MM-dd HH:mm:ss', 'en-US');
+            let fromFormatted = formatDate(this.price.t * 1000, 'yyyy-MM-dd HH:mm:ss', 'en-US');
               // Market is considered closed if more than 5 minutes have elapsed
               this.marketStatus = 'Market Closed ' + fromFormatted ;
               this.marketOpen = false;
           }
 
-          if (this.combinedData?.price.d > 0 ) {
+          if (this.price.d > 0 ) {
             this.increasing = true;
           } else {
             this.increasing = false;
@@ -172,21 +188,35 @@ export class TopSectionComponent implements OnInit, OnDestroy {
       }
     });
 
+    // this.route.paramMap.subscribe(params => {
+    //   const ticker = params.get('ticker');
+    //   if (ticker) {
+    //     this.stockSymbol = ticker.toUpperCase();
+    //     this.checkInitialStarState(this.stockSymbol);
+    //   }
+    // });
+    
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
       if (ticker) {
         this.stockSymbol = ticker.toUpperCase();
         this.checkInitialStarState(this.stockSymbol);
+        // Start or restart the auto-update process for the new ticker
+        this.startAutoUpdateInfoPrice(this.stockSymbol);
       }
     });
+
+    this.updateInfoPrice(this.stockSymbol)
     // Existing subscription to shared data...
-    this.subscription.add(
-      this.sharedService.currentData$.subscribe((newData: CombinedData) => {
-        this.combinedData = newData;
-        console.log(this.combinedData)
-        this.calculateMarketStatus(); // Call this method here
-      })
-    );
+    // this.subscription.add(
+    //   this.sharedService.currentData$.subscribe((newData: CombinedData) => {
+    //     this.combinedData = newData;
+    //     console.log(this.combinedData)
+    //     this.calculateMarketStatus(); // Call this method here
+    //   })
+    // );
+
+
 
     // Set up an interval to update the currentTime every 15 seconds
     const timeUpdateSubscription = interval(15000) // 15000 milliseconds
@@ -202,6 +232,24 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this.subscription.add(timeUpdateSubscription);
   }
 
+  updateInfoPrice(ticker: string): void {
+    if (!ticker) return;
+    this.backendService.searchStock(this.stockSymbol).subscribe({
+      next: (data:StockInfo) => {
+        this.info = data;
+        console.log(this.info)
+      },
+      error: (error) => console.error('Error fetching updated stock info', error)
+    });
+    this.backendService.stockPrice(this.stockSymbol).subscribe({
+      next: (data:StockPrice) => {
+        console.log(data)
+        this.price = data;
+        this.calculateMarketStatus();
+      },
+      error: (error) => console.error('Error fetching updated stock info', error)
+    });
+  }
   
   // New method to update stock count
   updateStockCountAfterTransaction(ticker: string): void {
@@ -242,26 +290,28 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Clean up the subscription when the component gets destroyed
     this.subscription.unsubscribe();
+    this.updateInfoPriceSubscription.unsubscribe(); 
   }
 
   calculateTotal() {
-    this.totalCost = this.quantity * this.data.price.c;
+    this.totalCost = this.quantity * this.price.c;
   }
 
 
   buyStock() {
     if (this.quantity > 0) {
       // ... your backend service call
-      this.backendService.buyStock(this.data.stock.ticker, this.quantity, this.data.price.c).subscribe({
+      this.backendService.buyStock(this.info.ticker, this.quantity, this.price.c).subscribe({
         next: (response) => {
           console.log('Stock purchase successful:', response);
           
-          this.updateStockCountAfterTransaction(this.data.stock.ticker)
+          this.updateStockCountAfterTransaction(this.info.ticker)
           // Check if modalRef is defined and then close the modal
           if (this.modalRef) {
             this.modalRef.close();
           }
-          this.showAlertFor(`${this.combinedData?.stock.ticker} bought successfully.`);
+          this.showAlertFor(`${this.info.ticker} bought successfully.`);
+          this.quantity = 0;
         },
         error: (error) => {
           console.error('Error buying stock:', error);
@@ -277,15 +327,16 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   sellStock() {
     if (this.quantity > 0) {
       // ... your backend service call
-      this.backendService.sellStock(this.data.stock.ticker, this.quantity, this.data.price.c).subscribe({
+      this.backendService.sellStock(this.info.ticker, this.quantity, this.price.c).subscribe({
         next: (response) => {
           console.log('Stock selling successful:', response);
-          this.updateStockCountAfterTransaction(this.data.stock.ticker)
+          this.updateStockCountAfterTransaction(this.info.ticker)
           // Check if modalRef is defined and then close the modal
           if (this.modalRef) {
             this.modalRef.close();
           }
-          this.showFailAlertFor(`${this.combinedData?.stock.ticker} sold successfully.`);
+          this.showFailAlertFor(`${this.info.ticker} sold successfully.`);
+          this.quantity = 0;
         },
         error: (error) => {
           console.error('Error selling stock:', error);

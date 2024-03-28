@@ -228,8 +228,6 @@ export class InsightsComponent {
         align: 'center', // Center the legend
         verticalAlign: 'bottom', // Move it to the bottom
         floating: false, // Disable floating
-        borderColor: '#CCC',
-        borderWidth: 1,
         shadow: false
       },
       tooltip: {
@@ -275,14 +273,18 @@ export class InsightsComponent {
     this.updateFlag = true;
   }
 
-
+  
   createEarningsChart(earningsData: EarningData[]): void {
-    // console.log(earningsData)
+    const surpriseMap = new Map(earningsData.map(data => {
+      const timestamp = Date.parse(data.period);
+      return [timestamp, data.surprise];
+    }));
+    console.log(earningsData)
     if (Array.isArray(earningsData)) {
       const actualData = earningsData.map(data => ({
-        y: data.actual !== null ? data.actual : 0, // Replace null with 0
+        y: data.actual !== null ? data.actual : 0,
         x: Date.parse(data.period),
-        surprise: data.surprise !== null ? data.surprise.toFixed(4) : 0 // Replace null with 0 and format
+        surprise: data.surprise !== null ? data.surprise : 0
       }));
       
       const estimateData = earningsData.map(data => ({
@@ -302,7 +304,10 @@ export class InsightsComponent {
         type: 'datetime',
         labels: {
           formatter: function() {
-            return Highcharts.dateFormat('%Y-%m-%d', this.value as number);
+            const dateStr = Highcharts.dateFormat('%Y-%m-%d', this.value as number);
+            const surprise = surpriseMap.get(this.value as number);
+            const surpriseStr = surprise !== undefined ? ` Surprise: ${surprise.toFixed(4)}` : '';
+            return dateStr + surpriseStr;
           }
         }
       },
@@ -324,14 +329,14 @@ export class InsightsComponent {
       },
       series: [{
         name: 'Actual',
-        data: actualData,
-        type: 'spline',
+        data: actualData as Highcharts.SeriesSplineOptions['data'],
+        type: 'spline' as const,
         showInLegend: true,
         zIndex: 1
       }, {
         name: 'Estimate',
-        data: estimateData,
-        type: 'spline',
+        data: estimateData as Highcharts.SeriesSplineOptions['data'],
+        type: 'spline' as const,
         showInLegend: true,
         zIndex: 0
       }]
