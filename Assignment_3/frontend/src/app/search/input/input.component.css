@@ -2,8 +2,21 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 70px;
+    /* margin-top: 50px; */
+    margin-bottom: 20px;
+    /* padding-bottom: 20px; */
   }  
+
+  .box {
+    display: flex;
+    justify-content: center;
+  }
+  .error {
+    margin-top: 20px;
+    width: 70%;
+  }
+
+  
   .form-container {
     /* padding: 10px; */
     border-radius: 20px;

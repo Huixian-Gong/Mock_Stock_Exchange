@@ -42,11 +42,11 @@ Exporting(Highcharts);
       series: [{
       type: 'candlestick',
       name: 'AAPL',
-      data: [[0]]
+      data: [[0,0,0,0,0]]
     }, {
       type: 'column',
       name: 'Volume',
-      data: [0],
+      data: [[0,0]],
       yAxis: 1
     }, {
       type: 'vbp',
@@ -60,7 +60,8 @@ Exporting(Highcharts);
       zoneLines: {
           enabled: false
       }
-    }]}; // Define the chart options type
+    }]
+  }; // Define the chart options type
 
     ngOnInit(): void {
       this.route.paramMap.subscribe(params => {
@@ -83,7 +84,6 @@ Exporting(Highcharts);
 
       this.backendService.chartTab(ticker, fromFormatted, toFormatted).subscribe({
         next: (data) => {
-          // data = {"ticker":"AAPL","queryCount":502,"resultsCount":502,"adjusted":true,"results":[{"v":71763761,"vw":169.3619,"o":169.15,"c":169,"h":170.73,"l":168.49,"t":1709787600000,"n":825405},{"v":76267041,"vw":171.5322,"o":169,"c":170.73,"h":173.7,"l":168.94,"t":1709874000000,"n":925213},{"v":60139473,"vw":172.9273,"o":172.94,"c":172.75,"h":174.38,"l":172.05,"t":1710129600000,"n":793618},{"v":59813522,"vw":172.8726,"o":173.15,"c":173.23,"h":174.03,"l":171.01,"t":1710216000000,"n":735065},{"v":52488692,"vw":171.3457,"o":172.77,"c":171.13,"h":173.185,"l":170.76,"t":1710302400000,"n":647120},{"v":72913507,"vw":173.0899,"o":172.91,"c":173,"h":174.3078,"l":172.05,"t":1710388800000,"n":806014},{"v":121752699,"vw":171.8002,"o":171.17,"c":172.62,"h":172.62,"l":170.285,"t":1710475200000,"n":771387},{"v":75606556,"vw":175.4587,"o":175.57,"c":173.72,"h":177.71,"l":173.52,"t":1710734400000,"n":866430},{"v":55215244,"vw":175.4779,"o":174.34,"c":176.08,"h":176.605,"l":173.03,"t":1710820800000,"n":636058},{"v":53423102,"vw":177.2239,"o":175.72,"c":178.67,"h":178.67,"l":175.09,"t":1710907200000,"n":641653}],"status":"DELAYED","request_id":"d8fe9246c8468da9d217206f2cf8cdfd","count":502}
           data=data.results
           if (data && Array.isArray(data)) {
             this.createChart(data);
@@ -115,6 +115,8 @@ Exporting(Highcharts);
         item.t, // the date
         item.v   // the volume
       ]);
+      console.log(volume)
+    
   
       this.chartOptions = {
         chart: {
@@ -125,8 +127,7 @@ Exporting(Highcharts);
         rangeSelector: {
           selected: 2,
           inputEnabled: true,
-          enabled: true
-
+          enabled: true,
       },
         exporting: {
           enabled: false, // This will hide the context button
@@ -172,6 +173,7 @@ Exporting(Highcharts);
       }],
       xAxis: {
         type: 'datetime',
+        ordinal: false,
         scrollbar: {
           enabled: true
         },
@@ -239,4 +241,5 @@ Exporting(Highcharts);
     }
     
   }
+
 

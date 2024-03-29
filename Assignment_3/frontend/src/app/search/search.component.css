@@ -4,6 +4,7 @@
     border: 2px solid rgb(222, 195, 197);
     padding-block: 20px;
     border-radius: 5px;
+    width: 80%
   }
   
   .spinner {
@@ -11,3 +12,9 @@
     justify-content: center;
     margin-top: 40px;
   }
+
+  .empty {
+    display: flex;
+    justify-content: center;
+  }
+  

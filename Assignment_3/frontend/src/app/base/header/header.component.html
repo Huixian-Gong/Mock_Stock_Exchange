@@ -1,20 +1,28 @@
-<nav class="navbar navbar-expand-lg fixed-top">
-  <a class="navbar-brand" routerLink="/">Stock Search</a>
-  <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarNav" [attr.aria-expanded]="!isNavbarCollapsed" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed" id="navbarNav">
-    <ul class="navbar-nav nav-items-right">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/search/home" [class.active-link]="isSearchRoute">Search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/watchlist" routerLinkActive="active-link">Watchlist</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/portfolio" routerLinkActive="active-link">Portfolio</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+    <div class="top">
+      <a class="navbar-brand col-8" routerLink="/">Stock Search</a>
+      <button class="navbar-toggler" type="button" (click)="toggleNavbarCollapse()" aria-controls="navbarNav" [attr.aria-expanded]="!isNavbarCollapsed" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed" id="navbarNav">
+      <ul class="navbar-nav nav-items-right">
+        <li class="nav-item first">
+          <a class="nav-link" [class.active-link]="isSearchActive" (click)="navigateToLastSearch()">Search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/watchlist" routerLinkActive="active-link">Watchlist</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/portfolio" routerLinkActive="active-link">Portfolio</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div [ngStyle]="{'padding-top': pad, 'transition': 'padding-top 0.25s linear 0s'}" class="main-content">
+
+  <router-outlet></router-outlet>
+</div>
 

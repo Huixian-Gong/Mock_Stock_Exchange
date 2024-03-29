@@ -15,6 +15,7 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+
 interface StockInfo {
   exchange: string;
   finnhubIndustry: string;
@@ -76,6 +77,9 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   info: any;
   price: any;
   infoPrice: any;
+  sufficientBalance: boolean = true;
+  sufficientStock: boolean = true;
+
 
 
 
@@ -91,8 +95,14 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     private _success = new Subject<string>();
     successMessage = '';
 
+    private _buy = new Subject<string>();
+    buyMessage = '';
+
     private _fail = new Subject<string>();
     failMessage = '';
+
+    private _watch = new Subject<string>();
+    notWatch = '';
 
     toggleStar(): void {
       if (this.info && this.info.ticker) {
@@ -115,6 +125,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
                 next: (response) => {
                   console.log('Stock removed from watchlist:', response);
                   this.isStarred = false; // Update local state to reflect the removal
+                  this.notWatchAlertFor(`${this.info.ticker} removed from watchlist.`);
                 },
                 error: (error) => console.error('Error removing stock from watchlist', error)
               });
@@ -174,6 +185,14 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this._fail.next(`${message}`);
   }
 
+  public BuySuccessAlertFor(message: string): void {
+    this._buy.next(`${message}`);
+  }
+
+  public notWatchAlertFor(message: string): void {
+    this._watch.next(`${message}`);
+  }
+
   ngOnInit(): void {
     this._success.subscribe(message => this.successMessage = message);
     this._success.pipe(debounceTime(5000)).subscribe(() => {
@@ -183,6 +202,18 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     });
     this._fail.subscribe(message => this.failMessage = message);
     this._fail.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+    this._buy.subscribe(message => this.buyMessage = message);
+    this._buy.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
+    this._watch.subscribe(message => this.notWatch = message);
+    this._watch.pipe(debounceTime(5000)).subscribe(() => {
       if (this.selfClosingAlert) {
         this.selfClosingAlert.close();
       }
@@ -283,6 +314,10 @@ export class TopSectionComponent implements OnInit, OnDestroy {
 
   openModal(content: TemplateRef<any>, stock: any) {
     this.data = stock;
+    this.quantity = 0;
+    this.totalCost = 0;
+    this.sufficientBalance = true;
+    this.sufficientStock = true;
     // Open the modal and save the reference
     this.modalRef = this.modalService.open(content);  
   }
@@ -293,8 +328,24 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this.updateInfoPriceSubscription.unsubscribe(); 
   }
 
-  calculateTotal() {
+  calculateTotal(act : string) {
     this.totalCost = this.quantity * this.price.c;
+    if (act == 'buy') {
+      if (this.totalCost > this.balance) {
+        this.sufficientBalance = false;
+      } else {
+        this.sufficientBalance = true;
+      }
+    }
+    if (act == 'sell') {
+      if (this.stockCount < this.quantity) {
+        this.sufficientStock = false;
+      } else {
+        this.sufficientStock = true;
+      }
+    }
+    console.log('quantity  = ', this.quantity )
+    
   }
 
 
@@ -309,9 +360,10 @@ export class TopSectionComponent implements OnInit, OnDestroy {
           // Check if modalRef is defined and then close the modal
           if (this.modalRef) {
             this.modalRef.close();
+            // this.quantity = 0;
           }
-          this.showAlertFor(`${this.info.ticker} bought successfully.`);
-          this.quantity = 0;
+          this.BuySuccessAlertFor(`${this.info.ticker} bought successfully.`);
+          // this.quantity = 0;
         },
         error: (error) => {
           console.error('Error buying stock:', error);
@@ -334,9 +386,10 @@ export class TopSectionComponent implements OnInit, OnDestroy {
           // Check if modalRef is defined and then close the modal
           if (this.modalRef) {
             this.modalRef.close();
+            // this.quantity = 0;
           }
           this.showFailAlertFor(`${this.info.ticker} sold successfully.`);
-          this.quantity = 0;
+          // this.quantity = 0;
         },
         error: (error) => {
           console.error('Error selling stock:', error);

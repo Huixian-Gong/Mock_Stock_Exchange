@@ -30,7 +30,7 @@ export class WatchlistComponent implements OnInit {
   constructor(private backendService: BackendService,
     private router: Router) {}
 
-  ngOnInit(): void {
+    ngOnInit(): void {
     this.loading = true
     
     this.loadWatchlist();
@@ -44,7 +44,7 @@ export class WatchlistComponent implements OnInit {
       this.watchlist = stocks.filter(stock => stock.watchlist === true);
       console.log(this.watchlist);
       this.fetchStockDetails(); // Fetch additional details for each stock
-      this.loading = false
+      
     });
   }
 
@@ -67,7 +67,9 @@ export class WatchlistComponent implements OnInit {
         };
       });
       console.log('Stock Details:', this.stocksDetails);
+      this.loading = false
     });
+    
   }
 
   onRemoveStock(ticker: string): void {

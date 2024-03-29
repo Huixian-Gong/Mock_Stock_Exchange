@@ -1,9 +1,15 @@
 <div *ngIf="info && price" class="stock-container container">
-    <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text" (closed)="successMessage = ''" #selfClosingAlert>
+    <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text alert" (closed)="successMessage = ''" #selfClosingAlert>
       {{ successMessage }}
     </ngb-alert>
-    <ngb-alert *ngIf="failMessage" [type]="'danger'" class="center-text" (closed)="failMessage = ''" #selfClosingAlert>
+    <ngb-alert *ngIf="failMessage" [type]="'danger'" class="center-text alert" (closed)="failMessage = ''" #selfClosingAlert>
       {{ failMessage }}
+    </ngb-alert>
+    <ngb-alert *ngIf="buyMessage" [type]="'success'" class="center-text alert" (closed)="buyMessage = ''" #selfClosingAlert>
+      {{ buyMessage }}
+    </ngb-alert>
+    <ngb-alert *ngIf="notWatch" [type]="'danger'" class="center-text alert" (closed)="notWatch = ''" #selfClosingAlert>
+      {{ notWatch }}
     </ngb-alert>
   
     <div class="top-section row">
@@ -23,7 +29,7 @@
         <p>{{ info?.exchange }}</p>
         <div class="transaction-button-container">
             <div class="buy-button">
-                <div class="buy-button">
+                <div class="buy-button first-button">
                     <button (click)="openModal(buying, data)">Buy</button>
                 </div>
                 </div>
@@ -63,54 +69,77 @@
 
 <ng-template #buying let-modal>
     <div class="modal-header">
-      <h4 class="modal-title">
-      {{ info?.ticker}}
-      </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-        <span aria-hidden="true"><u>&times;</u></span>
-      </button>
+          <div class="modal-title col-11">
+          {{ info?.ticker}}
+          </div>
+          <a type="button" class="close col-1" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true"><u>&times;</u></span>
+          </a>
     </div>
   
     <div class="modal-body">
       Current price: {{ price?.c }}<br>
-      Money in Wallet: ${{ balance }}<br>
+      Money in Wallet: ${{ balance | number: "1.2-2"}}<br>
       Quantity:  
-      <input type="number" [(ngModel)]="quantity" min="0" (input)="calculateTotal()">
+      <input type="number" class="col-9" [(ngModel)]="quantity" min="0" (input)="calculateTotal('buy')" oninput="validity.valid||(value='');" pattern="\d*">
+      <div *ngIf="!this.sufficientBalance" class="insufficient">
+        <span >Not enough money in wallet!</span>
+      </div>
     </div>
-    <div class="modal-footer">
-        <div class="">
+    <div class="modal-footer bot">
+        <div>
           Total: {{totalCost | number: "1.2-2"}}
+        </div> 
+        <div class="buy-button" *ngIf="this.sufficientBalance && quantity > 0 && quantity != null">
+          <button id="greenButton" (click)="buyStock(); modal.dismiss()">
+            Buy
+          </button>
         </div>
-        <button id="greenButton" (click)="buyStock(); modal.dismiss()">
-          Buy
-        </button>
+        <div class="bad-buy-button" *ngIf="!this.sufficientBalance || quantity < 1|| quantity == null">
+          <button disabled (click)="buyStock()">
+            Buy
+          </button>
         </div>
+      </div>
   </ng-template>
 
 
 <ng-template #selling let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
+  <div class="modal-header">
+      <div class="modal-title col-11">
       {{ info?.ticker}}
-      </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      </div>
+      <a type="button" class="close col-1" aria-label="Close" (click)="modal.dismiss()">
         <span aria-hidden="true"><u>&times;</u></span>
-      </button>
-    </div>
+      </a>
+  </div>
   
     <div class="modal-body">
       Current price: {{ price?.c }}<br>
-      Money in Wallet: ${{ balance }}<br>
+      Money in Wallet: ${{ balance | number: "1.2-2"}}<br>
       Quantity:  
-      <input type="number" [(ngModel)]="quantity" min="0" (input)="calculateTotal()">
+      <input type="number" class="col-9" [(ngModel)]="quantity" min="0" (input)="calculateTotal('sell')" oninput="validity.valid||(value='');" pattern="\d*">
+      <div *ngIf="!this.sufficientStock" class="insufficient">
+        <span >You cannot sell the stocks that you don't have!</span>
+      </div>
     </div>
-    <div class="modal-footer">
-        <div class="">
-          Total: {{totalCost | number: "1.2-2"}}
-        </div>
+
+    <div class="modal-footer bot">
+      <div>
+        Total: {{totalCost | number: "1.2-2"}}
+      </div>
+      <div class="buy-button"  *ngIf="this.sufficientStock && quantity > 0 && quantity != null">
         <button id="greenButton" (click)="sellStock(); modal.dismiss()">
           Sell
         </button>
-        </div>
+      </div>
+      <div class="bad-sell-button" *ngIf="!this.sufficientStock || quantity < 1 || quantity == null">
+        <button disabled (click)="sellStock()">
+          Sell
+        </button>
+      </div>
+    </div>
+
+      
   </ng-template>
 

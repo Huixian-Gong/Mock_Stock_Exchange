@@ -13,6 +13,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 interface Stock {
@@ -56,17 +57,21 @@ export class PortfolioComponent implements OnInit {
   totalCost: number = 0;
   private modalRef!: NgbModalRef;
   loading: boolean = false;
+  sufficientBalance: boolean = true;
+  sufficientStock: boolean = true;
   
 
   
   constructor(private backendService: BackendService,
     private modalWindow: NgbModal,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
     ) {}
   
   @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
   private _success = new Subject<string>();
   successMessage = '';
+  
 
   private _fail = new Subject<string>();
   failMessage = '';
@@ -110,7 +115,7 @@ export class PortfolioComponent implements OnInit {
         this.portfolio = portfolio;
         this.walletBalance = balance;
         this.fetchStockDetails();
-        this.loading = false
+        
       },
       error: (error) => console.error('Error refreshing portfolio', error)
     });
@@ -136,7 +141,7 @@ export class PortfolioComponent implements OnInit {
     const requests: Observable<any>[] = this.portfolio.map(stock => {
       return forkJoin({
         stockData: this.backendService.searchStock(stock.ticker),
-        priceData: this.backendService.stockPrice(stock.ticker)
+        priceData: this.backendService.stockPrice(stock.ticker),
       }).pipe(
         map(result => {
           // result is the combined result of stockData and priceData for each stock
@@ -147,7 +152,7 @@ export class PortfolioComponent implements OnInit {
             name: result.stockData.name, // name from stockData
             avgCost: stock.price / stock.count, // avgCost needs to be provided by the backend or calculated
             totalCost: stock.price, // Calculate totalCost based on quantity and avgCost
-            change: stock.count * result.priceData.c - stock.price, // change from priceData
+            change: result.priceData.c - stock.price / stock.count,// change from priceData
             c: result.priceData.c, // current price from priceData
             marketValue: stock.count * result.priceData.c // Calculate marketValue
           };
@@ -160,16 +165,35 @@ export class PortfolioComponent implements OnInit {
       // results will be an array of combined data for each stock
       this.stocksDetails = results;
       console.log('Stock Details:', this.stocksDetails);
+      this.loading = false
     });
   }
 
-  calculateTotal() {
-    this.totalCost = this.quantity * this.data.c;
-  }
+  calculateTotal(act : string, price: number, count: number) {
+    this.totalCost = this.quantity * price;
+    if (act == 'buy') {
+      if (this.totalCost > this.walletBalance) {
+        this.sufficientBalance = false;
+      } else {
+        this.sufficientBalance = true;
+      }
+    }
+    if (act == 'sell') {
+      if (count < this.quantity) {
+        this.sufficientStock = false;
+      } else {
+        this.sufficientStock = true;
+      }
+    }
 
+  }
   openModal(content: TemplateRef<any>, stock: any) {
     this.data = stock;
     // Open the modal and save the reference
+    this.quantity = 0;
+    this.totalCost = 0;
+    this.sufficientBalance = true;
+    this.sufficientStock = true;
     this.modalRef = this.modalService.open(content);  
   }
 
@@ -184,9 +208,10 @@ export class PortfolioComponent implements OnInit {
           
           if (this.modalRef) {
             this.modalRef.close();
+            // this.quantity = 0;
             this.showAlertFor(`${this.data.ticker} bought successfully.`);
           }
-          this.quantity = 0;
+          
         },
         error: (error) => {
           console.error('Error buying stock:', error);
@@ -209,9 +234,9 @@ export class PortfolioComponent implements OnInit {
           // Check if modalRef is defined and then close the modal
           if (this.modalRef) {
             this.modalRef.close();
+            // this.quantity = 0;
           }
           this.showFailAlertFor(`${this.data.ticker} sold successfully.`);
-          this.quantity = 0;
         },
         error: (error) => {
           console.error('Error selling stock:', error);
@@ -224,4 +249,8 @@ export class PortfolioComponent implements OnInit {
     }
   }
 
+  route(ticker: string): void {
+    this.router.navigate(['/search', ticker])
+
+  }
 }

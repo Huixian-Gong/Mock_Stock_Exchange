@@ -5,10 +5,16 @@ import { interval, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
+// import * as Highcharts from 'highcharts';
 import { formatDate } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { BackendService } from '../../../../services/backend.service';
+import * as Highcharts from 'highcharts/highstock';
+import HC_exporting from 'highcharts/modules/exporting';
+HC_exporting(Highcharts);
+
+
+
 
 interface StockInfo {
   exchange: string;
@@ -91,9 +97,10 @@ export class SummaryComponent implements OnInit, OnDestroy {
   
     this.chartOptions = {
       chart: {
-        type: 'line',
         backgroundColor: 'rgb(248,248,248)',
-        
+      },
+      rangeSelector: {
+        selected: 1
       },
       title: {
         text: apiData.ticker + ' Hourly Price Variation',
@@ -101,66 +108,30 @@ export class SummaryComponent implements OnInit, OnDestroy {
           color: 'rgb(180, 180, 180)' // Set the title color
         }
       },
+      series: [{
+        name: 'AAPL',
+        data: seriesData,
+        type: 'line',
+        tooltip: {
+          valueDecimals: 2
+        },
+        color: (seriesData.c > 0) ? 'rgb(82,131,34' : 'rgb(230,52,37)',
+      }],
       xAxis: {
         type: 'datetime',
-        endOnTick: true,
         startOnTick: true,
-        showLastLabel: true,  // Ensure the last label is shown
-        crosshair: {
-          snap: true, // Optionally disable snapping to data points
-          color: 'rgba(150, 150, 150, 0.8)', // Customize the crosshair color
-          width: 1, // Customize the crosshair width,
-          label: {
-            enabled: true,
-            backgroundColor: 'rgb(255,255,255)',
-          }
-        },
-        scrollbar: {
-          enabled: true
-        },
-      },
-      yAxis: { 
-        opposite: true,
-        title: {
-          text: '' ,
-        },
-        labels: {
-          x: -20,
-          y: -5
-        },
+          endOnTick: true,
         
       },
-      series: [{
-        type: 'line',
-        name: apiData.ticker,
-        data: seriesData,
-        tooltip: {
-          valueDecimals: 2,
-          
-        },
-        marker: {
-          enabled: false // Set enabled to false to remove the markers
-      }
-      }],
-      time: {
-        useUTC: false // Set to true or false depending on your data's timezone
+      yAxis: {
+        
       },
-      legend: {
-        enabled: false // Set legend to be hidden
-    },
-    tooltip: {
-      formatter: function() {
-          return '<hr style="border: 1px solid ' + this.series.color + '; width: 100%;">' +' <span style="color:' + this.series.color + '">&#9679;</span> '+apiData.ticker + ": " +this.point.y; // Customize the tooltip content here
+      credits: {
+        enabled: false
       },
-      positioner: function(labelWidth, labelHeight, point) {
-        var tooltipX, tooltipY;
-
-        tooltipX = point.plotX + this.chart.plotLeft + 20; // 10px to the right of the cursor
-        tooltipY = point.plotY + this.chart.plotTop - labelHeight / 2;
-
-        return { x: tooltipX, y: tooltipY };
-        },
-      },
+      exporting: {
+        enabled: false
+    }
     };
   }
 
@@ -176,8 +147,19 @@ export class SummaryComponent implements OnInit, OnDestroy {
     );
 
     this.chartOptions = {
+      title: {
+        text:''
+      },navigator: {
+        enabled: false
+      },
+      rangeSelector: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false, // This will hide the context button
+    },
       series: [{
-        data: [1, 2, 3, 4], // Example data
+        data: [], // Example data
         type: 'line' // Specify the chart type
       }]
     };

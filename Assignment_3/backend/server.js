@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 const FINNHUB_API_KEY = 'cms4589r01qlk9b11g1gcms4589r01qlk9b11g20';
 const POLYGON_API_KEY = 'wjYgWwDJ_fIrb0Iem90No7WkqTF1yyYu';
@@ -42,7 +42,7 @@ app.use(cors());
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
 
 app.get('/', (req, res) => {
-    res.redirect('/search/home');
+    res.send('Server connected!');
 })
 
 // app.get('/search/home', (req, res) => {

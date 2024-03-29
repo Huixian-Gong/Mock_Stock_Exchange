@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' }) // Removed the duplicate @Injectable decorator
+@Injectable({
+  providedIn: 'root',
+})
 export class NavbarService {
-  private navbarExpanded = new BehaviorSubject<boolean>(false);
+  private navbarHeight = new BehaviorSubject<string>('56px'); // Default height, adjust as needed
+  navbarHeight$ = this.navbarHeight.asObservable();
 
-  setNavbarState(isExpanded: boolean) {
-    this.navbarExpanded.next(isExpanded);
-  }
-
-  getNavbarState(): Observable<boolean> {
-    return this.navbarExpanded.asObservable();
+  updateNavbarHeight(height: string) {
+    this.navbarHeight.next(height);
   }
 }

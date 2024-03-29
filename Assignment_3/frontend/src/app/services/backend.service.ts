@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BackendService {
-  private apiUrl = 'http://localhost:3000'; // Base URL for your API
+  // private apiUrl = 'https://hw3backend-dot-csci-571-huixian.wl.r.appspot.com/'; 
+  private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 

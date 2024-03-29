@@ -82,7 +82,11 @@
     text-align: center;
     justify-content: center;
     margin-bottom: 20px;
+    /* text-align: right; */
+  }
 
+  .close a {
+    text-align: right;
   }
   
   .buy-button button {
@@ -92,12 +96,13 @@
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
+    
+  }
+
+  .first-button button{
     margin-right: 20px;
   }
-  
-  .bi {
-    cursor: pointer;
-  }
+
   
   .bi-star {
     fill: gray;
@@ -141,6 +146,44 @@
 
   .center-text {
     text-align: center;
+  }
+
+  .insufficient {
+    color: rgb(224, 127, 124);
+  }
+  .modal-title {
+    padding-bottom: 10px;
+  }
+
+  .modal-body {
+    padding-left: 30px;
+  }
+
+  .alert {
+    margin-top: 15px;
+  }
+
+  .bad-buy-button button{
+    background-color: rgb(133, 184, 157);
+    cursor: default;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+
+  }
+
+  .bad-sell-button button{
+    background-color: rgb(133, 184, 157);
+    cursor: default;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+  }
+
+  .bot {
+    justify-content: space-between;
   }
 
   @media (max-width: 400px) {
@@ -199,4 +242,6 @@
     .open, .closed {
       margin-top: 10px;
     }
+
+    
   }

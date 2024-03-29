@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output , ViewChild} from '@angular/core';
 import { BackendService } from '../../services/backend.service'; // Ensure this path is correct
 import { SharedService } from '../../services/shared.service'; // Ensure this path is correct
 import { HttpClientModule } from '@angular/common/http'
@@ -16,6 +16,9 @@ import { filter } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { interval } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+
 
 
 interface Stock {
@@ -35,7 +38,7 @@ interface Stock {
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule], // Removed HttpClientModule as it's provided by BackendService
+    MatProgressSpinnerModule,NgbAlertModule], // Removed HttpClientModule as it's provided by BackendService
   providers: [BackendService] // Added SharedService
 })
 export class InputComponent {
@@ -47,7 +50,11 @@ export class InputComponent {
   loading: boolean = false;
   // selection: boolean = false;
   private intervalSubscription: Subscription = new Subscription();
+  empty: boolean = false;
 
+  @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
+    private _fail = new Subject<string>();
+    failMessage = '';
 
   constructor(
     private backendService: BackendService,
@@ -77,7 +84,14 @@ export class InputComponent {
         return results.result.filter((stock: any) =>
           stock.type === 'Common Stock' && !stock.displaySymbol.includes('.'));
       })
+      
     );
+    this._fail.subscribe(message => this.failMessage = message);
+    this._fail.pipe(debounceTime(5000)).subscribe(() => {
+      if (this.selfClosingAlert) {
+        this.selfClosingAlert.close();
+      }
+    });
     // Listen to route parameter changes
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
@@ -90,16 +104,28 @@ export class InputComponent {
   }
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement; // Safely cast the event target to HTMLInputElement
+    if (input.value != '') {
+      this.empty = false;
+    }
     this.onSearch(input.value); // Now you can safely access input.value
   }
 
+  public showFailAlertFor(message: string): void {
+    this._fail.next(`${message}`);
+  }
   onSubmit(): void {
-    const searchTerm = this.stockCtrl.value.toUpperCase(); // Use the value from the form control
-    if (this.router.url !== `/search/${searchTerm}`) {
-      this.router.navigate(['/search', searchTerm]);
+    if (this.stockCtrl.value == null)  {
+      this.empty = true;
+      this.showFailAlertFor(`Please enter a valid stock ticker`);
     } else {
-      this.fetchData(searchTerm); // Otherwise, just fetch the data
+      const searchTerm = this.stockCtrl.value.toUpperCase(); // Use the value from the form control
+      if (this.router.url !== `/search/${searchTerm}`) {
+        this.router.navigate(['/search', searchTerm]);
+      } else {
+        this.fetchData(searchTerm); // Otherwise, just fetch the data
+      }
     }
+    
   }
   // Push a search term into the observable stream.
   search(term: string): void {

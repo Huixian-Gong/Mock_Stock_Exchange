@@ -1,0 +1,11 @@
+runtime: nodejs20
+service: hw3frontend
+handlers:
+- url: /(.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff2|woff|ttf|map))$
+  static_files: dist/frontend/browser/\1
+  upload: dist/frontend/browser/(.*\.(gif|png|jpg|css|js|ico|json|txt|svg|woff2|woff|ttf|map))$
+
+- url: /
+  static_files: dist/frontend/browser/index.html
+  upload: dist/frontend/browser/index.html
+

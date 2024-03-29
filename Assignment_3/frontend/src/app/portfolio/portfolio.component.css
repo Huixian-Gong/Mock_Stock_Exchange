@@ -7,6 +7,10 @@
     margin-bottom: 20px;
   }
 
+  .alert {
+    margin-top: 20px;
+  }
+
   .stock-details {
     font-size: 23px;
     display: flex;
@@ -16,6 +20,10 @@
     padding-block: 15px;
   }
 
+  .stock-header {
+    cursor: pointer;
+  }
+  
   .stock-pricing {
     font-size: 23px;
     display: flex;
@@ -74,6 +82,10 @@
     cursor: pointer;
   }
   
+  .insufficient {
+    color: rgb(224, 127, 124);
+  }
+
   .positive {
     color: rgb(60, 134, 40);
     /* float: right; */
@@ -82,6 +94,10 @@
   .negative {
     color: rgb(208, 45, 31);
     /* float: right; */
+  }
+
+  .zero {
+    color: #000000
   }
   
   .ticker {
@@ -127,6 +143,16 @@
 
   }
 
+  .inner-buy-button button {
+    background-color: rgb(69, 144,100); /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 20px;
+  }
+
 
 .bubble {
   background-color: rgb(253, 246, 215);
@@ -153,43 +179,25 @@
 .modal-title {
   font-size: 15px;
   font-weight: 400;
-  color: rgb(138, 138, 138)
+  padding-bottom: 10px;
+  /* color: rgb(138, 138, 138) */
 }
-.modal-body {
-  color: rgb(138, 138, 138)
-}
+
 .modal-footer {
   justify-content:space-between;
-  color: rgb(138, 138, 138)
+  /* color: rgb(138, 138, 138) */
 }
 
-#buy  {
-  background-color: rgb(69, 144, 99); /* Green background */
+.bad-button button{
+  background-color: rgb(133, 184, 157);
   color: white;
   border: none;
   border-radius: 5px;
-  /* padding: 10px 20px; */
-  cursor: pointer;
-  /* margin-right: 10px;
-  margin-left: 15px; */
-  width: 50px;
-  height: 35px;
-
+  padding: 10px 20px;
+  cursor: default;
+  margin-right: 20px;
 }
 
-#sell  {
-  background-color: rgb(69, 144, 99); /* Green background */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  /* padding: 10px 20px; */
-  cursor: pointer;
-  /* margin-right: 10px;
-  margin-left: 15px; */
-  width: 50px;
-  height: 35px;
-
-}
 
 @media (max-width: 400px) {
   .outer-container {
