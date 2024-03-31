@@ -59,6 +59,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   Highcharts: typeof Highcharts = Highcharts; // Add this line
   chartOptions: Highcharts.Options = {}; // Define the chart options type
+  change: number = 0
 
 
   constructor(private backendService: BackendService,
@@ -80,6 +81,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
       next: (data) => this.updateChart(data), // Data is processed and chart is updated
       error: (error) => console.error('Failed to fetch chart data', error)
     });
+    this.change = this.combinedData.price.d;
   }
   
   // updateChart(data: any): void {
@@ -115,7 +117,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
         tooltip: {
           valueDecimals: 2
         },
-        color: (seriesData.c > 0) ? 'rgb(82,131,34' : 'rgb(230,52,37)',
+        color: (this.change > 0) ? 'rgb(82,131,34)' : 'rgb(230,52,37)',
       }],
       xAxis: {
         type: 'datetime',

@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BackendService {
-  // private apiUrl = 'https://hw3backend-dot-csci-571-huixian.wl.r.appspot.com/'; 
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'https://hw3backend-dot-csci-571-huixian.wl.r.appspot.com'; 
+  // private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
+
 
   // Example for a GET request
 
@@ -81,11 +82,13 @@ export class BackendService {
   }
 
   buyStock(ticker: string, count: number, price: number): Observable <any> {
+    console.log(`${this.apiUrl}/buy/${ticker}/${count}/${price}`)
     return this.http.get(`${this.apiUrl}/buy/${ticker}/${count}/${price}`);
   }
 
-  sellStock(ticker: string, count: number, price: number): Observable <any> {
-    return this.http.get(`${this.apiUrl}/sell/${ticker}/${count}/${price}`);
+  sellStock(ticker: string, count: number, price: number, sellAll: number): Observable <any> {
+    console.log(`${this.apiUrl}/sell/${ticker}/${count}/${price}/${sellAll}`)
+    return this.http.get(`${this.apiUrl}/sell/${ticker}/${count}/${price}/${sellAll}`);
   }
 
   getPortfolio(): Observable <any> {

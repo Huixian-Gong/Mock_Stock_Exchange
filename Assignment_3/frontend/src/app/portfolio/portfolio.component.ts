@@ -14,6 +14,7 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { popperGenerator } from '@popperjs/core';
 
 
 interface Stock {
@@ -59,6 +60,8 @@ export class PortfolioComponent implements OnInit {
   loading: boolean = false;
   sufficientBalance: boolean = true;
   sufficientStock: boolean = true;
+  empty: boolean = false;
+  sellAll: number = 0;
   
 
   
@@ -85,6 +88,7 @@ export class PortfolioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("runned")
     this.loading = true
     this.refreshPortfolio();
     this._success.subscribe(message => this.successMessage = message);
@@ -114,8 +118,12 @@ export class PortfolioComponent implements OnInit {
       next: ({ portfolio, balance }) => {
         this.portfolio = portfolio;
         this.walletBalance = balance;
-        this.fetchStockDetails();
-        
+        if (portfolio.length != 0) {
+          this.fetchStockDetails();
+        } else {
+          this.loading = false;
+          this.empty = true;
+        }
       },
       error: (error) => console.error('Error refreshing portfolio', error)
     });
@@ -127,7 +135,15 @@ export class PortfolioComponent implements OnInit {
       // Filter stocks to include only those with watchlist = true
       this.portfolio = stocks;
       console.log(this.portfolio);
-      this.fetchStockDetails(); // Fetch additional details for each stock
+      if (this.portfolio.length != 0) {
+        this.fetchStockDetails();
+        console.log('stockdetails: ', this.stocksDetails)
+      } else {
+        this.loading = false;
+        this.empty = true;
+        this.stocksDetails = [];
+      }
+      // this.fetchStockDetails(); // Fetch additional details for each stock
     });
     this.backendService.getBalance().subscribe((response) => {
       // Filter stocks to include only those with watchlist = true
@@ -150,11 +166,11 @@ export class PortfolioComponent implements OnInit {
             watchlist: stock.watchlist, // watchlist status from portfolio
             quantity: stock.count, // quantity from portfolio
             name: result.stockData.name, // name from stockData
-            avgCost: stock.price / stock.count, // avgCost needs to be provided by the backend or calculated
-            totalCost: stock.price, // Calculate totalCost based on quantity and avgCost
-            change: result.priceData.c - stock.price / stock.count,// change from priceData
-            c: result.priceData.c, // current price from priceData
-            marketValue: stock.count * result.priceData.c // Calculate marketValue
+            avgCost: parseFloat((stock.price / stock.count).toFixed(2)), // avgCost needs to be provided by the backend or calculated
+            totalCost: parseFloat((stock.price).toFixed(2)), // Calculate totalCost based on quantity and avgCost
+            change: parseFloat((result.priceData.c - stock.price / stock.count).toFixed(2)),// change from priceData
+            c: parseFloat((result.priceData.c).toFixed(2)), // current price from priceData
+            marketValue: parseFloat((stock.count * result.priceData.c).toFixed(2)) // Calculate marketValue
           };
         })
       );
@@ -183,6 +199,11 @@ export class PortfolioComponent implements OnInit {
         this.sufficientStock = false;
       } else {
         this.sufficientStock = true;
+      }
+      if (count == this.quantity) {
+        this.sellAll = 0;
+      } else {
+        this.sellAll = 1;
       }
     }
 
@@ -227,7 +248,7 @@ export class PortfolioComponent implements OnInit {
   sellStock() {
     if (this.quantity > 0) {
       // ... your backend service call
-      this.backendService.sellStock(this.data.ticker, this.quantity, this.data.c).subscribe({
+      this.backendService.sellStock(this.data.ticker, this.quantity, this.data.c, this.sellAll).subscribe({
         next: (response) => {
           console.log('Stock selling successful:', response);
           this.loadPortfolio()

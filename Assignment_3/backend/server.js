@@ -390,8 +390,8 @@ app.get('/buy/:ticker/:count/:price', async (req, res) => {
   }
 });
 
-app.get('/sell/:ticker/:count/:price', async (req, res) => {
-  const { ticker, count, price } = req.params;
+app.get('/sell/:ticker/:count/:price/:sellAll', async (req, res) => {
+  const { ticker, count, price, sellAll } = req.params;
   const countToAdd = parseInt(count);
   const pricePerUnit = parseFloat(price);
   const totalCost = countToAdd * pricePerUnit;
@@ -407,16 +407,32 @@ app.get('/sell/:ticker/:count/:price', async (req, res) => {
 
     if (portfolio) {
       // If the ticker exists, update the count and price
-      await collection.updateOne(
-        { "stocks.ticker": ticker },
-        {
-          $inc: {
-            "stocks.$.count": -countToAdd,
-            "stocks.$.price": -totalCost,
-            "balance": +totalCost
+      if (sellAll != 0) {
+        await collection.updateOne(
+          { "stocks.ticker": ticker },
+          {
+            $inc: {
+              "stocks.$.count": -countToAdd,
+              "stocks.$.price": -totalCost,
+              "balance": +totalCost
+            }
           }
-        }
-      );
+        );
+      } else {
+        await collection.updateOne(
+          { "stocks.ticker": ticker },
+          {
+            $inc: {
+              "stocks.$.count": -countToAdd,
+              "balance": +totalCost
+            },
+            $set: {
+              "stocks.$.price": 0 // This sets the price to 0
+            }
+          }
+        );
+      }
+      
       res.status(200).send({ success: true, message: `Updated ${ticker} with count ${countToAdd} and total cost ${totalCost}` });
     } else {
       // If the ticker does not exist, add a new entry to the stocks array and deduct from balance

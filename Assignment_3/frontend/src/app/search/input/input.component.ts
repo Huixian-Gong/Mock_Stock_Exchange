@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output , ViewChild} from '@angular/core';
+import { Component, OnInit, EventEmitter, Output , ViewChild, ChangeDetectorRef} from '@angular/core';
 import { BackendService } from '../../services/backend.service'; // Ensure this path is correct
 import { SharedService } from '../../services/shared.service'; // Ensure this path is correct
 import { HttpClientModule } from '@angular/common/http'
@@ -52,6 +52,7 @@ export class InputComponent {
   private intervalSubscription: Subscription = new Subscription();
   empty: boolean = false;
 
+
   @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
     private _fail = new Subject<string>();
     failMessage = '';
@@ -60,7 +61,8 @@ export class InputComponent {
     private backendService: BackendService,
     private sharedService: SharedService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -159,17 +161,18 @@ export class InputComponent {
         };
         this.sharedService.updateData(combinedData);
         // console.log('Combined Response from backend:', combinedData);
-        this.data = combinedData
-        console.log(this.data)
+
       },
       error: (error) => console.error('Error fetching data:', error)
     });
   }
 
   clearInput(): void {
-    this.stockCtrl.setValue(''); // Clears the FormControl that's bound to the input
-    this.sharedService.updateData(null);
-    this.router.navigate(['/search/home']);
+    this.stockCtrl.setValue(''); // Clears the FormControl that's bound to the input immediately
+    this.sharedService.updateData(null); // Clear any shared data
+    this.router.navigate(['/search/home']).then(() => {
+      this.changeDetectorRef.detectChanges(); // Manually trigger change detection
+    });
   }
   
 }

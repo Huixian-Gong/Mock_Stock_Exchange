@@ -26,6 +26,7 @@ export class WatchlistComponent implements OnInit {
   watchlist: any[] = [];
   stocksDetails: any[] = []; // This array will hold the combined details
   loading: boolean = false;
+  empty: boolean = false;
 
   constructor(private backendService: BackendService,
     private router: Router) {}
@@ -42,9 +43,12 @@ export class WatchlistComponent implements OnInit {
     this.backendService.getFavorites().subscribe((stocks: Stock[]) => {
       // Filter stocks to include only those with watchlist = true
       this.watchlist = stocks.filter(stock => stock.watchlist === true);
-      console.log(this.watchlist);
-      this.fetchStockDetails(); // Fetch additional details for each stock
-      
+      if (this.watchlist.length != 0) {
+        this.fetchStockDetails(); // Fetch additional details for each stock
+      } else {
+        this.loading = false;
+        this.empty = true;
+      }
     });
   }
 
@@ -77,6 +81,9 @@ export class WatchlistComponent implements OnInit {
       // Remove the stock from the local watchlist
       this.watchlist = this.watchlist.filter(stock => stock.ticker !== ticker);
       // Also remove the stock from the stocksDetails
+      if (this.watchlist.length == 0) {
+        this.empty = true;
+      }
       this.stocksDetails = this.stocksDetails.filter(stock => stock.ticker !== ticker);
     });
   }

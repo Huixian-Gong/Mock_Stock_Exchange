@@ -183,7 +183,6 @@ export class InsightsComponent {
       next: (data) => {
         if (data && Array.isArray(data)) {
           this.createEarningsChart(data);
-          // console.log(data)
         } else {
           console.error('Data is not an array:', data);
         }
@@ -275,10 +274,6 @@ export class InsightsComponent {
 
   
   createEarningsChart(earningsData: EarningData[]): void {
-    const surpriseMap = new Map(earningsData.map(data => {
-      const timestamp = Date.parse(data.period);
-      return [timestamp, data.surprise];
-    }));
     console.log(earningsData)
     if (Array.isArray(earningsData)) {
       const actualData = earningsData.map(data => ({
@@ -288,10 +283,31 @@ export class InsightsComponent {
       }));
       
       const estimateData = earningsData.map(data => ({
-        y: data.estimate !== null ? data.estimate : 0, // Replace null with 0
+        y : data.estimate !== null ? data.estimate : 0, // Replace null with 0
+        x: Date.parse(data.period)
+      }));
+      const categories = actualData.map(data => Highcharts.dateFormat('%Y-%m-%d', data.x) + '<br>Surprise: ' + data.surprise.toFixed(4));
+      // console.log(categories)
+      
+      const dataObject = earningsData.map(data => ({
+        estimate : data.estimate !== null ? data.estimate : 0, // Replace null with 0
+        actual: data.actual !== null ? data.actual : 0,
+        surprise: data.surprise !== null ? data.surprise : 0,
         x: Date.parse(data.period)
       }));
 
+      const dataMerge = {
+        actual: earningsData.map(item => item["actual"]),
+        estimate: earningsData.map(item => item["estimate"]),
+        period: earningsData.map(item => String(item["period"])),
+        surprise: earningsData.map(item => item["surprise"]),
+      };
+
+
+
+
+      console.log(dataMerge)
+      
     this.chartOptions2 = {
       chart: {
         type: 'spline',
@@ -301,14 +317,13 @@ export class InsightsComponent {
         text: 'Historical EPS Surprises'
       },
       xAxis: {
-        type: 'datetime',
+        type: 'category',
+        categories: dataMerge.period,
         labels: {
-          formatter: function() {
-            const dateStr = Highcharts.dateFormat('%Y-%m-%d', this.value as number);
-            const surprise = surpriseMap.get(this.value as number);
-            const surpriseStr = surprise !== undefined ? ` Surprise: ${surprise.toFixed(4)}` : '';
-            return dateStr + surpriseStr;
-          }
+          formatter: function () {
+            return `<p style="text-align: center;">${this.value}<br>Surprise: ${dataMerge.surprise[this.pos]}</p>`;
+          },
+          useHTML: true
         }
       },
       yAxis: {
@@ -329,14 +344,14 @@ export class InsightsComponent {
       },
       series: [{
         name: 'Actual',
-        data: actualData as Highcharts.SeriesSplineOptions['data'],
-        type: 'spline' as const,
+        data: dataMerge.actual,
+        type: 'spline',
         showInLegend: true,
         zIndex: 1
       }, {
         name: 'Estimate',
-        data: estimateData as Highcharts.SeriesSplineOptions['data'],
-        type: 'spline' as const,
+        data: dataMerge.estimate,
+        type: 'spline' ,
         showInLegend: true,
         zIndex: 0
       }]
@@ -346,3 +361,4 @@ export class InsightsComponent {
 }
 }
 }
+

@@ -79,6 +79,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   infoPrice: any;
   sufficientBalance: boolean = true;
   sufficientStock: boolean = true;
+  sellAll: number = 0;
 
 
 
@@ -343,6 +344,11 @@ export class TopSectionComponent implements OnInit, OnDestroy {
       } else {
         this.sufficientStock = true;
       }
+      if (this.stockCount == this.quantity) {
+        this.sellAll = 0;
+      } else {
+        this.sellAll = 1;
+      }
     }
     console.log('quantity  = ', this.quantity )
     
@@ -379,7 +385,7 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   sellStock() {
     if (this.quantity > 0) {
       // ... your backend service call
-      this.backendService.sellStock(this.info.ticker, this.quantity, this.price.c).subscribe({
+      this.backendService.sellStock(this.info.ticker, this.quantity, this.price.c, this.sellAll).subscribe({
         next: (response) => {
           console.log('Stock selling successful:', response);
           this.updateStockCountAfterTransaction(this.info.ticker)

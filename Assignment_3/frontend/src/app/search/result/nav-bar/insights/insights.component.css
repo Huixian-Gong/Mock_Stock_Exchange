@@ -29,3 +29,7 @@ td {
     font-family: sans-serif;
     margin-block: 10px;
 }
+
+.container {
+    padding-bottom: 20px;
+}

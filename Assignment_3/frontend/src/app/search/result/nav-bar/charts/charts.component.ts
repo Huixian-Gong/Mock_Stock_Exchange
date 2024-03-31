@@ -115,7 +115,7 @@ Exporting(Highcharts);
         item.t, // the date
         item.v   // the volume
       ]);
-      console.log(volume)
+      // console.log(volume)
     
   
       this.chartOptions = {
