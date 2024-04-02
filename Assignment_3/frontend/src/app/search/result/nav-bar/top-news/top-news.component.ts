@@ -15,7 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';  //need to import
   selector: 'app-top-news',
   standalone: true,
   imports: [HttpClientModule, CommonModule, MatDialogModule, MatCardModule, NgbModule], // Removed HttpClientModule as it's provided by BackendService
-  providers: [BackendService, DatePipe], // Added SharedService
+  providers: [BackendService, DatePipe], 
   templateUrl: './top-news.component.html',
   styleUrl: './top-news.component.css'
 })

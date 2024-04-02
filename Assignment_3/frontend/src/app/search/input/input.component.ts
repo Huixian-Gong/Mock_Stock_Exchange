@@ -11,13 +11,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
+import { catchError, finalize, map, startWith } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { interval } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { ResultComponent } from '../result/result.component';
+import { TopSectionComponent } from '../result/top-section/top-section.component';
+import { NavBarComponent } from '../result/nav-bar/nav-bar.component';
 
 
 
@@ -38,24 +41,26 @@ interface Stock {
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule,NgbAlertModule], // Removed HttpClientModule as it's provided by BackendService
+    MatProgressSpinnerModule,
+    NgbAlertModule,
+    ResultComponent,
+    TopSectionComponent,
+    NavBarComponent], // Removed HttpClientModule as it's provided by BackendService
   providers: [BackendService] // Added SharedService
 })
 export class InputComponent {
   stockSymbol: string = '';
   data : any;
-  filteredStocks$: Observable<any[]> = of([]);
-  private searchTerms = new Subject<string>();
   stockCtrl = new FormControl();
   loading: boolean = false;
-  // selection: boolean = false;
-  private intervalSubscription: Subscription = new Subscription();
+  errorMessage : string = ''
   empty: boolean = false;
+  filteredOptions ?: Observable<{ displaySymbol: string, description:string, combined:string }[]>;
+  resultLoading = false;
+  emptyInput = false;
 
 
-  @ViewChild('selfClosingAlert', {static: false}) selfClosingAlert: NgbAlert | undefined;
-    private _fail = new Subject<string>();
-    failMessage = '';
+ 
 
   constructor(
     private backendService: BackendService,
@@ -66,113 +71,75 @@ export class InputComponent {
   ) {}
 
   ngOnInit(): void {
-    this.filteredStocks$ = this.stockCtrl.valueChanges.pipe(
-      // debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(term => {
-        // If the term is not empty, initiate the search
-        if (term) {
-          this.loading = true; // Indicate loading
-          // this.selection = false;
-          return this.backendService.stockTicker(term);
+    this.filteredOptions = this.stockCtrl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(150),
+      switchMap(value => {
+        if (value) {
+          this.loading = true
+          return this.fetchStock(value).pipe(
+            finalize(() => this.loading = false),
+          );
         } else {
-          // If the term is empty, clear the results and loading state
-          this.loading = false; // No longer loading
-          // this.selection = true;
-          return of([]);
-        }}),
-      map((results: any) => {
-        this.loading = false; // Data received, stop loading
-        return results.result.filter((stock: any) =>
-          stock.type === 'Common Stock' && !stock.displaySymbol.includes('.'));
+          this.loading = false;
+          return of([]); 
+        }
+      }),
+      catchError(error => {
+        console.error('There was an error!', error);
+        this.loading = false;
+        return [];
       })
-      
     );
-    this._fail.subscribe(message => this.failMessage = message);
-    this._fail.pipe(debounceTime(5000)).subscribe(() => {
-      if (this.selfClosingAlert) {
-        this.selfClosingAlert.close();
-      }
-    });
+    
     // Listen to route parameter changes
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
-      if (ticker) {
-        this.stockSymbol = ticker.toUpperCase();
-        this.stockCtrl.setValue(this.stockSymbol); // Set the value in FormControl as well
-        this.fetchData(this.stockSymbol);
-      }
+      Promise.resolve().then(() => {
+        if (ticker && ticker !== 'home') {
+          this.stockCtrl.setValue(ticker);
+          this.onSubmit();
+        } else {
+          this.stockCtrl.setValue('');
+        }
+      });
     });
   }
-  onInput(event: Event): void {
-    const input = event.target as HTMLInputElement; // Safely cast the event target to HTMLInputElement
-    if (input.value != '') {
-      this.empty = false;
-    }
-    this.onSearch(input.value); // Now you can safely access input.value
+
+  fetchStock(ticker: string): Observable<any[]>  {
+    return this.backendService.stockTicker(ticker).pipe(
+      // map(data => data.map((item: any) => item.displaySymbol)),
+      map(data => data.map((item: any) => ({
+        displaySymbol: item.displaySymbol,
+        description: item.description,
+      }))),
+      catchError(error => {
+        console.error('There was an error!', error);
+        return [];
+      })
+    );
   }
 
-  public showFailAlertFor(message: string): void {
-    this._fail.next(`${message}`);
-  }
   onSubmit(): void {
-    if (this.stockCtrl.value == null)  {
-      this.empty = true;
-      this.showFailAlertFor(`Please enter a valid stock ticker`);
-    } else {
-      const searchTerm = this.stockCtrl.value.toUpperCase(); // Use the value from the form control
-      if (this.router.url !== `/search/${searchTerm}`) {
-        this.router.navigate(['/search', searchTerm]);
-      } else {
-        this.fetchData(searchTerm); // Otherwise, just fetch the data
-      }
-    }
     
-  }
-  // Push a search term into the observable stream.
-  search(term: string): void {
-    this.searchTerms.next(term);
-  }
-  selectStock(stock: any): void {
-    this.loading = false;
-    this.stockSymbol = stock.displaySymbol;
-    this.stockCtrl.setValue(this.stockSymbol); // This will set the selected stock symbol in the input field
-    this.onSubmit(); // Trigger search immediately
-    this.filteredStocks$ = of([]); // Clear suggestions
-  }
-
-  // Use this method in your template's (input) event
-  onSearch(term: string): void {
-    this.stockSymbol = term.toUpperCase();
-    this.search(term);
+    if (this.stockCtrl.value == '') {
+      this.emptyInput = true;
+    } else {
+      this.emptyInput = false;
+    }
+    console.log(this.emptyInput)
+    if (this.stockCtrl.value) {
+      this.router.navigate(['/search', this.stockCtrl.value.toUpperCase()]);
+      this.resultLoading = true;
+    } else {
+      this.errorMessage = 'Please enter a valid ticker.';
+    }
   }
 
-  fetchData(ticker: string): void {
-    forkJoin({
-      stockData: this.backendService.searchStock(ticker),
-      priceData: this.backendService.stockPrice(ticker),
-      peersData: this.backendService.stockPeers(ticker)
-    }).subscribe({
-      next: (results) => {
-        const combinedData = {
-          stock: results.stockData,
-          price: results.priceData,
-          peers: results.peersData
-        };
-        this.sharedService.updateData(combinedData);
-        // console.log('Combined Response from backend:', combinedData);
-
-      },
-      error: (error) => console.error('Error fetching data:', error)
-    });
-  }
 
   clearInput(): void {
     this.stockCtrl.setValue(''); // Clears the FormControl that's bound to the input immediately
-    this.sharedService.updateData(null); // Clear any shared data
-    this.router.navigate(['/search/home']).then(() => {
-      this.changeDetectorRef.detectChanges(); // Manually trigger change detection
-    });
+    this.router.navigate(['/search/home'])
   }
-  
+
 }

@@ -90,6 +90,31 @@
     margin-bottom: 45px;
   }
 
+  .spinner {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .errorMessage {
+    background-color: rgb(244, 221, 223);
+    text-align: center;
+    border: 2px solid rgb(222, 195, 197);
+    padding-block: 20px;
+    border-radius: 5px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+
+  .errorText {
+    text-align: center;
+  }
+  .errorButton {
+    float: right;
+    border: none;
+    background-color: transparent;
+  }
   @media (max-width: 400px) {
     .form-container {
       width: 300px;

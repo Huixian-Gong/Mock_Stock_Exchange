@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import { SharedService } from '../../../services/shared.service'; // Update the path accordingly
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -14,6 +13,8 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 interface StockInfo {
@@ -52,7 +53,9 @@ interface CombinedData {
     HttpClientModule, 
     NgbModule,
     FormsModule,
-    NgbAlertModule],
+    NgbAlertModule,
+    NavBarComponent,
+    MatProgressSpinnerModule],
   providers: [BackendService],
   templateUrl: './top-section.component.html',
   styleUrls: ['./top-section.component.css'] // Changed 'styleUrl' to 'styleUrls'
@@ -80,12 +83,11 @@ export class TopSectionComponent implements OnInit, OnDestroy {
   sufficientBalance: boolean = true;
   sufficientStock: boolean = true;
   sellAll: number = 0;
-
+  exist: boolean = false;
 
 
 
   constructor(
-    private sharedService: SharedService,
     private backendService: BackendService,
     private route: ActivatedRoute,
     private modalWindow: NgbModal,
@@ -220,13 +222,6 @@ export class TopSectionComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.route.paramMap.subscribe(params => {
-    //   const ticker = params.get('ticker');
-    //   if (ticker) {
-    //     this.stockSymbol = ticker.toUpperCase();
-    //     this.checkInitialStarState(this.stockSymbol);
-    //   }
-    // });
     
     this.route.paramMap.subscribe(params => {
       const ticker = params.get('ticker');
@@ -239,14 +234,6 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     });
 
     this.updateInfoPrice(this.stockSymbol)
-    // Existing subscription to shared data...
-    // this.subscription.add(
-    //   this.sharedService.currentData$.subscribe((newData: CombinedData) => {
-    //     this.combinedData = newData;
-    //     console.log(this.combinedData)
-    //     this.calculateMarketStatus(); // Call this method here
-    //   })
-    // );
 
 
 
@@ -269,7 +256,14 @@ export class TopSectionComponent implements OnInit, OnDestroy {
     this.backendService.searchStock(this.stockSymbol).subscribe({
       next: (data:StockInfo) => {
         this.info = data;
-        console.log(this.info)
+
+        if (Object.keys(data).length === 0 && data.constructor === Object) {
+          this.exist = false;
+        } else {
+          console.log(data);
+          this.exist = true;
+        }
+
       },
       error: (error) => console.error('Error fetching updated stock info', error)
     });

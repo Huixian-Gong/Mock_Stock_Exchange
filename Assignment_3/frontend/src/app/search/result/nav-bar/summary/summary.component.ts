@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SharedService } from '../../../../services/shared.service'; // Update the path accordingly
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { BackendService } from '../../../../services/backend.service';
 import * as Highcharts from 'highcharts/highstock';
 import HC_exporting from 'highcharts/modules/exporting';
 HC_exporting(Highcharts);
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -47,50 +47,120 @@ interface CombinedData {
 @Component({
   selector: 'app-summary',
   standalone: true,
-  imports: [CommonModule, RouterModule, HighchartsChartModule, HttpClientModule],
+  imports: [CommonModule, RouterModule, HighchartsChartModule, HttpClientModule,],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.css',
   providers: [BackendService]
 })
 
 export class SummaryComponent implements OnInit, OnDestroy {
-  combinedData: CombinedData | null = null; // The property type is now the corrected CombinedData
   currentTime: Date = new Date();
   private subscription: Subscription = new Subscription();
   Highcharts: typeof Highcharts = Highcharts; // Add this line
   chartOptions: Highcharts.Options = {}; // Define the chart options type
   change: number = 0
-
+  stockSymbol: string = '';
+  profile: any [] = [];
+  peers: string [] = [];
+  price: any [] = [];
+  data: any = {profile: this.profile, peers: this.peers, price: this.price}
 
   constructor(private backendService: BackendService,
-    private sharedService: SharedService) {}
+    private route: ActivatedRoute,) {}
+
+    ngOnInit(): void {
+      // Existing subscription to shared data...
+
+      this.route.paramMap.subscribe(params => {
+        const ticker = params.get('ticker');
+        // console.log('news' + ticker)
+        if (ticker) {
+          this.stockSymbol = ticker.toUpperCase();
+          this.fetchData(this.stockSymbol); // Directly fetch data based on the ticker
+        }
+      });
+  
+      this.chartOptions = {
+        title: {
+          text:''
+        },navigator: {
+          enabled: false
+        },
+        rangeSelector: {
+          enabled: false
+        },
+        exporting: {
+          enabled: false, // This will hide the context button
+        },
+          series: [{
+            data: [], // Example data
+            type: 'line' // Specify the chart type
+          }]
+        };
+  
+      // Set up an interval to update the currentTime every 15 seconds
+      const timeUpdateSubscription = interval(15000) // 15000 milliseconds
+        .pipe(
+          startWith(this.currentTime), // Emit the current time immediately
+          map(() => new Date()) // Then emit a new Date object for each tick of the interval
+        )
+        .subscribe(time => {
+          this.currentTime = time; // Update the currentTime property
+        });
+  
+      // Add the timeUpdateSubscription to the subscriptions
+      this.subscription.add(timeUpdateSubscription);
+    }
+
+    fetchData(ticker: string): void {
+      this.backendService.searchStock(ticker).subscribe({
+        next: (data) => {
+          this.data.profile = data
+          console.log(this.data)
+        },
+        error: (error) => console.error('Failed to fetch profile data', error)
+      });
+      this.backendService.stockPeers(ticker).subscribe({
+        next: (data) => {
+          this.data.peers = data;
+          console.log(this.data)
+        },
+        error: (error) => console.error('Failed to fetch peers data', error)
+      });
+      this.backendService.stockPrice(ticker).subscribe({
+        next: (data) => {
+          this.data.price = data;
+          console.log(this.data)
+          this.fetchHourlyStockData();
+
+        },
+        error: (error) => console.error('Failed to fetch price data', error)
+      });
+    }
+  
   
   fetchHourlyStockData(): void {
-    if (!this.combinedData) return;
+    if (!this.data) return;
   
-    const ticker = this.combinedData.stock.ticker;
-    const to = new Date(this.combinedData.price.t * 1000);
+    const ticker = this.stockSymbol;
+    const to = new Date(this.data.price.t * 1000);
     // Example: determine 'from' and 'to' based on whether market is open or closed
     // Adjust the logic based on market hours and time zones
-    const from = new Date(this.combinedData.price.t * 1000);
+    const from = new Date(this.data.price.t * 1000);
     from.setDate(to.getDate() - 1);
     let fromFormatted = formatDate(from, 'yyyy-MM-dd', 'en-US');
     let toFormatted = formatDate(to, 'yyyy-MM-dd', 'en-US');
     // Call the service method to fetch data
     this.backendService.summaryChart(ticker, fromFormatted, toFormatted).subscribe({
-      next: (data) => this.updateChart(data), // Data is processed and chart is updated
+      next: (data) => {
+        this.updateChart(data)
+        console.log(data)
+      }, 
       error: (error) => console.error('Failed to fetch chart data', error)
     });
-    this.change = this.combinedData.price.d;
+    this.change = this.data.price.d;
   }
   
-  // updateChart(data: any): void {
-  //   // Example: Update your Highcharts options based on the data
-  //   this.chartOptions = {
-  //     // Define chart options, series data extracted from the API response
-  //   };
-  // }
-
   updateChart(apiData: any): void {
     // Assuming 'apiData.results' contains your stock data
     const seriesData = apiData.results.map((dataPoint: { t: number; c: number }) => {
@@ -135,49 +205,6 @@ export class SummaryComponent implements OnInit, OnDestroy {
         enabled: false
     }
     };
-  }
-
-  
-
-  ngOnInit(): void {
-    // Existing subscription to shared data...
-    this.subscription.add(
-      this.sharedService.currentData$.subscribe((newData: CombinedData) => {
-        this.combinedData = newData;
-        this.fetchHourlyStockData(); // Fetch hourly data when combinedData updates
-      })
-    );
-
-    this.chartOptions = {
-      title: {
-        text:''
-      },navigator: {
-        enabled: false
-      },
-      rangeSelector: {
-        enabled: false
-      },
-      exporting: {
-        enabled: false, // This will hide the context button
-    },
-      series: [{
-        data: [], // Example data
-        type: 'line' // Specify the chart type
-      }]
-    };
-
-    // Set up an interval to update the currentTime every 15 seconds
-    const timeUpdateSubscription = interval(15000) // 15000 milliseconds
-      .pipe(
-        startWith(this.currentTime), // Emit the current time immediately
-        map(() => new Date()) // Then emit a new Date object for each tick of the interval
-      )
-      .subscribe(time => {
-        this.currentTime = time; // Update the currentTime property
-      });
-
-    // Add the timeUpdateSubscription to the subscriptions
-    this.subscription.add(timeUpdateSubscription);
   }
 
   ngOnDestroy(): void {

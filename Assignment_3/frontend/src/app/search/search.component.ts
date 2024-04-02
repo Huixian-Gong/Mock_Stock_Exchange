@@ -65,26 +65,8 @@ export class SearchComponent implements OnInit {
         const tickerValue = params.get('ticker');
         if (tickerValue) {
           this.ticker = tickerValue.toUpperCase(); // Update input box
-          this.submitSearch(); // Auto-submit
+          console.log(`Searching for ${this.ticker}`);
         }
       });
-      this.subscription.add(
-        this.sharedService.currentData$.subscribe((newData: CombinedData) => {
-          if (newData) { // Ensure newData is not null before proceeding
-            this.combinedData = newData;
-            this.exist = newData.peers && newData.peers.length !== 0;
-            // Adjust the loading state based on the new data
-            this.loading = false;
-          } else {
-            // Handle the case where newData is null
-            this.loading = true; // You may want to adjust this based on your needs
-            this.exist = false;
-          }
-        })
-      );
-    }
-    
-    submitSearch(): void {
-      console.log(`Searching for ${this.ticker}`);
     }
   }

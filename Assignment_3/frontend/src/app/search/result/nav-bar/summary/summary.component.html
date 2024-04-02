@@ -1,28 +1,28 @@
 
 
 
-<div *ngIf="combinedData" class="stock-container container">
+<div *ngIf="data.peers.length != 0" class="stock-container container">
     <!-- new-component.html -->
     <div class="row">
         <div class="col-md-6 col-12">
         <div class="stock-info">
-            <b>High Price: </b>{{ combinedData.price.h | number:'1.2-2' }}<br>
-            <b>Low Price: </b>{{ combinedData.price.l | number:'1.2-2' }}<br>
-            <b>Open Price: </b>{{ combinedData.price.o | number:'1.2-2' }}<br>
-            <b>Prev. Close: </b>{{ combinedData.price.pc | number:'1.2-2' }}<br>
+            <b>High Price: </b>{{ data.price.h | number:'1.2-2' }}<br>
+            <b>Low Price: </b>{{ data.price.l | number:'1.2-2' }}<br>
+            <b>Open Price: </b>{{ data.price.o | number:'1.2-2' }}<br>
+            <b>Prev. Close: </b>{{ data.price.pc | number:'1.2-2' }}<br>
         </div>
         <div class="company-info">
             <div class="header">
             <u><b>About the company</b></u>
             </div>
-            <p><b>IPO Start Date: </b>{{ combinedData.stock.ipo }}</p>
-            <p><b>Industry: </b>{{ combinedData.stock.finnhubIndustry }}</p>
-            <p><b>Webpage: </b><a href="{{ combinedData.stock.weburl }}">{{ combinedData.stock.weburl }}</a></p>
+            <p><b>IPO Start Date: </b>{{ data.profile.ipo }}</p>
+            <p><b>Industry: </b>{{ data.profile.finnhubIndustry }}</p>
+            <p><b>Webpage: </b><a href="{{ data.profile.weburl }}">{{ data.profile.weburl }}</a></p>
             <!-- <p>Company peers:{{ combinedData.peers }}</p> -->
             
-            <div *ngIf="combinedData && combinedData.peers.length > 0">
+            <div *ngIf="data && data.peers.length > 0">
             <p><b>Company Peers:</b></p>
-            <span *ngFor="let peer of combinedData.peers; let last = last" class="peers">
+            <span *ngFor="let peer of data.peers; let last = last" class="peers">
                 <a [routerLink]="['/search', peer]">{{ peer }}</a>{{last ? '' : ', '}}
             </span>
             </div>

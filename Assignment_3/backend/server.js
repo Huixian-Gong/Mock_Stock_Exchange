@@ -55,11 +55,19 @@ app.get('/ticker/:query', async (req, res) => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    res.json(data);
+    
+    // Apply the filtering criteria
+    const filteredResults = data.result.filter(item => 
+      item.type === 'Common Stock' && !item.symbol.includes('.')
+    );
+
+    // Send the filtered array back as the response
+    res.json(filteredResults);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from Finnhub' });
   }
 });
+
 
 app.get('/search/:ticker', async (req, res) => {
     const ticker = req.params.ticker;

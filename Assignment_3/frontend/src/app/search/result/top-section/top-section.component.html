@@ -1,4 +1,14 @@
+<div  class="spinner" *ngIf="!(info && price)">
+  <mat-spinner diameter="70"></mat-spinner>
+</div>
 <div *ngIf="info && price" class="stock-container container">
+
+  <div *ngIf="!exist" class="empty">
+    <div class="bubble">No data found. Please enter a valid Ticker</div>
+  </div >
+
+  <div *ngIf="exist" class="non-empty">
+
     <ngb-alert *ngIf="successMessage" [type]="'success'" class="center-text alert" (closed)="successMessage = ''" #selfClosingAlert>
       {{ successMessage }}
     </ngb-alert>
@@ -63,7 +73,13 @@
 
     </div>
     <div [ngClass]="{'open': marketOpen, 'closed':!marketOpen}">{{ marketStatus }}</div>
+
+    <div class="navbar-container">
+      <app-nav-bar></app-nav-bar>
+    </div>
+  </div>
 </div>
+
 
 
 
