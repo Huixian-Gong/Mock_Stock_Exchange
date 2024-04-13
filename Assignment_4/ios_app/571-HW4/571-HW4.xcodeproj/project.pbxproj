@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED2641202BC79D4E005B5FB7 /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED26411F2BC79D4E005B5FB7 /* SearchResultView.swift */; };
+		ED2641222BC7A87F005B5FB7 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2641212BC7A87F005B5FB7 /* SearchViewModel.swift */; };
+		ED2641252BC8693D005B5FB7 /* StockDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2641242BC8693D005B5FB7 /* StockDetailView.swift */; };
+		ED2641272BC87050005B5FB7 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2641262BC87050005B5FB7 /* Structs.swift */; };
+		ED2641292BC882AA005B5FB7 /* StockDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2641282BC882AA005B5FB7 /* StockDetailViewModel.swift */; };
 		ED44C71F2BC4ABE800044A8D /* _71_HW4App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C71E2BC4ABE800044A8D /* _71_HW4App.swift */; };
 		ED44C7212BC4ABE800044A8D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7202BC4ABE800044A8D /* ContentView.swift */; };
 		ED44C7262BC4ABE900044A8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7252BC4ABE900044A8D /* Preview Assets.xcassets */; };
@@ -31,9 +36,16 @@
 		EDF35C282BC5235A000381BC /* WatchlistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C272BC5235A000381BC /* WatchlistModel.swift */; };
 		EDF35C2A2BC523D3000381BC /* WatchlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */; };
 		EDF35C2D2BC5D12D000381BC /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C2C2BC5D12D000381BC /* NetworkService.swift */; };
+		EDF35C4B2BC78DC8000381BC /* PortfolioStockRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C4A2BC78DC8000381BC /* PortfolioStockRowView.swift */; };
+		EDF35C4D2BC78E3B000381BC /* WatchlistStockRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C4C2BC78E3B000381BC /* WatchlistStockRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ED26411F2BC79D4E005B5FB7 /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
+		ED2641212BC7A87F005B5FB7 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		ED2641242BC8693D005B5FB7 /* StockDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailView.swift; sourceTree = "<group>"; };
+		ED2641262BC87050005B5FB7 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		ED2641282BC882AA005B5FB7 /* StockDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailViewModel.swift; sourceTree = "<group>"; };
 		ED44C71B2BC4ABE800044A8D /* 571-HW4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "571-HW4.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED44C71E2BC4ABE800044A8D /* _71_HW4App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _71_HW4App.swift; sourceTree = "<group>"; };
 		ED44C7202BC4ABE800044A8D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +67,8 @@
 		EDF35C272BC5235A000381BC /* WatchlistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistModel.swift; sourceTree = "<group>"; };
 		EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViewModel.swift; sourceTree = "<group>"; };
 		EDF35C2C2BC5D12D000381BC /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		EDF35C4A2BC78DC8000381BC /* PortfolioStockRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioStockRowView.swift; sourceTree = "<group>"; };
+		EDF35C4C2BC78E3B000381BC /* WatchlistStockRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistStockRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ED2641232BC868F6005B5FB7 /* StockDetail */ = {
+			isa = PBXGroup;
+			children = (
+				ED2641242BC8693D005B5FB7 /* StockDetailView.swift */,
+				ED2641282BC882AA005B5FB7 /* StockDetailViewModel.swift */,
+			);
+			path = StockDetail;
+			sourceTree = "<group>";
+		};
 		ED44C7122BC4ABE800044A8D = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +118,7 @@
 				ED44C71E2BC4ABE800044A8D /* _71_HW4App.swift */,
 				ED44C7202BC4ABE800044A8D /* ContentView.swift */,
 				ED44C7502BC4D18700044A8D /* HomeScreen */,
+				ED2641232BC868F6005B5FB7 /* StockDetail */,
 				EDF35C2B2BC5D11A000381BC /* Service */,
 				ED44C72C2BC4AC2200044A8D /* Assets.xcassets */,
 				ED44C7242BC4ABE900044A8D /* Preview Content */,
@@ -131,6 +155,8 @@
 				ED44C7532BC4F97900044A8D /* Portfolio */,
 				ED44C7542BC4F98300044A8D /* Watchlist */,
 				ED44C7412BC4B5C600044A8D /* FooterView.swift */,
+				ED26411F2BC79D4E005B5FB7 /* SearchResultView.swift */,
+				ED2641212BC7A87F005B5FB7 /* SearchViewModel.swift */,
 			);
 			path = HomeScreen;
 			sourceTree = "<group>";
@@ -141,6 +167,7 @@
 				ED44C75C2BC4FE0C00044A8D /* PortfolioView.swift */,
 				ED44C7602BC5031500044A8D /* PortfolioModel.swift */,
 				ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */,
+				EDF35C4A2BC78DC8000381BC /* PortfolioStockRowView.swift */,
 			);
 			path = Portfolio;
 			sourceTree = "<group>";
@@ -151,6 +178,7 @@
 				ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */,
 				EDF35C272BC5235A000381BC /* WatchlistModel.swift */,
 				EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */,
+				EDF35C4C2BC78E3B000381BC /* WatchlistStockRowView.swift */,
 			);
 			path = Watchlist;
 			sourceTree = "<group>";
@@ -159,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				EDF35C2C2BC5D12D000381BC /* NetworkService.swift */,
+				ED2641262BC87050005B5FB7 /* Structs.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -248,17 +277,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED2641292BC882AA005B5FB7 /* StockDetailViewModel.swift in Sources */,
+				EDF35C4D2BC78E3B000381BC /* WatchlistStockRowView.swift in Sources */,
 				ED44C7382BC4AF4200044A8D /* DateHeaderView.swift in Sources */,
 				EDF35C2A2BC523D3000381BC /* WatchlistViewModel.swift in Sources */,
 				ED44C7212BC4ABE800044A8D /* ContentView.swift in Sources */,
 				ED44C75B2BC4FCB200044A8D /* HomeScreenViewModel.swift in Sources */,
 				ED44C7592BC4FCA100044A8D /* HomeScreenModel.swift in Sources */,
+				ED2641222BC7A87F005B5FB7 /* SearchViewModel.swift in Sources */,
 				ED44C7522BC4D2B700044A8D /* HomeScreenView.swift in Sources */,
 				ED44C7422BC4B5C600044A8D /* FooterView.swift in Sources */,
 				ED44C71F2BC4ABE800044A8D /* _71_HW4App.swift in Sources */,
 				ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */,
 				ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */,
+				ED2641272BC87050005B5FB7 /* Structs.swift in Sources */,
 				ED44C75D2BC4FE0C00044A8D /* PortfolioView.swift in Sources */,
+				ED2641252BC8693D005B5FB7 /* StockDetailView.swift in Sources */,
+				ED2641202BC79D4E005B5FB7 /* SearchResultView.swift in Sources */,
+				EDF35C4B2BC78DC8000381BC /* PortfolioStockRowView.swift in Sources */,
 				ED44C7632BC5031E00044A8D /* PortfolioViewModel.swift in Sources */,
 				EDF35C2D2BC5D12D000381BC /* NetworkService.swift in Sources */,
 				EDF35C282BC5235A000381BC /* WatchlistModel.swift in Sources */,
