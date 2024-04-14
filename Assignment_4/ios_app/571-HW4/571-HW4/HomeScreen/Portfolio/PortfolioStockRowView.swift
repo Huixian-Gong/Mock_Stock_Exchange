@@ -13,9 +13,11 @@ struct PortfolioStockRowView: View {
     var price: Double
     var difference: Double?
     var differencePercentage: Double?
+    @State private var isShowingDetailView = false
+
     
     var body: some View {
-        NavigationLink(destination: Text("Destination")) {
+        NavigationLink(destination: StockDetailView(stockSymbol: ticker, isShowingDetailView: $isShowingDetailView), isActive: $isShowingDetailView) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(ticker)
@@ -47,7 +49,11 @@ struct PortfolioStockRowView: View {
                     .font(.system(size: 14))
                 }
             }
+            
         }
+        .onTapGesture {
+                    self.isShowingDetailView = true
+                }
     }
 }
 

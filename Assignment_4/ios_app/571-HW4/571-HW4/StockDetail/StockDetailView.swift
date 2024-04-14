@@ -158,9 +158,19 @@ struct StockDetailView: View {
                                     .font(.system(size: 15))
                                     .bold()
                                 Spacer()
-                                Text(viewModel.peers.joined(separator: ", "))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 15))
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                                HStack {
+                                                    ForEach(viewModel.peers, id: \.self) { peer in
+                                                        NavigationLink(destination: StockDetailView(stockSymbol: peer, isShowingDetailView: .constant(true))) {
+                                                            Text("\(peer),")
+                                                                
+                                                                .foregroundColor(.blue)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.system(size: 15))
                             }
                         }
                         
@@ -254,12 +264,14 @@ struct StockDetailView: View {
                 VStack{
                     Text("News")
                         .font(.system(size: 25))
-                    Divider()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    StockNewsView(news: viewModel.news)
+
                 }
-                Spacer()
-                    .frame(height: 20)
+                
             }
             .padding()
+            
             
         }
         .navigationBarTitle(stockSymbol, displayMode: .inline)
@@ -283,8 +295,9 @@ struct StockDetailView: View {
         }
         // When the view disappears, set isShowingDetailView to false
         .onDisappear {
-            isShowingDetailView = false
+//            isShowingDetailView = false
         }
+        
     }
     
     
@@ -302,5 +315,6 @@ struct StockDetailView: View {
 
 
 #Preview {
-    StockDetailView(stockSymbol: "AAPL", isShowingDetailView: .constant(true))
+    StockDetailView(stockSymbol: "NVDA", isShowingDetailView: .constant(true))
+    
 }

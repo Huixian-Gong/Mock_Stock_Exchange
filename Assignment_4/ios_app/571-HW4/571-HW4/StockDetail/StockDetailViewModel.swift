@@ -88,7 +88,9 @@ class StockDetailViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let news):
-                    self?.news = news
+                    let filteredNews = news.filter { !$0.headline.isEmpty && !$0.source.isEmpty && !$0.summary.isEmpty && !$0.image.isEmpty && !$0.url.isEmpty }.prefix(20)
+//                    print(filteredNews)
+                    self?.news = Array(filteredNews)
                     self?.dataFetched()
                 case .failure(let error):
                     print(error)

@@ -181,7 +181,6 @@ class NetworkService: NetworkServiceProtocol {
     func fetchInsider(for ticker: String, completion: @escaping (Result<[StockInsider], Error>) -> Void) {
         let url = "\(baseURL)/insider/\(ticker)"
         AF.request(url).validate().responseDecodable(of: [StockInsider].self) { response in
-//            print(response.result)
             switch response.result {
             case .success(let tickers):
                 completion(.success(tickers))

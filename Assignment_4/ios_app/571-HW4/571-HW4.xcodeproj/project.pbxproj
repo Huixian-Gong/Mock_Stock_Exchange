@@ -17,9 +17,9 @@
 		ED44C7262BC4ABE900044A8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7252BC4ABE900044A8D /* Preview Assets.xcassets */; };
 		ED44C72D2BC4AC2200044A8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED44C72C2BC4AC2200044A8D /* Assets.xcassets */; };
 		ED44C72F2BC4AC4400044A8D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED44C72E2BC4AC4400044A8D /* Launch Screen.storyboard */; };
-		ED44C7342BC4ACBD00044A8D /* sl_z_072523_61700_05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7312BC4ACBC00044A8D /* sl_z_072523_61700_05.jpg */; };
+		ED44C7342BC4ACBD00044A8D /* twitter.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7312BC4ACBC00044A8D /* twitter.jpg */; };
 		ED44C7352BC4ACBD00044A8D /* app icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7322BC4ACBC00044A8D /* app icon.png */; };
-		ED44C7362BC4ACBD00044A8D /* f_logo_RGB-Blue_144.png in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7332BC4ACBD00044A8D /* f_logo_RGB-Blue_144.png */; };
+		ED44C7362BC4ACBD00044A8D /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = ED44C7332BC4ACBD00044A8D /* facebook.png */; };
 		ED44C7382BC4AF4200044A8D /* DateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7372BC4AF4200044A8D /* DateHeaderView.swift */; };
 		ED44C7422BC4B5C600044A8D /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7412BC4B5C600044A8D /* FooterView.swift */; };
 		ED44C7452BC4C69800044A8D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = ED44C7442BC4C69800044A8D /* Alamofire */; };
@@ -33,6 +33,8 @@
 		ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */; };
 		ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7602BC5031500044A8D /* PortfolioModel.swift */; };
 		ED44C7632BC5031E00044A8D /* PortfolioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */; };
+		EDAB0EEE2BCA4AE600E0E699 /* StockNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */; };
+		EDAB0EF02BCA57B700E0E699 /* NewsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */; };
 		EDF35C282BC5235A000381BC /* WatchlistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C272BC5235A000381BC /* WatchlistModel.swift */; };
 		EDF35C2A2BC523D3000381BC /* WatchlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */; };
 		EDF35C2D2BC5D12D000381BC /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF35C2C2BC5D12D000381BC /* NetworkService.swift */; };
@@ -52,9 +54,9 @@
 		ED44C7252BC4ABE900044A8D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		ED44C72C2BC4AC2200044A8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../../../../../../../../../Downloads/AppIcons 2/Assets.xcassets"; sourceTree = "<group>"; };
 		ED44C72E2BC4AC4400044A8D /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		ED44C7312BC4ACBC00044A8D /* sl_z_072523_61700_05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sl_z_072523_61700_05.jpg; sourceTree = "<group>"; };
+		ED44C7312BC4ACBC00044A8D /* twitter.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = twitter.jpg; sourceTree = "<group>"; };
 		ED44C7322BC4ACBC00044A8D /* app icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app icon.png"; sourceTree = "<group>"; };
-		ED44C7332BC4ACBD00044A8D /* f_logo_RGB-Blue_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "f_logo_RGB-Blue_144.png"; sourceTree = "<group>"; };
+		ED44C7332BC4ACBD00044A8D /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		ED44C7372BC4AF4200044A8D /* DateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeaderView.swift; sourceTree = "<group>"; };
 		ED44C7412BC4B5C600044A8D /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		ED44C7512BC4D2B700044A8D /* HomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenView.swift; sourceTree = "<group>"; };
@@ -64,6 +66,8 @@
 		ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
 		ED44C7602BC5031500044A8D /* PortfolioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioModel.swift; sourceTree = "<group>"; };
 		ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewModel.swift; sourceTree = "<group>"; };
+		EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNewsView.swift; sourceTree = "<group>"; };
+		EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsDetailView.swift; sourceTree = "<group>"; };
 		EDF35C272BC5235A000381BC /* WatchlistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistModel.swift; sourceTree = "<group>"; };
 		EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViewModel.swift; sourceTree = "<group>"; };
 		EDF35C2C2BC5D12D000381BC /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -91,6 +95,8 @@
 			children = (
 				ED2641242BC8693D005B5FB7 /* StockDetailView.swift */,
 				ED2641282BC882AA005B5FB7 /* StockDetailViewModel.swift */,
+				EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */,
+				EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */,
 			);
 			path = StockDetail;
 			sourceTree = "<group>";
@@ -139,8 +145,8 @@
 			isa = PBXGroup;
 			children = (
 				ED44C7322BC4ACBC00044A8D /* app icon.png */,
-				ED44C7332BC4ACBD00044A8D /* f_logo_RGB-Blue_144.png */,
-				ED44C7312BC4ACBC00044A8D /* sl_z_072523_61700_05.jpg */,
+				ED44C7332BC4ACBD00044A8D /* facebook.png */,
+				ED44C7312BC4ACBC00044A8D /* twitter.jpg */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -262,10 +268,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED44C72F2BC4AC4400044A8D /* Launch Screen.storyboard in Resources */,
-				ED44C7362BC4ACBD00044A8D /* f_logo_RGB-Blue_144.png in Resources */,
+				ED44C7362BC4ACBD00044A8D /* facebook.png in Resources */,
 				ED44C7352BC4ACBD00044A8D /* app icon.png in Resources */,
 				ED44C7262BC4ABE900044A8D /* Preview Assets.xcassets in Resources */,
-				ED44C7342BC4ACBD00044A8D /* sl_z_072523_61700_05.jpg in Resources */,
+				ED44C7342BC4ACBD00044A8D /* twitter.jpg in Resources */,
 				ED44C72D2BC4AC2200044A8D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,6 +285,7 @@
 			files = (
 				ED2641292BC882AA005B5FB7 /* StockDetailViewModel.swift in Sources */,
 				EDF35C4D2BC78E3B000381BC /* WatchlistStockRowView.swift in Sources */,
+				EDAB0EF02BCA57B700E0E699 /* NewsDetailView.swift in Sources */,
 				ED44C7382BC4AF4200044A8D /* DateHeaderView.swift in Sources */,
 				EDF35C2A2BC523D3000381BC /* WatchlistViewModel.swift in Sources */,
 				ED44C7212BC4ABE800044A8D /* ContentView.swift in Sources */,
@@ -291,6 +298,7 @@
 				ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */,
 				ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */,
 				ED2641272BC87050005B5FB7 /* Structs.swift in Sources */,
+				EDAB0EEE2BCA4AE600E0E699 /* StockNewsView.swift in Sources */,
 				ED44C75D2BC4FE0C00044A8D /* PortfolioView.swift in Sources */,
 				ED2641252BC8693D005B5FB7 /* StockDetailView.swift in Sources */,
 				ED2641202BC79D4E005B5FB7 /* SearchResultView.swift in Sources */,
