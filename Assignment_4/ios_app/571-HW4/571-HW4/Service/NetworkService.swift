@@ -190,11 +190,23 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
     
-    
-    
-    
-    
-    
+    func fetchHourlyStockData(for ticker: String, from startTime: String, to endTime: String, completion: @escaping (Result<[[Any]], Error>) -> Void) {
+        let url = "\(baseURL)/stock/hourly/\(ticker)/\(startTime)/\(endTime)"
+        AF.request(url).validate().responseDecodable(of: HourlyResponse.self) { response in
+            switch response.result {
+            case .success(let data):
+                let chartData = self.prepareDataForHighcharts(hourlyData: data.results)
+                completion(.success(chartData))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func prepareDataForHighcharts(hourlyData: [StockHourly]) -> [[Any]] {
+        return hourlyData.map { [Double($0.t), $0.c] }
+    }
+
 }
 
 

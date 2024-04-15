@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct StockDetailView: View {
     var stockSymbol: String
     // Add a binding to control whether the add button is displayed
@@ -14,9 +16,12 @@ struct StockDetailView: View {
     @StateObject private var viewModel = StockDetailViewModel()
     
     init(stockSymbol: String, isShowingDetailView: Binding<Bool>) {
-            self.stockSymbol = stockSymbol
-            self._isShowingDetailView = isShowingDetailView
-        }
+        self.stockSymbol = stockSymbol
+        self._isShowingDetailView = isShowingDetailView
+    }
+    
+    
+
     
     var body: some View {
         ScrollView {
@@ -53,18 +58,26 @@ struct StockDetailView: View {
                 }
                 Spacer()
                     .frame(height: 20)
-                TabView {
-                    Text("chart 1")
-                        .tabItem {
-                            Label("Hourly", systemImage: "chart.xyaxis.line")
-                        }
-                    Text("chart 2")
-                        .tabItem {
-                            Label("Historical", systemImage: "clock.fill")
-                        }
-                }
-                .frame(height: 450) // Explicit height for the TabView
-                .padding(.horizontal, 16) // Optional padding to ensure it's not too wide
+                if !viewModel.stockHourlyData.isEmpty {
+                                    TabView {
+                                        WebView(htmlName: "hourly", data: viewModel.stockHourlyData)
+                                            .edgesIgnoringSafeArea(.all)
+                                            .tabItem {
+                                                Label("Hourly", systemImage: "chart.xyaxis.line")
+                                            }
+                                        Text("Historical Information")
+                                            .tabItem {
+                                                Label("Historical", systemImage: "clock.fill")
+                                            }
+                                    }
+                                    .frame(height: 450)
+                                    .padding(.horizontal, 16)
+                                } else {
+                                    // Display loading view or placeholder
+                                    Text("Loading data...")
+                                        .frame(height: 450)
+                                        .padding(.horizontal, 16)
+                                }
                 Spacer()
                     .frame(height: 20)
                 VStack{
@@ -118,62 +131,61 @@ struct StockDetailView: View {
                         .font(.system(size: 23))
                     Spacer()
                     
-                        VStack{
-                            HStack {
-                                Text("IPO Start Date:")
-                                    .frame(maxWidth: .infinity*0.4, alignment: .leading)
-                                    .font(.system(size: 15))
-                                    .bold()
-                                Spacer()
-                                Text(viewModel.profile?.ipo ?? "<ipo date>")
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 15))
-                            }
+                    VStack{
+                        HStack {
+                            Text("IPO Start Date:")
+                                .frame(maxWidth: .infinity*0.4, alignment: .leading)
+                                .font(.system(size: 15))
+                                .bold()
                             Spacer()
-                            HStack{
-                                Text("Industry:")
-                                    .frame(maxWidth: .infinity*0.4, alignment: .leading)
-                                    .font(.system(size: 15))
-                                    .bold()
-                                Spacer()
-                                Text(viewModel.profile?.finnhubIndustry ?? "<finnhubIndustry>")
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 15))
-                            }
-                            Spacer()
-                            HStack{
-                                Text("Webpage:")
-                                    .frame(maxWidth: .infinity*0.4, alignment: .leading)
-                                    .font(.system(size: 15))
-                                    .bold()
-                                Spacer()
-                                Link(viewModel.profile?.weburl ?? "finnhub.io", destination: URL(string: viewModel.profile?.weburl ?? "finnhub.io")!)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 15))
-                            }
-                            Spacer()
-                            HStack {
-                                Text("Company Peers:")
-                                    .frame(maxWidth: .infinity*0.4, alignment: .leading)
-                                    .font(.system(size: 15))
-                                    .bold()
-                                Spacer()
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                                HStack {
-                                                    ForEach(viewModel.peers, id: \.self) { peer in
-                                                        NavigationLink(destination: StockDetailView(stockSymbol: peer, isShowingDetailView: .constant(true))) {
-                                                            Text("\(peer),")
-                                                                
-                                                                .foregroundColor(.blue)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .font(.system(size: 15))
-                            }
+                            Text(viewModel.profile?.ipo ?? "<ipo date>")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 15))
                         }
-                        
+                        Spacer()
+                        HStack{
+                            Text("Industry:")
+                                .frame(maxWidth: .infinity*0.4, alignment: .leading)
+                                .font(.system(size: 15))
+                                .bold()
+                            Spacer()
+                            Text(viewModel.profile?.finnhubIndustry ?? "<finnhubIndustry>")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 15))
+                        }
+                        Spacer()
+                        HStack{
+                            Text("Webpage:")
+                                .frame(maxWidth: .infinity*0.4, alignment: .leading)
+                                .font(.system(size: 15))
+                                .bold()
+                            Spacer()
+                            Link(viewModel.profile?.weburl ?? "finnhub.io", destination: URL(string: viewModel.profile?.weburl ?? "finnhub.io")!)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 15))
+                        }
+                        Spacer()
+                        HStack {
+                            Text("Company Peers:")
+                                .frame(maxWidth: .infinity*0.4, alignment: .leading)
+                                .font(.system(size: 15))
+                                .bold()
+                            Spacer()
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    ForEach(viewModel.peers, id: \.self) { peer in
+                                        NavigationLink(destination: StockDetailView(stockSymbol: peer, isShowingDetailView: .constant(true))) {
+                                            Text("\(peer),")
+                                                .foregroundColor(.blue)
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.system(size: 15))
+                        }
+                    }
+                    
                     
                 }
                 
@@ -188,29 +200,29 @@ struct StockDetailView: View {
                         .font(.system(size: 23))
                     Spacer()
                         .frame(height: 25)
-                        
+                    
                     HStack{
                         VStack (alignment:.leading){
                             Text(viewModel.profile?.name ?? "<Name>")
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text("Total")
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text("Positive")
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text("Negative")
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                         }
                         Spacer()
                         VStack(alignment:.leading) {
@@ -218,19 +230,19 @@ struct StockDetailView: View {
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.totalMspr ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.positiveMspr ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.negativeMspr ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                         }
                         
                         Spacer()
@@ -239,23 +251,23 @@ struct StockDetailView: View {
                                 .bold()
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.totalChange ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.positiveChange ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                             Text(String(format: "%.2f", viewModel.insiderAggregates?.negativeChange ?? 0))
                             Rectangle()
                                 .frame(width:100, height: 0.5)
-                               .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                         }
                         
                     }
-
+                    
                 }
                 
                 
@@ -266,7 +278,7 @@ struct StockDetailView: View {
                         .font(.system(size: 25))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     StockNewsView(news: viewModel.news)
-
+                    
                 }
                 
             }
@@ -279,8 +291,9 @@ struct StockDetailView: View {
             // Add the button conditionally
             if isShowingDetailView {
                 Button(action: {
-                    print("Add button pressed")
-                    
+                    print("--------")
+                    print(viewModel.stockHourlyData)
+                    print("=======")
                 }) {
                     Image(systemName: "plus.circle.fill")
                 }
@@ -291,11 +304,10 @@ struct StockDetailView: View {
         .onAppear {
             isShowingDetailView = true
             viewModel.fetchAllData(for: stockSymbol)
-            
         }
         // When the view disappears, set isShowingDetailView to false
         .onDisappear {
-//            isShowingDetailView = false
+            //            isShowingDetailView = false
         }
         
     }

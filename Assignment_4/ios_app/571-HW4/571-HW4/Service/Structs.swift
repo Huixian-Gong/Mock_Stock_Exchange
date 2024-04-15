@@ -25,6 +25,7 @@ struct StockQuote: Decodable {
     var l: Double
     var o: Double
     var pc: Double
+    var t: Int
 }
 
 struct StockNews: Decodable {
@@ -70,3 +71,11 @@ struct InsiderAggregates {
     var negativeChange: Double
 }
 
+struct StockHourly: Codable {
+    var t: Double    // Timestamp
+    var c: Double // Closing price
+}
+
+struct HourlyResponse: Codable {
+    var results: [StockHourly]
+}

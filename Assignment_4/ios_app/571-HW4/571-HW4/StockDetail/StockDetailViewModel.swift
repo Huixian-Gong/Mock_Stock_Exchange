@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class StockDetailViewModel: ObservableObject {
     // Published properties to hold the fetched data
@@ -18,6 +19,10 @@ class StockDetailViewModel: ObservableObject {
     @Published var insider: [StockInsider] = []
     @Published var isLoading = false
     @Published var insiderAggregates: InsiderAggregates?
+    @Published var stockHourlyData: [[Double]] = []
+    @Published var stockHourlyLoading = false
+    
+
     // Add other published properties for the remaining data types
     
     private let networkService: NetworkServiceProtocol
@@ -36,7 +41,8 @@ class StockDetailViewModel: ObservableObject {
                 fetchPeers(for:),
                 fetchRecommendations(for:),
                 fetchEarnings(for:),
-                fetchInsider(for:)
+                fetchInsider(for:),
+//                loadHourlyData(for:)
             ]
 
             fetchCount = fetchFunctions.count  // Set count to number of fetches
@@ -75,12 +81,14 @@ class StockDetailViewModel: ObservableObject {
                 case .success(let quote):
                     self?.quote = quote
                     self?.dataFetched()
+                    self?.loadHourlyData(for: ticker, endTime: quote.t)
                 case .failure(let error):
                     print(error)
                     break
                 }
             }
         }
+        
     }
     
     func fetchNews(for ticker: String) {
@@ -122,6 +130,8 @@ class StockDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let recommendations):
                     self?.recommendations = recommendations
+//                    print(self?.recommendations)
+
                     self?.dataFetched()
                 case .failure(let error):
                     print(error)
@@ -180,5 +190,46 @@ class StockDetailViewModel: ObservableObject {
         )
     }
 
+    func loadHourlyData(for ticker: String, endTime: Int) {
+        self.stockHourlyLoading = true
+        print("endtime: ", endTime)
+        let formattedEndTime = self.formatUnixTimestamp(endTime)
+        
+        let startTime = endTime - 86400
+        let formattedStartTime = self.formatUnixTimestamp(startTime)
+        //        let endTime = Int(Date().timeIntervalSince1970)
+        //        let endTime = "2024-04-12"
+//        let startTime = "2024-01-11"  // 24 hours earlier
+        print(formattedStartTime)
+        print(formattedEndTime)
+        
+        NetworkService.shared.fetchHourlyStockData(for: ticker, from: formattedStartTime, to: formattedEndTime) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    
+                    self?.stockHourlyData = data.compactMap { item in
+                        if let timestamp = item.first as? Double, let value = item.last as? Double {
+                            return [timestamp, value]
+                        }
+                        return nil
+                    }
+                    self?.stockHourlyLoading = false
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    self?.stockHourlyData = []  // Handle error by clearing data or showing default data
+                }
+            }
+        }
+    }
+    
+    // Utility function to convert Unix timestamp to "yyyy-MM-dd" format
+    func formatUnixTimestamp(_ timestamp: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)  // Adjust timezone if needed!
+        return dateFormatter.string(from: date)
+    }
     // Add other fetch functions for the remaining data types
 }
