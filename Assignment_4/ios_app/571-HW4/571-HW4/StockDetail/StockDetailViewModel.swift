@@ -20,7 +20,7 @@ class StockDetailViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var insiderAggregates: InsiderAggregates?
     @Published var stockHourlyData: [[Double]] = []
-    @Published var stockHourlyLoading = false
+//    @Published var stockHourlyLoading = false
     
 
     // Add other published properties for the remaining data types
@@ -42,7 +42,6 @@ class StockDetailViewModel: ObservableObject {
                 fetchRecommendations(for:),
                 fetchEarnings(for:),
                 fetchInsider(for:),
-//                loadHourlyData(for:)
             ]
 
             fetchCount = fetchFunctions.count  // Set count to number of fetches
@@ -191,18 +190,13 @@ class StockDetailViewModel: ObservableObject {
     }
 
     func loadHourlyData(for ticker: String, endTime: Int) {
-        self.stockHourlyLoading = true
-        print("endtime: ", endTime)
-        let formattedEndTime = self.formatUnixTimestamp(endTime)
+//        self.stockHourlyLoading = true
+        var ee = endTime - 86400 * 3
+        let formattedEndTime = self.formatUnixTimestamp(ee)
         
-        let startTime = endTime - 86400
-        let formattedStartTime = self.formatUnixTimestamp(startTime)
-        //        let endTime = Int(Date().timeIntervalSince1970)
-        //        let endTime = "2024-04-12"
-//        let startTime = "2024-01-11"  // 24 hours earlier
-        print(formattedStartTime)
-        print(formattedEndTime)
-        
+        let startTime = ee - 86400
+        let formattedStartTime = self.formatUnixTimestamp(ee)
+
         NetworkService.shared.fetchHourlyStockData(for: ticker, from: formattedStartTime, to: formattedEndTime) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -214,7 +208,7 @@ class StockDetailViewModel: ObservableObject {
                         }
                         return nil
                     }
-                    self?.stockHourlyLoading = false
+//                    self?.stockHourlyLoading = false
                 case .failure(let error):
                     print("Error: \(error.localizedDescription)")
                     self?.stockHourlyData = []  // Handle error by clearing data or showing default data

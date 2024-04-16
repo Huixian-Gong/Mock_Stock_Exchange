@@ -196,6 +196,7 @@ class NetworkService: NetworkServiceProtocol {
             switch response.result {
             case .success(let data):
                 let chartData = self.prepareDataForHighcharts(hourlyData: data.results)
+//                print(chartData)
                 completion(.success(chartData))
             case .failure(let error):
                 completion(.failure(error))

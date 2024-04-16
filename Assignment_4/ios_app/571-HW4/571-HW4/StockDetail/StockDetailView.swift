@@ -59,25 +59,27 @@ struct StockDetailView: View {
                 Spacer()
                     .frame(height: 20)
                 if !viewModel.stockHourlyData.isEmpty {
-                                    TabView {
-                                        WebView(htmlName: "hourly", data: viewModel.stockHourlyData)
-                                            .edgesIgnoringSafeArea(.all)
-                                            .tabItem {
-                                                Label("Hourly", systemImage: "chart.xyaxis.line")
-                                            }
-                                        Text("Historical Information")
-                                            .tabItem {
-                                                Label("Historical", systemImage: "clock.fill")
-                                            }
-                                    }
-                                    .frame(height: 450)
-                                    .padding(.horizontal, 16)
-                                } else {
-                                    // Display loading view or placeholder
-                                    Text("Loading data...")
-                                        .frame(height: 450)
-                                        .padding(.horizontal, 16)
-                                }
+                    TabView {
+                        StockHourlyPriceChartView(data: viewModel.stockHourlyData,
+                                                  ticker: stockSymbol,
+                                                  diff: viewModel.quote?.d ?? 0)
+                        .tabItem {
+                            Label("Hourly", systemImage: "chart.xyaxis.line")
+                        }
+                        StockHourlyPriceChartView(data: viewModel.stockHourlyData,
+                                                  ticker: stockSymbol,
+                                                  diff: viewModel.quote?.d ?? 0)
+                        .tabItem {
+                            Label("Historical", systemImage: "clock.fill")
+                        }
+                    }
+                    .frame(height: 350)
+                } else {
+                    Text("")
+                        .frame(height: 350)
+                }
+                
+                
                 Spacer()
                     .frame(height: 20)
                 VStack{
@@ -327,6 +329,6 @@ struct StockDetailView: View {
 
 
 #Preview {
-    StockDetailView(stockSymbol: "NVDA", isShowingDetailView: .constant(true))
+    StockDetailView(stockSymbol: "AAPL", isShowingDetailView: .constant(true))
     
 }
