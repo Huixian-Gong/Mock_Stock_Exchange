@@ -21,6 +21,7 @@ protocol NetworkServiceProtocol {
     func fetchRecommendations(for ticker: String, completion: @escaping (Result<[StockRecommendation], Error>) -> Void)
     func fetchEarnings(for ticker: String, completion: @escaping (Result<[StockEarnings], Error>) -> Void)
     func fetchInsider(for ticker: String, completion: @escaping (Result<[StockInsider], Error>) -> Void)
+    func fetchFavStock(for ticker: String, completion: @escaping (Result<StockInfo, Error>) -> Void)
    }
 
 class NetworkService: NetworkServiceProtocol {
@@ -152,17 +153,16 @@ class NetworkService: NetworkServiceProtocol {
     }
     
     func fetchRecommendations(for ticker: String, completion: @escaping (Result<[StockRecommendation], Error>) -> Void) {
-        let url = "\(baseURL)/recommendation/\(ticker)"
-        AF.request(url).validate().responseDecodable(of: [StockRecommendation].self) { response in
-//            print(response.result)
-            switch response.result {
-            case .success(let tickers):
-                completion(.success(tickers))
-            case .failure(let error):
-                completion(.failure(error))
+            let url = "\(baseURL)/recommendation/\(ticker)"
+            AF.request(url).validate().responseDecodable(of: [StockRecommendation].self) { response in
+                switch response.result {
+                case .success(let recommendations):
+                    completion(.success(recommendations))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
-    }
     
     func fetchEarnings(for ticker: String, completion: @escaping (Result<[StockEarnings], Error>) -> Void) {
         let url = "\(baseURL)/earning/\(ticker)"
@@ -208,6 +208,40 @@ class NetworkService: NetworkServiceProtocol {
         return hourlyData.map { [Double($0.t), $0.c] }
     }
 
+    func fetchChartData(for ticker: String, startTime: String, endTime: String, completion: @escaping (Result<StockChart, Error>) -> Void) {
+        let urlString = "\(baseURL)/chart/\(ticker)/\(startTime)/\(endTime)"
+        AF.request(urlString).validate().responseDecodable(of: StockChart.self) { response in
+            switch response.result {
+            case .success(let chartData):
+                completion(.success(chartData))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchFavStock(for ticker: String, completion: @escaping (Result<StockInfo, Error>) -> Void) {
+        let url = "\(baseURL)/favorites/check/\(ticker)"
+        AF.request(url).validate().response { response in
+            // Check if the data is empty and handle accordingly
+            guard let data = response.data, !data.isEmpty else {
+                print("Received empty response for ticker: \(ticker), providing default values.")
+                completion(.success(StockInfo.defaultInstance(ticker: ticker)))
+                return
+            }
+            
+            do {
+                let stockInfo = try JSONDecoder().decode(StockInfo.self, from: data)
+                print("Fetched data for ticker: \(stockInfo.ticker), Watchlist: \(stockInfo.watchlist), Count: \(stockInfo.count), Price: $\(stockInfo.price)")
+                completion(.success(stockInfo))
+            } catch {
+                print("Failed to decode data for ticker: \(ticker) with error: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
 }
 
 

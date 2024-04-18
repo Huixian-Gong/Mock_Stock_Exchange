@@ -36,8 +36,11 @@
 		ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */; };
 		ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7602BC5031500044A8D /* PortfolioModel.swift */; };
 		ED44C7632BC5031E00044A8D /* PortfolioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */; };
-		ED56A99D2BCCA6220011BC59 /* hourly.html in Resources */ = {isa = PBXBuildFile; fileRef = ED56A99C2BCCA6220011BC59 /* hourly.html */; };
-		ED56A99F2BCCA64C0011BC59 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED56A99E2BCCA64C0011BC59 /* WebView.swift */; };
+		ED68AAE62BCF3F53002B1349 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED68AAE52BCF3F53002B1349 /* WebView.swift */; };
+		ED68AAE82BCF4070002B1349 /* StockChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED68AAE72BCF4070002B1349 /* StockChartView.swift */; };
+		ED68AAEA2BCF4082002B1349 /* chart.html in Resources */ = {isa = PBXBuildFile; fileRef = ED68AAE92BCF4082002B1349 /* chart.html */; };
+		ED68AAEC2BD18D0C002B1349 /* StockOwnedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED68AAEB2BD18D0C002B1349 /* StockOwnedView.swift */; };
+		ED68AAF22BD1CA49002B1349 /* TradeSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED68AAF12BD1CA49002B1349 /* TradeSheetView.swift */; };
 		EDAB0EEE2BCA4AE600E0E699 /* StockNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */; };
 		EDAB0EF02BCA57B700E0E699 /* NewsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */; };
 		EDC774652BCDFC250048AD63 /* Highcharts in Frameworks */ = {isa = PBXBuildFile; productRef = EDC774642BCDFC250048AD63 /* Highcharts */; };
@@ -76,8 +79,11 @@
 		ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
 		ED44C7602BC5031500044A8D /* PortfolioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioModel.swift; sourceTree = "<group>"; };
 		ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewModel.swift; sourceTree = "<group>"; };
-		ED56A99C2BCCA6220011BC59 /* hourly.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = hourly.html; sourceTree = "<group>"; };
-		ED56A99E2BCCA64C0011BC59 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		ED68AAE52BCF3F53002B1349 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		ED68AAE72BCF4070002B1349 /* StockChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockChartView.swift; sourceTree = "<group>"; };
+		ED68AAE92BCF4082002B1349 /* chart.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = chart.html; sourceTree = "<group>"; };
+		ED68AAEB2BD18D0C002B1349 /* StockOwnedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockOwnedView.swift; sourceTree = "<group>"; };
+		ED68AAF12BD1CA49002B1349 /* TradeSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSheetView.swift; sourceTree = "<group>"; };
 		EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNewsView.swift; sourceTree = "<group>"; };
 		EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsDetailView.swift; sourceTree = "<group>"; };
 		EDC774662BCDFD030048AD63 /* StockHourlyPriceChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockHourlyPriceChartView.swift; sourceTree = "<group>"; };
@@ -107,26 +113,14 @@
 		ED2641232BC868F6005B5FB7 /* StockDetail */ = {
 			isa = PBXGroup;
 			children = (
-				ED2A6B902BCE1A9C00CD9B99 /* Unused */,
+				ED68AAF02BD18D69002B1349 /* Insiders */,
+				ED68AAEF2BD18D44002B1349 /* News */,
+				ED68AAEE2BD18D1E002B1349 /* Charts */,
+				ED68AAED2BD18D14002B1349 /* Portfolio */,
 				ED2641242BC8693D005B5FB7 /* StockDetailView.swift */,
 				ED2641282BC882AA005B5FB7 /* StockDetailViewModel.swift */,
-				EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */,
-				EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */,
-				EDC774662BCDFD030048AD63 /* StockHourlyPriceChartView.swift */,
-				ED2A6B8A2BCE137500CD9B99 /* HistoricalChangeView.swift */,
-				ED2A6B8C2BCE13D800CD9B99 /* RecommendationView.swift */,
-				ED2A6B8E2BCE13E600CD9B99 /* EPSView.swift */,
 			);
 			path = StockDetail;
-			sourceTree = "<group>";
-		};
-		ED2A6B902BCE1A9C00CD9B99 /* Unused */ = {
-			isa = PBXGroup;
-			children = (
-				ED56A99E2BCCA64C0011BC59 /* WebView.swift */,
-				ED56A99C2BCCA6220011BC59 /* hourly.html */,
-			);
-			path = Unused;
 			sourceTree = "<group>";
 		};
 		ED44C7122BC4ABE800044A8D = {
@@ -217,6 +211,45 @@
 			path = Watchlist;
 			sourceTree = "<group>";
 		};
+		ED68AAED2BD18D14002B1349 /* Portfolio */ = {
+			isa = PBXGroup;
+			children = (
+				ED68AAEB2BD18D0C002B1349 /* StockOwnedView.swift */,
+				ED68AAF12BD1CA49002B1349 /* TradeSheetView.swift */,
+			);
+			path = Portfolio;
+			sourceTree = "<group>";
+		};
+		ED68AAEE2BD18D1E002B1349 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				ED2A6B8A2BCE137500CD9B99 /* HistoricalChangeView.swift */,
+				EDC774662BCDFD030048AD63 /* StockHourlyPriceChartView.swift */,
+				ED68AAE52BCF3F53002B1349 /* WebView.swift */,
+				ED68AAE72BCF4070002B1349 /* StockChartView.swift */,
+				ED68AAE92BCF4082002B1349 /* chart.html */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		ED68AAEF2BD18D44002B1349 /* News */ = {
+			isa = PBXGroup;
+			children = (
+				EDAB0EED2BCA4AE600E0E699 /* StockNewsView.swift */,
+				EDAB0EEF2BCA57B700E0E699 /* NewsDetailView.swift */,
+			);
+			path = News;
+			sourceTree = "<group>";
+		};
+		ED68AAF02BD18D69002B1349 /* Insiders */ = {
+			isa = PBXGroup;
+			children = (
+				ED2A6B8E2BCE13E600CD9B99 /* EPSView.swift */,
+				ED2A6B8C2BCE13D800CD9B99 /* RecommendationView.swift */,
+			);
+			path = Insiders;
+			sourceTree = "<group>";
+		};
 		EDF35C2B2BC5D11A000381BC /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,11 +330,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED56A99D2BCCA6220011BC59 /* hourly.html in Resources */,
 				ED44C72F2BC4AC4400044A8D /* Launch Screen.storyboard in Resources */,
 				ED44C7362BC4ACBD00044A8D /* facebook.png in Resources */,
 				ED44C7352BC4ACBD00044A8D /* app icon.png in Resources */,
 				ED44C7262BC4ABE900044A8D /* Preview Assets.xcassets in Resources */,
+				ED68AAEA2BCF4082002B1349 /* chart.html in Resources */,
 				ED44C7342BC4ACBD00044A8D /* twitter.jpg in Resources */,
 				ED44C72D2BC4AC2200044A8D /* Assets.xcassets in Resources */,
 			);
@@ -319,7 +352,9 @@
 				EDC774672BCDFD030048AD63 /* StockHourlyPriceChartView.swift in Sources */,
 				EDAB0EF02BCA57B700E0E699 /* NewsDetailView.swift in Sources */,
 				ED44C7382BC4AF4200044A8D /* DateHeaderView.swift in Sources */,
+				ED68AAF22BD1CA49002B1349 /* TradeSheetView.swift in Sources */,
 				EDF35C2A2BC523D3000381BC /* WatchlistViewModel.swift in Sources */,
+				ED68AAEC2BD18D0C002B1349 /* StockOwnedView.swift in Sources */,
 				ED44C7212BC4ABE800044A8D /* ContentView.swift in Sources */,
 				ED44C75B2BC4FCB200044A8D /* HomeScreenViewModel.swift in Sources */,
 				ED44C7592BC4FCA100044A8D /* HomeScreenModel.swift in Sources */,
@@ -330,11 +365,12 @@
 				ED44C7422BC4B5C600044A8D /* FooterView.swift in Sources */,
 				ED44C71F2BC4ABE800044A8D /* _71_HW4App.swift in Sources */,
 				ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */,
-				ED56A99F2BCCA64C0011BC59 /* WebView.swift in Sources */,
 				ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */,
 				ED2A6B8D2BCE13D800CD9B99 /* RecommendationView.swift in Sources */,
+				ED68AAE62BCF3F53002B1349 /* WebView.swift in Sources */,
 				ED2641272BC87050005B5FB7 /* Structs.swift in Sources */,
 				EDAB0EEE2BCA4AE600E0E699 /* StockNewsView.swift in Sources */,
+				ED68AAE82BCF4070002B1349 /* StockChartView.swift in Sources */,
 				ED44C75D2BC4FE0C00044A8D /* PortfolioView.swift in Sources */,
 				ED2641252BC8693D005B5FB7 /* StockDetailView.swift in Sources */,
 				ED2641202BC79D4E005B5FB7 /* SearchResultView.swift in Sources */,

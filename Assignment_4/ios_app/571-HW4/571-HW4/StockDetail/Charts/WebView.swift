@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  WebView.swift
 //  571-HW4
 //
-//  Created by Huixian Gong on 4/14/24.
+//  Created by Huixian Gong on 4/16/24.
 //
 
 import SwiftUI
@@ -10,7 +10,9 @@ import WebKit
 
 struct WebView: UIViewRepresentable {
     var htmlName: String
-    var data: [[Double]]  // Example data array you might want to pass to JavaScript
+    var chartData: [[Double]]
+    var volumeData: [[Double]]  // Example data array you might want to pass to JavaScript
+    var ticker: String
     @StateObject private var viewModel = StockDetailViewModel()
 
 
@@ -42,8 +44,11 @@ struct WebView: UIViewRepresentable {
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             // Called when the navigation is complete.
-            let jsonString = String(data: try! JSONEncoder().encode(parent.data), encoding: .utf8)!
-            let jsCode = "loadChartData(\(jsonString));"
+            let c_jsonString = String(data: try! JSONEncoder().encode(parent.chartData), encoding: .utf8)!
+            let v_jsonString = String(data: try! JSONEncoder().encode(parent.volumeData), encoding: .utf8)!
+            let stockSymbol = parent.ticker
+            
+            let jsCode = "loadChartData(\(c_jsonString),\(v_jsonString),'\(stockSymbol)');"
             webView.evaluateJavaScript(jsCode, completionHandler: nil)
         }
     }
@@ -56,6 +61,4 @@ struct WebView: UIViewRepresentable {
         }
     }
 }
-
-
 

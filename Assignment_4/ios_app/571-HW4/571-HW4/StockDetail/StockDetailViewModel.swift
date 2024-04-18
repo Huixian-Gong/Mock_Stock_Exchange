@@ -14,12 +14,15 @@ class StockDetailViewModel: ObservableObject {
     @Published var quote: StockQuote?
     @Published var news: [StockNews] = []
     @Published var peers: [String] = []
-    @Published var recommendations: [StockRecommendation] = []
+    @Published var recommendations: [StockRecommendation] = [] // This should be a single-dimensional array
     @Published var earning: [StockEarnings] = []
     @Published var insider: [StockInsider] = []
     @Published var isLoading = false
     @Published var insiderAggregates: InsiderAggregates?
     @Published var stockHourlyData: [[Double]] = []
+    @Published var stockHistoricData: [StockChart.ChartData] = []
+    @Published var stockFavDetail: StockInfo?
+    @Published var walletBalance: Double = 0.0
 //    @Published var stockHourlyLoading = false
     
 
@@ -39,11 +42,13 @@ class StockDetailViewModel: ObservableObject {
                 fetchQuote(for:),
                 fetchNews(for:),
                 fetchPeers(for:),
-                fetchRecommendations(for:),
                 fetchEarnings(for:),
                 fetchInsider(for:),
+                loadRecommendationData(for:),
+                loadHistoryData(for:),
+                loadFavStock(for:),
             ]
-
+            fetchWalletBalance()
             fetchCount = fetchFunctions.count  // Set count to number of fetches
             fetchFunctions.forEach { fetch in
                 fetch(ticker)
@@ -123,22 +128,21 @@ class StockDetailViewModel: ObservableObject {
     }
     
     
-    func fetchRecommendations(for ticker: String) {
-        networkService.fetchRecommendations(for: ticker) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let recommendations):
-                    self?.recommendations = recommendations
+//    func fetchRecommendations(for ticker: String) {
+//        networkService.fetchRecommendations(for: ticker) { [weak self] result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let recommendations):
+//                    self?.recommendations = recommendations
 //                    print(self?.recommendations)
-
-                    self?.dataFetched()
-                case .failure(let error):
-                    print(error)
-                    break
-                }
-            }
-        }
-    }
+//                    self?.dataFetched()
+//                case .failure(let error):
+//                    print(error)
+//                    break
+//                }
+//            }
+//        }
+//    }
     
     func fetchEarnings(for ticker: String) {
         networkService.fetchEarnings(for: ticker) { [weak self] result in
@@ -188,15 +192,58 @@ class StockDetailViewModel: ObservableObject {
             negativeChange: negativeChange
         )
     }
+    func loadRecommendationData(for ticker: String) {
+            NetworkService.shared.fetchRecommendations(for: ticker) { [weak self] result in // Use [weak self] to capture self weakly if needed
+                DispatchQueue.main.async { // Make sure you update the UI on the main thread
+                    switch result {
+                    case .success(let data):
+//                        print(data)
+                        self?.recommendations = data
+                        self?.dataFetched()
+                    case .failure(let error):
+                        print("Error: \(error)")
+                        self?.recommendations = [] // Optionally clear data or show an error state
+                    }
+                }
+            }
+        }
+    func loadHistoryData(for ticker: String) {
+        let endDate = Date()
+        let calendar = Calendar.current
+        guard let startDate = calendar.date(byAdding: .year, value: -2, to: endDate) else { return }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let formattedEndTime = formatter.string(from: endDate)
+        let formattedStartTime = formatter.string(from: startDate)
+
+        NetworkService.shared.fetchChartData(for: ticker, startTime: formattedStartTime, endTime: formattedEndTime) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let stockChart):
+                    // Extract only the 'results' key value pair
+//                    print(stockChart.results)
+
+                    self?.stockHistoricData = stockChart.results
+                    self?.dataFetched()
+                case .failure(let error):
+                    print("Error loading historical data: \(error.localizedDescription)")
+                    self?.stockHistoricData = [] // Clear data or handle the error as needed
+                }
+            }
+        }
+    }
+
+
 
     func loadHourlyData(for ticker: String, endTime: Int) {
 //        self.stockHourlyLoading = true
-        var ee = endTime - 86400 * 3
-        let formattedEndTime = self.formatUnixTimestamp(ee)
-        
-        let startTime = ee - 86400
-        let formattedStartTime = self.formatUnixTimestamp(ee)
-
+//        var ee = endTime - 86400 * 3
+        let formattedEndTime = self.formatUnixTimestamp(endTime)
+//        print(formattedEndTime)
+        let startTime = endTime - 86400
+        let formattedStartTime = self.formatUnixTimestamp(startTime)
+//        print(formattedStartTime)
         NetworkService.shared.fetchHourlyStockData(for: ticker, from: formattedStartTime, to: formattedEndTime) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -226,4 +273,38 @@ class StockDetailViewModel: ObservableObject {
         return dateFormatter.string(from: date)
     }
     // Add other fetch functions for the remaining data types
+    
+    func loadFavStock (for ticker: String) {
+        networkService.fetchFavStock(for: ticker) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let favDetail):
+                    self?.stockFavDetail = favDetail
+//                    print(self?.stockFavDetail)
+                    self?.dataFetched()
+                case .failure(let error):
+                    print(error)
+                    print(ticker, "not found")
+                    break
+                }
+            }
+        }
+    }
+    
+    func fetchWalletBalance() {
+            NetworkService.shared.fetchWalletBalance { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let balance):
+                        self?.walletBalance = balance
+                        
+                    case .failure(let error):
+                        print(error)
+                        // Handle error or show some default value
+                        self?.walletBalance = 0.0
+                    }
+                }
+            }
+        }
 }
+

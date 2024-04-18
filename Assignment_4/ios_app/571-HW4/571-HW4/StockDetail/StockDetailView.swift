@@ -22,7 +22,6 @@ struct StockDetailView: View {
     
     
 
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading){
@@ -66,12 +65,13 @@ struct StockDetailView: View {
                         .tabItem {
                             Label("Hourly", systemImage: "chart.xyaxis.line")
                         }
-                        StockHourlyPriceChartView(data: viewModel.stockHourlyData,
-                                                  ticker: stockSymbol,
-                                                  diff: viewModel.quote?.d ?? 0)
-                        .tabItem {
-                            Label("Historical", systemImage: "clock.fill")
-                        }
+                        .background(Color.white)
+                        
+                        StockChartView(data: viewModel.stockHistoricData, stockSymbol: stockSymbol)
+                            .tabItem {
+                                Label("Historical", systemImage: "clock.fill")
+                            }
+                            .background(Color.white)
                     }
                     .frame(height: 350)
                 } else {
@@ -86,7 +86,8 @@ struct StockDetailView: View {
                     Text("Portfolio")
                         .font(.system(size: 23))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Shares Owned")
+                
+                    StockOwnedView(stockDetail: viewModel.stockFavDetail, currPrice: viewModel.quote?.c, balance: viewModel.walletBalance, name: viewModel.profile?.name)
                 }
                 Spacer()
                     .frame(height: 20)
@@ -271,7 +272,18 @@ struct StockDetailView: View {
                     }
                     
                 }
-                
+                if !viewModel.recommendations.isEmpty {
+                    RecommendationsChartView(recommendations: viewModel.recommendations)
+                        .frame(height: 400)
+                } else {
+                    Text("Loading...")
+                }
+                if !viewModel.earning.isEmpty {
+                    EPSView(earningsData: viewModel.earning)
+                        .frame(height: 400)
+                } else {
+                    Text("Loading...")
+                }
                 
                 Spacer()
                     .frame(height: 20)
@@ -329,6 +341,6 @@ struct StockDetailView: View {
 
 
 #Preview {
-    StockDetailView(stockSymbol: "AAPL", isShowingDetailView: .constant(true))
+    StockDetailView(stockSymbol: "NVDA", isShowingDetailView: .constant(true))
     
 }
