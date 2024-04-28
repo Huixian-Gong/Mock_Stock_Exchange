@@ -306,5 +306,59 @@ class StockDetailViewModel: ObservableObject {
                 }
             }
         }
+    func addFav (for ticker: String) {
+        networkService.addFav(for: ticker){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.loadFavStock(for: ticker)
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
+    
+    func delFav (for ticker: String) {
+        networkService.delFav(for: ticker){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.loadFavStock(for: ticker)
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
+    func buyStock (for ticker: String, count: Int, price: Double) {
+        networkService.buyStock(for: ticker, count: count, price: price){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.loadFavStock(for: ticker)
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
+    
+    func sellStock (for ticker: String, count: Int, price: Double, sellAll: Int) {
+        networkService.sellStock(for: ticker, count: count, price: price, sellAll: sellAll){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.loadFavStock(for: ticker)
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
 }
 

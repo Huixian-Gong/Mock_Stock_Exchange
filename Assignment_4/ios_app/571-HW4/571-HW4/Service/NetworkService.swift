@@ -22,6 +22,10 @@ protocol NetworkServiceProtocol {
     func fetchEarnings(for ticker: String, completion: @escaping (Result<[StockEarnings], Error>) -> Void)
     func fetchInsider(for ticker: String, completion: @escaping (Result<[StockInsider], Error>) -> Void)
     func fetchFavStock(for ticker: String, completion: @escaping (Result<StockInfo, Error>) -> Void)
+    func addFav(for ticker: String, completion: @escaping (Result<String, AFError>) -> Void)
+    func delFav(for ticker: String, completion: @escaping (Result<String, AFError>) -> Void)
+    func buyStock(for ticker: String, count: Int, price: Double, completion: @escaping (Result<String, AFError>) -> Void)
+    func sellStock(for ticker: String, count:Int, price: Double, sellAll: Int, completion: @escaping (Result<String, AFError>) -> Void)
    }
 
 class NetworkService: NetworkServiceProtocol {
@@ -241,6 +245,53 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
     
+    func addFav(for ticker: String, completion: @escaping (Result<String, AFError>) -> Void) {
+        let url = "\(baseURL)/favorites/add/\(ticker)"
+        AF.request(url).responseString { response in
+            switch response.result {
+            case .success(let message):
+                completion(.success(message))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func delFav(for ticker: String, completion: @escaping (Result<String, AFError>) -> Void) {
+        let url = "\(baseURL)/favorites/remove/\(ticker)"
+        AF.request(url).responseString { response in
+            switch response.result {
+            case .success(let message):
+                completion(.success(message))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func buyStock(for ticker: String, count: Int, price: Double, completion: @escaping (Result<String, AFError>) -> Void) {
+        let url = "\(baseURL)/buy/\(ticker)/\(count)/\(price)"
+        AF.request(url).responseString { response in
+            switch response.result {
+            case .success(let message):
+                completion(.success(message))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func sellStock(for ticker: String, count:Int, price: Double, sellAll: Int, completion: @escaping (Result<String, AFError>) -> Void) {
+        let url = "\(baseURL)/sell/\(ticker)/\(count)/\(price)/\(sellAll)"
+        AF.request(url).responseString { response in
+            switch response.result {
+            case .success(let message):
+                completion(.success(message))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
     
 }
 

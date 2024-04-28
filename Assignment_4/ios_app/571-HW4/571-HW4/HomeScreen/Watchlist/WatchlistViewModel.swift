@@ -35,7 +35,7 @@ private let baseURL = "https://hw3backend-dot-csci-571-huixian.wl.r.appspot.com"
 
 class WatchlistViewModel: ObservableObject {
     @Published var stocks: [WatchlistStock] = []
-    @Published var isLoading = false
+    @Published var isLoading = true
     
     private var networkService: NetworkServiceProtocol
 
@@ -48,20 +48,23 @@ class WatchlistViewModel: ObservableObject {
     }
     
     func fetchStocks() {
-        isLoading = true
+//        isLoading = true
         networkService.fetchFavoriteStocks { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let fetchedStocks):
-                    self?.stocks = fetchedStocks
-                    self?.fetchPrices(for: fetchedStocks) {
+                    // Filter the stocks to include only those where watchlist is true
+                    let watchlistStocks = fetchedStocks.filter { $0.watchlist }
+                    self?.stocks = watchlistStocks
+                    self?.fetchPrices(for: watchlistStocks) {
                         self?.fetchCompanyDetails() {
-                            self?.isLoading = false // Only set isLoading to false here
+                            self?.isLoading = false // Set isLoading to false here, once all updates are done
                         }
                     }
+
                 case .failure(let error):
                     print(error)
-                    self?.isLoading = false // Ensure isLoading is set to false if fetching fails
+                    self?.isLoading = false // Set isLoading to false if there is an error in fetching stocks
                 }
             }
         }
@@ -154,7 +157,13 @@ class WatchlistViewModel: ObservableObject {
         }
     
     func moveStocks(from source: IndexSet, to destination: Int) {
-            stocks.move(fromOffsets: source, toOffset: destination)
-            // Implement any additional logic needed to persist the changes
+        print("Before move: \(stocks.map { $0.ticker })")
+        stocks.move(fromOffsets: source, toOffset: destination)
+        print("After move: \(stocks.map { $0.ticker })")
+        
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
         }
+        
+    }
 }

@@ -13,7 +13,7 @@ private let baseURL = "https://hw3backend-dot-csci-571-huixian.wl.r.appspot.com"
 
 class PortfolioViewModel: ObservableObject {
     @Published var stocks: [PortfolioStock] = []
-    @Published var isLoading = false
+    @Published var isLoading = true
     @Published var walletBalance: Double = 0.0
     
     
@@ -30,7 +30,7 @@ class PortfolioViewModel: ObservableObject {
     }
     
     func fetchStocks() {
-        isLoading = true // Start loading
+//        isLoading = true // Start loading
         networkService.fetchPortfolioStocks { [weak self] result in
             DispatchQueue.main.async {
                 switch result {

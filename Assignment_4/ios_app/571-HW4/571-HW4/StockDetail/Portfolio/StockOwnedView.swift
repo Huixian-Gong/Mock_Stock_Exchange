@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StockOwnedView: View {
     @State private var showingTradeSheet = false
+    @StateObject private var viewModel = StockDetailViewModel()
 
     var stockDetail: StockInfo?
     var currPrice: Double?
@@ -80,34 +81,43 @@ struct StockOwnedView: View {
                 }
                 .background(Color.green)  // Set the background color to green
                 .clipShape(Capsule())  // Clip the background to a capsule shape
-                .sheet(isPresented: $showingTradeSheet) {
+                .sheet(isPresented: $showingTradeSheet, onDismiss: {
+                    // Call the function directly in the closure here
+                    performActionAfterSheetDismissal()
+                }) {
                     // The view that you want to show as a sheet goes here
                     TradeSheetView(stockDetail: stockDetail, stockPrice: currPrice ?? 0, availableFunds: balance ?? 0, name: name ?? "<Company Name>")
                 }
             }
         }
         
-        
-        
-        
     }
-    private var averageCostPerShare: Double {
-            if let price = stockDetail?.price, let count = stockDetail?.count, count > 0 {
-                return price / Double(count)
-            } else {
-                return 0  // Return 0 if count is 0 or if either value is nil
+    private func performActionAfterSheetDismissal() {
+            print("Sheet has been dismissed.")
+            // Your code to execute after the sheet is dismissed...
+            if let ticker = stockDetail?.ticker {
+//                viewModel.loadFavStock(for: ticker)
+                print("Loaded favorite stock for \(ticker)")
             }
         }
+    
+    private var averageCostPerShare: Double {
+        if let price = stockDetail?.price, let count = stockDetail?.count, count > 0 {
+            return price / Double(count)
+        } else {
+            return 0  // Return 0 if count is 0 or if either value is nil
+        }
+    }
     private var costDiff: Double {
         return (currPrice ?? 0) - averageCostPerShare
-        }
+    }
     private var differenceColor: Color {
-            if costDiff == 0 {
-                return .gray
-            } else {
-                return costDiff < 0 ? .red : .green
-            }
+        if costDiff == 0 {
+            return .gray
+        } else {
+            return costDiff < 0 ? .red : .green
         }
+    }
 }
 
 #Preview {
