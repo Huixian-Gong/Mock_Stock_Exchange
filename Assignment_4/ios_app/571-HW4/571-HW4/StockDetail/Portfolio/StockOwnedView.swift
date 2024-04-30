@@ -10,6 +10,8 @@ import SwiftUI
 struct StockOwnedView: View {
     @State private var showingTradeSheet = false
     @StateObject private var viewModel = StockDetailViewModel()
+    @EnvironmentObject var portfolioViewModel: PortfolioViewModel
+    @EnvironmentObject var watchlistViewModel: WatchlistViewModel
 
     var stockDetail: StockInfo?
     var currPrice: Double?

@@ -166,4 +166,31 @@ class WatchlistViewModel: ObservableObject {
         }
         
     }
+    
+    func delFav (for ticker: String) {
+        networkService.delFav(for: ticker){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.fetchStocks()
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
+    func addFav (for ticker: String) {
+        networkService.addFav(for: ticker){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.fetchStocks()
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
 }

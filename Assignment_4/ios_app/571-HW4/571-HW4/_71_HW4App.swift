@@ -10,10 +10,16 @@ import SwiftUI
 @main
 struct _71_HW4App: App {
     
-
+    var portfolioViewModel = PortfolioViewModel()
+    var watchlistViewModel = WatchlistViewModel()
+    var stockDetailViewModel = StockDetailViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(portfolioViewModel)
+                .environmentObject(watchlistViewModel)
+                
                 
         }
     }

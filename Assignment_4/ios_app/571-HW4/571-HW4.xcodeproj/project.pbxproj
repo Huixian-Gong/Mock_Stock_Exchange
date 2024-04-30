@@ -33,7 +33,6 @@
 		ED44C7592BC4FCA100044A8D /* HomeScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7582BC4FCA100044A8D /* HomeScreenModel.swift */; };
 		ED44C75B2BC4FCB200044A8D /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C75A2BC4FCB200044A8D /* HomeScreenViewModel.swift */; };
 		ED44C75D2BC4FE0C00044A8D /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C75C2BC4FE0C00044A8D /* PortfolioView.swift */; };
-		ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */; };
 		ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7602BC5031500044A8D /* PortfolioModel.swift */; };
 		ED44C7632BC5031E00044A8D /* PortfolioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */; };
 		ED68AAE62BCF3F53002B1349 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED68AAE52BCF3F53002B1349 /* WebView.swift */; };
@@ -77,7 +76,6 @@
 		ED44C7582BC4FCA100044A8D /* HomeScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenModel.swift; sourceTree = "<group>"; };
 		ED44C75A2BC4FCB200044A8D /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		ED44C75C2BC4FE0C00044A8D /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioView.swift; sourceTree = "<group>"; };
-		ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
 		ED44C7602BC5031500044A8D /* PortfolioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioModel.swift; sourceTree = "<group>"; };
 		ED44C7622BC5031E00044A8D /* PortfolioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewModel.swift; sourceTree = "<group>"; };
 		ED68AAE52BCF3F53002B1349 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
@@ -206,7 +204,6 @@
 		ED44C7542BC4F98300044A8D /* Watchlist */ = {
 			isa = PBXGroup;
 			children = (
-				ED44C75E2BC4FF0300044A8D /* WatchlistView.swift */,
 				EDF35C272BC5235A000381BC /* WatchlistModel.swift */,
 				EDF35C292BC523D3000381BC /* WatchlistViewModel.swift */,
 				EDF35C4C2BC78E3B000381BC /* WatchlistStockRowView.swift */,
@@ -368,7 +365,6 @@
 				ED44C7422BC4B5C600044A8D /* FooterView.swift in Sources */,
 				ED68AAF42BD1E5B4002B1349 /* ToastView.swift in Sources */,
 				ED44C71F2BC4ABE800044A8D /* _71_HW4App.swift in Sources */,
-				ED44C75F2BC4FF0300044A8D /* WatchlistView.swift in Sources */,
 				ED44C7612BC5031500044A8D /* PortfolioModel.swift in Sources */,
 				ED2A6B8D2BCE13D800CD9B99 /* RecommendationView.swift in Sources */,
 				ED68AAE62BCF3F53002B1349 /* WebView.swift in Sources */,

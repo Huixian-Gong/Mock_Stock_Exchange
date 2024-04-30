@@ -18,6 +18,8 @@ struct StockDetailView: View {
     @State private var toastMessage = ""
     @State private var toastOpacity = 0.0
     @State private var showingTradeSheet = false
+    @EnvironmentObject var portfolioViewModel: PortfolioViewModel
+    @EnvironmentObject var watchlistViewModel: WatchlistViewModel
     
     
     init(stockSymbol: String, isShowingDetailView: Binding<Bool>) {
@@ -133,10 +135,7 @@ struct StockDetailView: View {
                                         .padding()
                                         .frame(width:140, height: 60)
                                 }
-                                .sheet(isPresented: $showingTradeSheet, onDismiss: {
-                                    // Call the function directly in the closure here
-                                    performActionAfterSheetDismissal()
-                                }) {
+                                .sheet(isPresented: $showingTradeSheet) {
                                     // The view that you want to show as a sheet goes here
                                     TradeSheetView(stockDetail: viewModel.stockFavDetail, stockPrice: viewModel.quote?.c ?? 0, availableFunds: viewModel.walletBalance, name: viewModel.profile?.name ?? "<Company Name>")
                                 }
@@ -389,8 +388,8 @@ struct StockDetailView: View {
                     if isShowingDetailView {
                         if viewModel.stockFavDetail?.watchlist ==  true {
                             Button(action: {
-                                
-                                viewModel.delFav(for: stockSymbol)
+                                watchlistViewModel.delFav(for: stockSymbol)
+                                viewModel.stockFavDetail?.watchlist = false
                                 toastMessage = "Removing \(stockSymbol) from favorites"
                                 showToast = true
                                 // Hide toast after 3 seconds
@@ -406,6 +405,7 @@ struct StockDetailView: View {
                             Button(action: {
                                 
                                 viewModel.addFav(for: stockSymbol)
+                                watchlistViewModel.fetchStocks()
                                 toastMessage = "Adding \(stockSymbol) to favorites"
                                 showToast = true
                                 

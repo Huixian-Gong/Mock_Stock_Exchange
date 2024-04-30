@@ -7,9 +7,12 @@
 import SwiftUI
 
 struct HomeScreenView: View {
-    @StateObject var homeScreenViewModel = HomeScreenViewModel()
-    @StateObject var portfolioViewModel = PortfolioViewModel()
-    @StateObject var watchlistViewModel = WatchlistViewModel()
+    @EnvironmentObject var portfolioViewModel: PortfolioViewModel
+    @EnvironmentObject var watchlistViewModel: WatchlistViewModel
+    
+    
+//    @StateObject var portfolioViewModel = PortfolioViewModel()
+//    @StateObject var watchlistViewModel = WatchlistViewModel()
     
     @State private var searchTicker: String = ""
     

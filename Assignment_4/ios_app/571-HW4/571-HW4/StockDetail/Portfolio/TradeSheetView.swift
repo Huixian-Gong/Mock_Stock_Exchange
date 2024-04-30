@@ -21,6 +21,8 @@ struct TradeSheetView: View {
     @State private var tradeType: String = ""
     @State private var success: Bool = false
     @State private var shareTrade: Int = 0
+    @EnvironmentObject var portfolioViewModel: PortfolioViewModel
+    @EnvironmentObject var watchlistViewModel: WatchlistViewModel
     
     var body: some View {
         ZStack {
@@ -95,6 +97,7 @@ struct TradeSheetView: View {
                                     shareTrade = shareCount
                                     success = true
                                     viewModel.buyStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice)
+                                    portfolioViewModel.fetchStocks()
                                 }
                             }) {
                                 Text("Buy")
@@ -134,6 +137,7 @@ struct TradeSheetView: View {
                                     tradeType = "sold"
                                     shareTrade = shareCount
                                     success = true
+                                    portfolioViewModel.fetchStocks()
                                 }
                             }) {
                                 Text("Sell")

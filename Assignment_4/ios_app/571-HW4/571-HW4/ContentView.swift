@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var portfolioViewModel: PortfolioViewModel
+    @EnvironmentObject var watchlistViewModel: WatchlistViewModel
+    
     var body: some View {
         HomeScreenView()
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}
