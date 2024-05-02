@@ -15,6 +15,8 @@ struct HomeScreenView: View {
 //    @StateObject var watchlistViewModel = WatchlistViewModel()
     
     @State private var searchTicker: String = ""
+    let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
+
     
     var body: some View {
         NavigationView {
@@ -31,7 +33,15 @@ struct HomeScreenView: View {
             }
             .searchable(text: $searchTicker)
             .overlay(loadingOverlay)
+            .onReceive(timer) { _ in
+                            portfolioViewModel.fetchStocks()
+                            watchlistViewModel.fetchStocks()
+                            print("auto-fetch")
+                        }
         }
+        .onDisappear {
+                    self.timer.upstream.connect().cancel()
+                }
     }
 
     // Extracted the regular content into a computed property
