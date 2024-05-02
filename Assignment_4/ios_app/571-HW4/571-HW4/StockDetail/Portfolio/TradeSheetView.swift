@@ -72,32 +72,25 @@ struct TradeSheetView: View {
                         // Buy and Sell buttons
                         HStack(spacing: 20) {
                             Button(action: {
-                                if !numberOfShares.allSatisfy({ $0.isNumber }) {
+                                if (!numberOfShares.allSatisfy({ $0.isNumber })) && (numberOfShares != "-1") {
                                     toastMessage = "Please enter a valid amount"
                                     showToast = true
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
+
                                 } else if (Double(shareCount) * stockPrice > availableFunds ?? 0) {
                                     toastMessage = "Not enough money to buy"
                                     showToast = true
-                                    // Hide toast after 3 seconds
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
+
                                 } else if (shareCount <= 0) {
                                     toastMessage = "Cannot buy non-positive shares"
                                     showToast = true
-                                    // Hide toast after 3 seconds
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
+
                                 } else {
                                     tradeType = "bought"
                                     shareTrade = shareCount
-                                    success = true
-                                    viewModel.buyStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice)
-                                    portfolioViewModel.fetchStocks()
+                                    portfolioViewModel.buyStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice)
+                                    withAnimation{
+                                        success = true
+                                    }
                                 }
                             }) {
                                 Text("Buy")
@@ -108,35 +101,29 @@ struct TradeSheetView: View {
                                     .cornerRadius(40)
                             }
                             Button(action: {
-                                if !numberOfShares.allSatisfy({ $0.isNumber }) {
+                                if (!numberOfShares.allSatisfy({ $0.isNumber })) && (numberOfShares != "-1") {
                                     toastMessage = "Please enter a valid amount"
                                     showToast = true
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
-                                } else if (shareCount > stockDetail?.count ?? 0) {
+
+                                } else if (shareCount > portfolioViewModel.getCount(for: stockDetail?.ticker ?? "Ticker")) {
                                     toastMessage = "Not Enough shares to sell"
                                     showToast = true
-                                    // Hide toast after 3 seconds
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
+
                                 } else if (shareCount <= 0) {
                                     toastMessage = "Cannot sell non-positive shares"
                                     showToast = true
-                                    // Hide toast after 3 seconds
-                                    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    //                                    showToast = false
-                                    //                                }
+
                                 } else {
-                                    if shareCount == stockDetail?.count {
-                                        viewModel.sellStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice, sellAll: 0)
+                                    if shareCount == portfolioViewModel.getCount(for: stockDetail?.ticker ?? "Ticker") {
+                                        portfolioViewModel.sellStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice, sellAll: 0)
                                     } else  {
-                                        viewModel.sellStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice, sellAll: 1)
+                                        portfolioViewModel.sellStock(for: stockDetail?.ticker ?? "TICKER", count: shareCount, price: stockPrice, sellAll: 1)
                                     }
                                     tradeType = "sold"
                                     shareTrade = shareCount
-                                    success = true
+                                    withAnimation {
+                                        success = true
+                                    }
                                     portfolioViewModel.fetchStocks()
                                 }
                             }) {
@@ -208,9 +195,9 @@ struct TradeSheetView: View {
                         tradeType = ""
                         
                         self.presentationMode.wrappedValue.dismiss()
-                        
                     }
-                    .padding()
+                    .padding(.horizontal, 130)
+                    .padding(.vertical, 15)
                     .background(Color.white)
                     .foregroundColor(Color.green)
                     .clipShape(Capsule())  // Clip the background to a capsule shape

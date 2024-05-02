@@ -12,9 +12,10 @@ struct ToastView: View {
     
     var body: some View {
         Text(message)
-            .font(.system(size: 20))
+            .font(.system(size: 15))
             .foregroundColor(.white)
-            .padding(35)
+            .padding(.horizontal, 40)
+            .padding(.vertical, 20)
             .background(Color.gray)
             .cornerRadius(50)
     }

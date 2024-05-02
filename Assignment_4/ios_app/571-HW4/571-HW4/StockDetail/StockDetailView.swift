@@ -81,7 +81,7 @@ struct StockDetailView: View {
                                 }
                                 .background(Color.white)
                         }
-                        .frame(height: 350)
+                        .frame(height: 450)
                     } else {
                         Text("")
                             .frame(height: 350)
@@ -94,33 +94,31 @@ struct StockDetailView: View {
                         Text("Portfolio")
                             .font(.system(size: 23))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        //                        StockOwnedView(stockDetail: viewModel.stockFavDetail, currPrice: viewModel.quote?.c, balance: viewModel.walletBalance, name: viewModel.profile?.name)
-                        if viewModel.stockFavDetail?.count ?? 0 > 0 {
+                        if portfolioViewModel.getCount(for: stockSymbol) > 0 {
                             HStack {
                                 VStack (alignment: .leading, spacing: 10) {
                                     HStack {
                                         Text("Shares Owned: ")
-                                        Text("\(viewModel.stockFavDetail?.count ?? 0)")
+                                        Text("\(portfolioViewModel.getCount(for: stockSymbol))")
                                     }
                                     HStack {
                                         Text("Avg. Cost / Share: ")
-                                        Text("$\(averageCostPerShare, specifier: "%.2f")")
+                                        Text("$\(averageCostPerShare(price: portfolioViewModel.getPrice(for: stockSymbol),count: portfolioViewModel.getCount(for: stockSymbol)), specifier: "%.2f")")
                                     }
                                     HStack {
                                         Text("Total Cost: ")
-                                        Text("$\(viewModel.stockFavDetail?.price ?? 0.00, specifier: "%.2f")")
+                                        Text("$\(portfolioViewModel.getPrice(for: stockSymbol), specifier: "%.2f")")
                                     }
                                     
                                     HStack {
                                         Text("Change: ")
-                                        Text("$\( costDiff, specifier: "%.2f")")
-                                            .foregroundColor(differenceColor)
+                                        Text("$\(costDiff(price: portfolioViewModel.getPrice(for: stockSymbol),count: portfolioViewModel.getCount(for: stockSymbol)), specifier: "%.2f")")
+                                            .foregroundColor(differenceColor(price: portfolioViewModel.getPrice(for: stockSymbol),count: portfolioViewModel.getCount(for: stockSymbol)))
                                     }
                                     HStack {
                                         Text("Market Value: ")
-                                        Text("$\(Double(viewModel.stockFavDetail?.count ?? 0) * (viewModel.quote?.c ?? 0.00), specifier: "%.2f")")
-                                            .foregroundColor(differenceColor)
+                                        Text("$\(Double(portfolioViewModel.getCount(for: stockSymbol)) * (viewModel.quote?.c ?? 0.00), specifier: "%.2f")")
+                                            .foregroundColor(differenceColor(price: portfolioViewModel.getPrice(for: stockSymbol),count: portfolioViewModel.getCount(for: stockSymbol)))
                                     }
                                 }
                                 .bold()
@@ -135,7 +133,10 @@ struct StockDetailView: View {
                                         .padding()
                                         .frame(width:140, height: 60)
                                 }
-                                .sheet(isPresented: $showingTradeSheet) {
+                                .sheet(isPresented: $showingTradeSheet, onDismiss: {
+                                    // Call the function directly in the closure here
+//                                    performActionAfterSheetDismissal()
+                                }) {
                                     // The view that you want to show as a sheet goes here
                                     TradeSheetView(stockDetail: viewModel.stockFavDetail, stockPrice: viewModel.quote?.c ?? 0, availableFunds: viewModel.walletBalance, name: viewModel.profile?.name ?? "<Company Name>")
                                 }
@@ -163,7 +164,7 @@ struct StockDetailView: View {
                                 .clipShape(Capsule())  // Clip the background to a capsule shape
                                 .sheet(isPresented: $showingTradeSheet, onDismiss: {
                                     // Call the function directly in the closure here
-                                    performActionAfterSheetDismissal()
+//                                    performActionAfterSheetDismissal()
                                 }) {
                                     // The view that you want to show as a sheet goes here
                                     TradeSheetView(stockDetail: viewModel.stockFavDetail, stockPrice: viewModel.quote?.c ?? 0, availableFunds: viewModel.walletBalance, name: viewModel.profile?.name ?? "<Company Name>")
@@ -392,11 +393,6 @@ struct StockDetailView: View {
                                 viewModel.stockFavDetail?.watchlist = false
                                 toastMessage = "Removing \(stockSymbol) from favorites"
                                 showToast = true
-                                // Hide toast after 3 seconds
-                                //                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                //                                showToast = false
-                                //                            }
-                                
                                 
                             }) {
                                 Image(systemName: "plus.circle.fill")
@@ -473,21 +469,18 @@ struct StockDetailView: View {
         }
     }
     
-    private var averageCostPerShare: Double {
-        if let price = viewModel.stockFavDetail?.price, let count = viewModel.stockFavDetail?.count, count > 0 {
-            return price / Double(count)
-        } else {
-            return 0  // Return 0 if count is 0 or if either value is nil
-        }
+    private func averageCostPerShare(price: Double, count: Int) -> Double {
+        return price / Double(count)
     }
-    private var costDiff: Double {
-        return (viewModel.quote?.c ?? 0) - averageCostPerShare
+    
+    private func costDiff(price: Double, count: Int) -> Double {
+        return (viewModel.quote?.c ?? 0) - averageCostPerShare(price:price, count:count)
     }
-    private var differenceColor: Color {
-        if costDiff == 0 {
+    private func differenceColor(price: Double, count: Int) -> Color {
+        if costDiff(price: price, count: count) == 0 {
             return .gray
         } else {
-            return costDiff < 0 ? .red : .green
+            return costDiff(price: price, count: count) < 0 ? .red : .green
         }
     }
 }

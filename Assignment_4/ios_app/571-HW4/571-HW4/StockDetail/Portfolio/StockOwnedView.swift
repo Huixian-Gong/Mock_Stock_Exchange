@@ -18,12 +18,13 @@ struct StockOwnedView: View {
     var balance: Double?
     var name: String?
     var body: some View {
-        if stockDetail?.count ?? 0 > 0 {
+        let index = portfolioViewModel.getIndex(for: stockDetail?.ticker ?? "ticker")
+        if portfolioViewModel.getCount(for: stockDetail?.ticker ?? "Ticker") > 0 {
             HStack {
                 VStack (alignment: .leading, spacing: 10) {
                     HStack {
                         Text("Shares Owned: ")
-                        Text("\(stockDetail?.count ?? 0)")
+                        Text("\(portfolioViewModel.stocks[index].count)")
                     }
                     HStack {
                         Text("Avg. Cost / Share: ")

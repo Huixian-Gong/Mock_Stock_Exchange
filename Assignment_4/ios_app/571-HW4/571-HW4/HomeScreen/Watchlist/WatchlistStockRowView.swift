@@ -42,11 +42,16 @@ struct WatchlistStockRowView: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                     if editMode?.wrappedValue.isEditing == true {
                         VStack {
-                            let differenceColor = difference.map { $0 < 0 ? Color.red : Color.green } ?? Color.gray
+                            let differenceColor = difference.map {
+                                $0 < 0 ? Color.red : ($0 > 0 ? Color.green : Color.gray)
+                            } ?? Color.gray
                             HStack {
                                 
                                 
-                                Image(systemName: difference.flatMap { $0 < 0 ? "arrow.down.right" : "arrow.up.right" } ?? "arrow.up.right")
+                                Image(systemName: difference.flatMap {
+                                    $0 < 0 ? "arrow.down.right" : ($0 > 0 ? "arrow.up.right" : "minus")
+                                } ?? "minus")
+
                                     .foregroundColor(differenceColor)
                                     .font(.system(size: 20))
                                 
@@ -61,9 +66,14 @@ struct WatchlistStockRowView: View {
                         .font(.system(size: 14))
                     } else {
                         HStack {
-                            let differenceColor = difference.map { $0 < 0 ? Color.red : Color.green } ?? Color.gray
+                            let differenceColor = difference.map {
+                                $0 < 0 ? Color.red : ($0 > 0 ? Color.green : Color.gray)
+                            } ?? Color.gray
                             
-                            Image(systemName: difference.flatMap { $0 < 0 ? "arrow.down.right" : "arrow.up.right" } ?? "arrow.up.right")
+                            Image(systemName: difference.flatMap {
+                                $0 < 0 ? "arrow.down.right" : ($0 > 0 ? "arrow.up.right" : "minus")
+                            } ?? "minus")
+
                                 .foregroundColor(differenceColor)
                                 .font(.system(size: 20))
                             

@@ -27,7 +27,7 @@
         <script>
             const
                 groupingUnits = [[
-                    'week',                         // unit name
+                    'day',                         // unit name
                     [1]                             // allowed multiples
                 ], [
                     'month',
@@ -50,11 +50,10 @@
                         labels: {align: 'right', x: -3},
                         title: {text: 'Volume'},
                         top: '65%',
-                        height: '35%',
+                        height: '20%',
                         offset: 0,
                         lineWidth: 2
                     }],
-                    tooltip: {split: true},
                     plotOptions: {
                             series: {
                                 dataGrouping: {
@@ -70,8 +69,6 @@
                         inputEnabled: true,
                         enabled: true,
                     },
-                    
-                    
                     series: [{
                         type: 'candlestick',
                         name: ticker,

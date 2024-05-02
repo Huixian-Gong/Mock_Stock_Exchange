@@ -12,6 +12,7 @@ struct PortfolioStock: Decodable {
 //    let watchlist: Bool
     var count: Int
     var price: Double
+    var totalPrice: Double?
     var difference: Double?
     var differencePercentage: Double?
     

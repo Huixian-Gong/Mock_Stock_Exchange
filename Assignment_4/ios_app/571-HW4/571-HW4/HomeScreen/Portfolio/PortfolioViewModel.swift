@@ -21,8 +21,8 @@ class PortfolioViewModel: ObservableObject {
     
     var netWorth: Double {
         let totalStocksValue = stocks.reduce(0) { $0 + (($1.price) * Double($1.count)) }
-            return walletBalance + totalStocksValue
-        }
+        return walletBalance + totalStocksValue
+    }
     
     // Dependency injection for easier testing
     init(networkService: NetworkServiceProtocol = NetworkService.shared) {
@@ -30,7 +30,7 @@ class PortfolioViewModel: ObservableObject {
     }
     
     func fetchStocks() {
-//        isLoading = true // Start loading
+        //        isLoading = true // Start loading
         networkService.fetchPortfolioStocks { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -46,23 +46,23 @@ class PortfolioViewModel: ObservableObject {
     }
     
     func fetchWalletBalance() {
-            NetworkService.shared.fetchWalletBalance { [weak self] result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let balance):
-                        self?.walletBalance = balance
-                    case .failure(let error):
-                        print(error)
-                        // Handle error or show some default value
-                        self?.walletBalance = 0.0
-                    }
+        NetworkService.shared.fetchWalletBalance { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let balance):
+                    self?.walletBalance = balance
+                case .failure(let error):
+                    print(error)
+                    // Handle error or show some default value
+                    self?.walletBalance = 0.0
                 }
             }
         }
+    }
     
     private func fetchPrices(for fetchedStocks: [PortfolioStock]) {
         let fetchGroup = DispatchGroup() // Create a dispatch group
-
+        
         for stock in fetchedStocks {
             fetchGroup.enter() // Enter the group for each stock
             
@@ -75,9 +75,9 @@ class PortfolioViewModel: ObservableObject {
                           let currentPricePerShare = response?.c else {
                         return
                     }
-                    
                     let currentTotalValue = currentPricePerShare * Double(self.stocks[index].count)
                     let storedTotalValue = self.stocks[index].price // Direct use without unwrapping
+                    self.stocks[index].totalPrice = storedTotalValue
                     let difference = currentTotalValue - storedTotalValue
                     self.stocks[index].difference = difference
                     self.stocks[index].price = currentPricePerShare
@@ -93,9 +93,9 @@ class PortfolioViewModel: ObservableObject {
             self?.isLoading = false
         }
     }
-
-
-
+    
+    
+    
     
     private func fetchPrice(for ticker: String, completion: @escaping (StockPriceResponse?) -> Void) {
         let url = "\(baseURL)/quote/\(ticker)"
@@ -110,8 +110,55 @@ class PortfolioViewModel: ObservableObject {
     }
     
     func moveStocks(from source: IndexSet, to destination: Int) {
-            stocks.move(fromOffsets: source, toOffset: destination)
-            // Implement any additional logic needed to persist the changes
+        stocks.move(fromOffsets: source, toOffset: destination)
+        // Implement any additional logic needed to persist the changes
+    }
+    func getCount(for ticker: String) -> Int {
+        // Find the stock with the given ticker and return its count
+        return stocks.first(where: { $0.ticker == ticker })?.count ?? 0
+    }
+    
+    func getPrice(for ticker: String) -> Double {
+        // Find the stock with the given ticker and return its count
+//        print(stocks)
+        return stocks.first(where: { $0.ticker == ticker })?.totalPrice ?? 0
+    }
+    
+    func removeStock(with ticker: String) {
+        // Filter out the stock with the matching ticker
+        stocks.removeAll { $0.ticker == ticker }
+    }
+    
+    func getIndex (for ticker: String) -> Int {
+        return stocks.firstIndex(where: { $0.ticker == ticker }) ?? -1
+    }
+    
+    func buyStock (for ticker: String, count: Int, price: Double) {
+        networkService.buyStock(for: ticker, count: count, price: price){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.fetchStocks()
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
         }
+    }
+    
+    func sellStock (for ticker: String, count: Int, price: Double, sellAll: Int) {
+        networkService.sellStock(for: ticker, count: count, price: price, sellAll: sellAll){ [weak self] result in
+            switch result {
+            case .success(let message):
+                print("Success: \(message)")
+                // Handle success, update favorites
+                self?.fetchStocks()
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                // Handle error
+            }
+        }
+    }
 }
 

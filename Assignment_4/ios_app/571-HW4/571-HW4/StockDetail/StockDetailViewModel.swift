@@ -360,5 +360,7 @@ class StockDetailViewModel: ObservableObject {
             }
         }
     }
+    
+    
 }
 
